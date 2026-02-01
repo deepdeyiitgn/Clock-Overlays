@@ -1,41 +1,38 @@
-# Clock Overlays 🕒
+# Transparent Clock
 
-A lightweight, always-on-top **transparent clock overlay** for Windows.  
-Built for students and focus-driven users who want time visibility without distraction.
+Transparent Clock is a lightweight, always‑on‑top clock overlay for Windows with a simple dashboard and pomodoro controls.
 
----
+Version: Transparent Clock v01.02.2026
 
-## ✨ Features
-- Always on top clock
-- Transparent background
-- Tray icon controls
-- Custom positioning
-- Minimal & distraction-free
+## Key Features
+- Transparent clock overlay with color, size, and position controls
+- Pomodoro timer (work / short break / long break)
+- Dashboard for clock, pomodoro, profile, and settings
+- Profile and settings stored locally
+- 100% offline (no tracking, no internet)
 
----
+## Privacy
+This app is fully offline. It does not send data, use tracking, or require internet access.
 
-## 🛠 Tech Stack
-- C#
-- .NET (WinForms)
-- Windows Desktop
+## How to Run
+From the repository root:
 
----
+dotnet run --project src/TransparentClock.csproj
 
-## 🎯 Purpose
-This project is designed to help students stay aware of time during study sessions,
-streams, and deep-focus work — without breaking concentration.
+## Build (Single EXE)
+Build a single Windows EXE:
 
----
+dotnet publish src/TransparentClock.csproj -c Release -r win-x64
 
-## 📦 Project Structure
-- `src/` → application source code
-- `assets/` → icons, logos, visuals
-- Releases → compiled EXE files
+Output EXE:
+src/bin/Release/net8.0-windows/win-x64/publish/TransparentClock.exe
 
----
+## Local Data
+On first run, the app creates its data folder automatically at:
+%LOCALAPPDATA%\Clock-Overlays\appstate.json
 
-## 👨‍💻 Author
-**Deep Dey**  
-An app by Deep
+## Desktop Shortcut
+After publishing, create a shortcut to the EXE (manual or via installer). The EXE already embeds the app icon.
 
-> This project will receive incremental updates every few months.
+## Author
+Deep Dey

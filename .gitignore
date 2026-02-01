@@ -17,3 +17,10 @@ Thumbs.db
 
 # ===== Publish output (release handled separately) =====
 publish/
+
+# ===== Installer & release artifacts =====
+dist/
+installer/
+
+# ===== Temp files =====
+HISTORY.tmp
