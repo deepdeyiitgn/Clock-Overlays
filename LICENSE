@@ -1,0 +1,83 @@
+CLOCK OVERLAYS – SOURCE AVAILABLE LICENSE
+Version: v29.01.2026
+Version: v01.02.2026
+
+Copyright (c) 2026 Deep Dey
+All Rights Reserved.
+
+--------------------------------------------------------------------
+
+1. PERMITTED USE (READ CAREFULLY)
+
+The source code of this project is made available STRICTLY for:
+- Educational purposes
+- Learning application architecture
+- Security review and inspection
+- Personal understanding of implementation
+
+You are allowed to:
+✔ View the source code
+✔ Read and analyze the implementation
+✔ Learn concepts from the code for personal knowledge
+
+--------------------------------------------------------------------
+
+2. PROHIBITED USE (IMPORTANT)
+
+You are NOT allowed to:
+✖ Copy or reuse this source code (fully or partially)
+✖ Modify the code for redistribution
+✖ Repackage or rebrand this project
+✖ Use this code in your own applications or projects
+✖ Upload modified or unmodified copies anywhere
+✖ Sell, sublicense, or commercially exploit the source
+✖ Claim this work as your own
+
+Any form of copy-paste, reuse, or derivative work is STRICTLY PROHIBITED.
+
+--------------------------------------------------------------------
+
+3. EXECUTABLE USAGE
+
+The compiled executable (.exe) released by the author:
+✔ MAY be used freely by end users
+✔ MAY be shared in original, unmodified form
+✖ MAY NOT be reverse engineered
+✖ MAY NOT be modified or redistributed under a different name
+
+Only official releases provided by the author are permitted for usage.
+
+--------------------------------------------------------------------
+
+4. OWNERSHIP & PROTECTION
+
+This project, including:
+- Source code
+- Application logic
+- Design and structure
+- Assets and binaries
+
+is protected under:
+- Copyright law
+- DMCA (Digital Millennium Copyright Act)
+
+Unauthorized use may result in legal action.
+
+--------------------------------------------------------------------
+
+5. NO WARRANTY
+
+This software is provided "AS IS", without any warranty of any kind.
+The author is not responsible for any damage, data loss, or misuse.
+
+--------------------------------------------------------------------
+
+6. CONTACT
+
+Author: Deep Dey  
+Project: Clock Overlays  
+Purpose: Productivity & focus tools for students
+
+--------------------------------------------------------------------
+
+By accessing this repository, you agree to all terms stated above.
