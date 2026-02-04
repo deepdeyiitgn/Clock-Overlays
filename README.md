@@ -2,7 +2,7 @@
 
 Transparent Clock is a lightweight, always‑on‑top clock overlay for Windows with a clean dashboard and Pomodoro controls.
 
-Version: v02.02.2026 (BETA)
+Version: v04.02.2026 (BETA)
 
 ## App Overview
 Transparent Clock keeps a minimal overlay clock visible while you work. A companion dashboard lets you adjust appearance, position, and Pomodoro sessions with local‑only settings.
@@ -23,7 +23,7 @@ Transparent Clock keeps a minimal overlay clock visible while you work. A compan
 - .NET 8 included (self‑contained build)
 
 ## Beta Warning
-This is a beta release. Expect occasional UI quirks or edge‑case bugs.
+This is a beta release. Expect occasional UI quirks or edge‑case bugs. Windows 10/11 supported.
 
 ## Open‑Source Notice
 Transparent Clock is open‑source. You are free to inspect, modify, and distribute under the project license.

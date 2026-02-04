@@ -1,5 +1,16 @@
 # Changelog
 
+## v04.02.2026 – BETA
+
+### Added
+- Version awareness (local metadata + update prompt).
+- 7-day focus history + 24-hour heatmap insights.
+- To-Do workflow improvements and stability polish.
+
+### Fixed
+- Pomodoro stability and session completion tracking.
+- Miscellaneous UI and persistence bug fixes.
+
 ## v03.02.2026 – BETA
 
 ### Added

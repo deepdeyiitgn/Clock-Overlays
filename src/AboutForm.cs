@@ -53,7 +53,7 @@ public class AboutForm : Form
 
         var version = new Label
         {
-            Text = "Version: v01.02.2026",
+            Text = $"Version: {TransparentClock.AppInfo.CurrentVersion}",
             Font = new Font("Segoe UI", 9),
             AutoSize = true,
             Location = new Point(22, 75)

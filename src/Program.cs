@@ -8,6 +8,7 @@ namespace TransparentClock
 {
     internal static class Program
     {
+        private const string AppVersion = AppInfo.CurrentVersion;
         public static AppState CurrentState { get; private set; } = AppState.CreateDefault();
         private static System.Threading.Timer? pomodoroAutoSaveTimer;
         public static TransparentClockForm? ClockForm { get; private set; }
@@ -256,6 +257,11 @@ namespace TransparentClock
                         MainForm = DashboardForm;
                     }
 
+                }
+
+                if (DashboardForm != null)
+                {
+                    UpdateChecker.CheckForUpdatesAsync(DashboardForm);
                 }
             }
         }

@@ -1,5 +1,8 @@
 # History
 
+## 2026-02-04
+- Day 4 summary: BETA release readiness, version awareness, update prompt, and focus history refinements.
+
 ## 2026-02-03
 - Day 3 summary: Focus history tracking + Insights tab + local To-Do system added.
 

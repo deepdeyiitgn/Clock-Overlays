@@ -280,7 +280,9 @@ namespace TransparentClock
             if (CurrentMode == PomodoroMode.Work)
             {
                 CompletedWorkSessions++;
-                FocusHistoryTracker.AddFocusMinutes(Program.CurrentState, Math.Max(1, settings.FocusMinutes));
+                int focusMinutes = Math.Max(1, settings.FocusMinutes);
+                FocusHistoryStorage.AddFocusMinutes(DateTime.Today, focusMinutes, DateTime.Now.Hour);
+                FocusSessionStorage.AddSession(DateTime.Now, focusMinutes);
 
                 int interval = Math.Max(1, settings.SessionsBeforeLongBreak);
                 if (CompletedWorkSessions >= interval)
