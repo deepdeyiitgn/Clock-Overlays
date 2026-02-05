@@ -1,0 +1,45 @@
+{
+  "version": "v05.02.2026",
+  "channel": "beta",
+  "releaseDate": "2026-02-05",
+  "currentBuild": {
+    "version": "v05.02.2026",
+    "status": "BETA",
+    "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v05.02.2026",
+    "releaseNotesUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v05.02.2026",
+    "installerName": "TransparentClock-v05.02.2026-Beta-Setup.exe"
+  },
+  "previousReleases": [
+    {
+      "version": "v04.02.2026",
+      "status": "Previous Beta",
+      "releaseDate": "2026-02-04",
+      "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v04.02.2026",
+      "notes": "Version awareness system, 7-day focus history, To-Do refinements"
+    }
+  ],
+  "releaseNotes": [
+    "Focus Insights system with time range selectors (Last 7/30 Days, 6/12 Months)",
+    "Advanced focus analytics with average/best/worst slot detection",
+    "QR Generator (13 types) with multi-format export (PNG, JPG, SVG, PDF, HEIC)",
+    "QR Scanner with online API, smart type detection, and drag-drop support",
+    "QuickLink URL Shortener with API management and caching",
+    "Network-aware QR scanning with clear error messaging",
+    "Focus Graphs (line graphs and 24-hour heatmaps)",
+    "Heatmap system (beta, in-progress)",
+    "Robust QuickLink API with error handling and fallback endpoints",
+    "Comprehensive stability improvements and user messaging"
+  ],
+  "knownIssues": [
+    "Heatmap cell interaction and date filtering still in development",
+    "QR code gradient and eye-style customization deferred to v06",
+    "HEIC export falls back to JPEG (system codec limitation)",
+    "QR scanning requires internet connection for online API mode"
+  ],
+  "requirements": {
+    "os": "Windows 10/11",
+    "dotnetRuntime": ".NET 8 (included in installer)",
+    "architecture": "x64"
+  }
+}
+
