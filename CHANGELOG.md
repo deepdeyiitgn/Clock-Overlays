@@ -1,5 +1,12 @@
 # Changelog
 
+## v08.02.2026 (Stable)
+- Finalized Pomodoro system with accurate focus tracking
+- Stable QR Generator and Scanner
+- Utilities tab finalized
+- UI polish and consistency improvements
+- Bug fixes and performance stability
+
 ## v05.02.2026 – Beta — 05 Feb 2026
 
 ### Added

@@ -38,6 +38,11 @@ namespace TransparentClock
         public bool AutoStartBreaks { get; set; }
 
         /// <summary>
+        /// Optional limit for completed cycles (0 = no limit).
+        /// </summary>
+        public int SessionLimit { get; set; }
+
+        /// <summary>
         /// Creates a safe default settings profile.
         /// </summary>
         public static PomodoroSettings CreateDefault()
@@ -49,7 +54,8 @@ namespace TransparentClock
                 LongBreakMinutes = 15,
                 SessionsBeforeLongBreak = 4,
                 AutoStartNextSession = false,
-                AutoStartBreaks = false
+                AutoStartBreaks = false,
+                SessionLimit = 0
             };
         }
     }

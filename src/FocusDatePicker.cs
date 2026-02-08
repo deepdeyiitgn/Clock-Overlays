@@ -32,6 +32,22 @@ namespace TransparentClock
         public void SetValidDates(List<DateTime> dates)
         {
             validDates = new HashSet<DateTime>(dates.Select(d => d.Date));
+
+            if (validDates.Count == 0)
+            {
+                isUpdatingDate = true;
+                Enabled = false;
+                Format = DateTimePickerFormat.Custom;
+                CustomFormat = "No data";
+                isUpdatingDate = false;
+                return;
+            }
+
+            if (!Enabled)
+            {
+                Enabled = true;
+                Format = DateTimePickerFormat.Short;
+            }
             
             // If current date is invalid, select the most recent valid date
             if (!validDates.Contains(Value.Date) && validDates.Count > 0)

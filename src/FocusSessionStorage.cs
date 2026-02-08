@@ -14,12 +14,19 @@ namespace TransparentClock
 
         private static readonly string SessionsFilePath = Path.Combine(AppFolderPath, "focus_sessions.json");
 
-        public static void AddSession(DateTime startTime, DateTime endTime)
+        public static void AddSession(DateTime startTime, DateTime endTime, int actualSeconds, string source)
         {
             if (endTime <= startTime)
             {
                 return;
             }
+
+            if (actualSeconds <= 0)
+            {
+                return;
+            }
+
+            source ??= string.Empty;
 
             var entries = LoadAll();
             if (entries.Any(entry => entry.StartTime == startTime && entry.EndTime == endTime))
@@ -30,7 +37,10 @@ namespace TransparentClock
             entries.Add(new FocusSessionEntry
             {
                 StartTime = startTime,
-                EndTime = endTime
+                EndTime = endTime,
+                ActualSeconds = actualSeconds,
+                ActualMinutes = (int)Math.Round(actualSeconds / 60d),
+                Source = source
             });
 
             SaveAll(entries);
@@ -61,6 +71,13 @@ namespace TransparentClock
                         var startTime = endTime.AddMinutes(-entry.Minutes.Value);
                         entry.StartTime = startTime;
                         entry.EndTime = endTime;
+                        entry.ActualMinutes = entry.Minutes.Value;
+                        entry.ActualSeconds = entry.Minutes.Value * 60;
+                    }
+
+                    if (!entry.ActualSeconds.HasValue && entry.ActualMinutes.HasValue && entry.ActualMinutes.Value > 0)
+                    {
+                        entry.ActualSeconds = entry.ActualMinutes.Value * 60;
                     }
                 }
 

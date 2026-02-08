@@ -60,6 +60,11 @@ namespace TransparentClock
         public int CompletedWorkSessions { get; set; }
 
         /// <summary>
+        /// Number of completed cycles (counted after a long break finishes).
+        /// </summary>
+        public int CompletedCycles { get; set; }
+
+        /// <summary>
         /// Remaining time in seconds.
         /// </summary>
         public int RemainingSeconds { get; set; } = 25 * 60;
@@ -68,6 +73,12 @@ namespace TransparentClock
         /// UTC timestamp of the last tick update.
         /// </summary>
         public DateTime LastTickUtc { get; set; } = DateTime.UtcNow;
+
+        private DateTime? focusSegmentStartUtc;
+        private readonly System.Collections.Generic.List<FocusSegment> focusSegments = new();
+        private int completionSequence;
+        private int lastNotifiedCompletionSequence;
+        private PomodoroCompletionInfo lastCompletionInfo;
 
         /// <summary>
         /// Creates a default pomodoro state.
@@ -80,6 +91,7 @@ namespace TransparentClock
                 IsPaused = false,
                 CurrentMode = PomodoroMode.Work,
                 CompletedWorkSessions = 0,
+                CompletedCycles = 0,
                 RemainingSeconds = 25 * 60,
                 LastTickUtc = DateTime.UtcNow,
                 WorkMinutes = 25,
@@ -95,6 +107,35 @@ namespace TransparentClock
         /// </summary>
         public void Start(PomodoroSettings settings)
         {
+            StartSession(settings);
+        }
+
+        /// <summary>
+        /// Pause a running session.
+        /// </summary>
+        public void Pause(PomodoroSettings settings)
+        {
+            PauseSession(settings);
+        }
+
+        /// <summary>
+        /// Resume a paused session.
+        /// </summary>
+        public void Resume()
+        {
+            ResumeSession();
+        }
+
+        /// <summary>
+        /// Stop the session and reset the remaining time.
+        /// </summary>
+        public void Stop(PomodoroSettings settings)
+        {
+            StopSession(settings);
+        }
+
+        public void StartSession(PomodoroSettings settings)
+        {
             NormalizeSettings(settings);
             IsRunning = true;
             IsPaused = false;
@@ -103,12 +144,14 @@ namespace TransparentClock
                 RemainingSeconds = GetModeLengthSeconds(CurrentMode, settings);
             }
             LastTickUtc = DateTime.UtcNow;
+
+            if (CurrentMode == PomodoroMode.Work)
+            {
+                BeginFocusSegment(LastTickUtc);
+            }
         }
 
-        /// <summary>
-        /// Pause a running session.
-        /// </summary>
-        public void Pause(PomodoroSettings settings)
+        public void PauseSession(PomodoroSettings settings)
         {
             if (!IsRunning || IsPaused)
             {
@@ -116,13 +159,11 @@ namespace TransparentClock
             }
 
             Tick(DateTime.UtcNow, settings);
+            EndFocusSegment(DateTime.UtcNow);
             IsPaused = true;
         }
 
-        /// <summary>
-        /// Resume a paused session.
-        /// </summary>
-        public void Resume()
+        public void ResumeSession()
         {
             if (!IsRunning || !IsPaused)
             {
@@ -131,20 +172,23 @@ namespace TransparentClock
 
             IsPaused = false;
             LastTickUtc = DateTime.UtcNow;
+            if (CurrentMode == PomodoroMode.Work)
+            {
+                BeginFocusSegment(LastTickUtc);
+            }
         }
 
-        /// <summary>
-        /// Stop the session and reset the remaining time.
-        /// </summary>
-        public void Stop(PomodoroSettings settings)
+        public void StopSession(PomodoroSettings settings)
         {
             NormalizeSettings(settings);
-            IsRunning = false;
-            IsPaused = false;
-            CurrentMode = PomodoroMode.Work;
-            CompletedWorkSessions = 0;
-            RemainingSeconds = GetModeLengthSeconds(CurrentMode, settings);
-            LastTickUtc = DateTime.UtcNow;
+
+            if (IsRunning && !IsPaused)
+            {
+                Tick(DateTime.UtcNow, settings);
+            }
+
+            CommitFocusData(DateTime.UtcNow);
+            ResetSession(settings);
         }
 
         /// <summary>
@@ -166,6 +210,16 @@ namespace TransparentClock
         public void SwitchMode(PomodoroMode mode, PomodoroSettings settings)
         {
             NormalizeSettings(settings);
+            if (IsRunning && !IsPaused)
+            {
+                Tick(DateTime.UtcNow, settings);
+            }
+
+            if (CurrentMode == PomodoroMode.Work)
+            {
+                CommitFocusData(DateTime.UtcNow);
+            }
+
             CurrentMode = mode;
             RemainingSeconds = GetModeLengthSeconds(CurrentMode, settings);
             IsRunning = false;
@@ -214,27 +268,9 @@ namespace TransparentClock
                 return;
             }
 
-            bool allowAutoStart = CurrentMode == PomodoroMode.Work
-                ? settings.AutoStartNextSession
-                : settings.AutoStartBreaks;
-
-            if (!allowAutoStart)
-            {
-                IsPaused = true;
-                LastTickUtc = utcNow;
-                return;
-            }
-
-            if (!IsPaused)
-            {
-                int elapsedSeconds = (int)Math.Floor((utcNow - LastTickUtc).TotalSeconds);
-                if (elapsedSeconds > 0)
-                {
-                    ApplyElapsedSeconds(elapsedSeconds, settings);
-                }
-            }
-
-            LastTickUtc = utcNow;
+            // Discard unfinished sessions after restart for data integrity.
+            ResetSession(settings);
+            return;
         }
 
         /// <summary>
@@ -259,33 +295,40 @@ namespace TransparentClock
                 return;
             }
 
-            int remaining = RemainingSeconds - elapsedSeconds;
-            while (remaining <= 0)
-            {
-                int overflow = -remaining;
-                CompleteCurrentMode(settings);
-                if (!IsRunning)
-                {
-                    RemainingSeconds = GetModeLengthSeconds(CurrentMode, settings);
-                    return;
-                }
-                remaining = RemainingSeconds - overflow;
-            }
+            var cursorUtc = LastTickUtc;
 
-            RemainingSeconds = Math.Max(0, remaining);
+            while (elapsedSeconds > 0)
+            {
+                int step = Math.Min(elapsedSeconds, RemainingSeconds);
+
+                if (CurrentMode == PomodoroMode.Work)
+                {
+                    BeginFocusSegment(cursorUtc);
+                }
+
+                RemainingSeconds -= step;
+                cursorUtc = cursorUtc.AddSeconds(step);
+                elapsedSeconds -= step;
+
+                if (RemainingSeconds <= 0)
+                {
+                    CompleteCurrentMode(settings, cursorUtc);
+                    if (!IsRunning)
+                    {
+                        return;
+                    }
+                }
+            }
         }
 
-        private void CompleteCurrentMode(PomodoroSettings settings)
+        private void CompleteCurrentMode(PomodoroSettings settings, DateTime completedAtUtc)
         {
+            var completedMode = CurrentMode;
             if (CurrentMode == PomodoroMode.Work)
             {
                 CompletedWorkSessions++;
-                int focusMinutes = Math.Max(1, settings.FocusMinutes);
-                FocusHistoryStorage.AddFocusMinutes(DateTime.Today, focusMinutes, DateTime.Now.Hour);
-
-                DateTime endTime = DateTime.Now;
-                DateTime startTime = endTime.AddMinutes(-focusMinutes);
-                FocusSessionStorage.AddSession(startTime, endTime);
+            EndFocusSegment(completedAtUtc);
+            CommitFocusData(completedAtUtc);
 
                 int interval = Math.Max(1, settings.SessionsBeforeLongBreak);
                 if (CompletedWorkSessions >= interval)
@@ -311,22 +354,144 @@ namespace TransparentClock
                     IsPaused = false;
                 }
 
+                RegisterCompletion(completedMode, false, false);
+
                 return;
+            }
+
+            bool cycleCompleted = CurrentMode == PomodoroMode.LongBreak;
+            bool sessionLimitReached = false;
+
+            if (cycleCompleted)
+            {
+                CompletedCycles++;
+                sessionLimitReached = settings.SessionLimit > 0 && CompletedCycles >= settings.SessionLimit;
             }
 
             CurrentMode = PomodoroMode.Work;
             RemainingSeconds = GetModeLengthSeconds(CurrentMode, settings);
 
+            if (sessionLimitReached)
+            {
+                IsRunning = false;
+                IsPaused = false;
+                RegisterCompletion(completedMode, cycleCompleted, true);
+                return;
+            }
+
             if (settings.AutoStartNextSession)
             {
                 IsRunning = true;
                 IsPaused = false;
+                ResetFocusTracking();
             }
             else
             {
                 IsRunning = false;
                 IsPaused = false;
             }
+
+            RegisterCompletion(completedMode, cycleCompleted, false);
+        }
+
+        private void CommitFocusData(DateTime commitUtc)
+        {
+            EndFocusSegment(commitUtc);
+
+            if (focusSegments.Count == 0)
+            {
+                ResetFocusTracking();
+                return;
+            }
+
+            int totalSeconds = 0;
+            foreach (var segment in focusSegments)
+            {
+                totalSeconds += Math.Max(0, (int)Math.Floor((segment.EndUtc - segment.StartUtc).TotalSeconds));
+            }
+
+            if (totalSeconds < 1)
+            {
+                ResetFocusTracking();
+                return;
+            }
+
+            var segmentsLocal = new System.Collections.Generic.List<(DateTime Start, DateTime End)>();
+            foreach (var segment in focusSegments)
+            {
+                segmentsLocal.Add((segment.StartUtc.ToLocalTime(), segment.EndUtc.ToLocalTime()));
+            }
+
+            FocusHistoryStorage.AddFocusSegments(segmentsLocal);
+
+            var startLocal = segmentsLocal[0].Start;
+            var endLocal = segmentsLocal[0].End;
+            foreach (var segment in segmentsLocal)
+            {
+                if (segment.Start < startLocal)
+                {
+                    startLocal = segment.Start;
+                }
+
+                if (segment.End > endLocal)
+                {
+                    endLocal = segment.End;
+                }
+            }
+
+            FocusSessionStorage.AddSession(startLocal, endLocal, totalSeconds, "Pomodoro");
+            ResetFocusTracking();
+        }
+
+        private void BeginFocusSegment(DateTime utcNow)
+        {
+            if (CurrentMode != PomodoroMode.Work)
+            {
+                return;
+            }
+
+            if (focusSegmentStartUtc.HasValue)
+            {
+                return;
+            }
+
+            focusSegmentStartUtc = utcNow;
+        }
+
+        private void EndFocusSegment(DateTime utcNow)
+        {
+            if (!focusSegmentStartUtc.HasValue)
+            {
+                return;
+            }
+
+            var startUtc = focusSegmentStartUtc.Value;
+            if (utcNow > startUtc)
+            {
+                focusSegments.Add(new FocusSegment(startUtc, utcNow));
+            }
+
+            focusSegmentStartUtc = null;
+        }
+
+        private void ResetSession(PomodoroSettings settings)
+        {
+            IsRunning = false;
+            IsPaused = false;
+            CurrentMode = PomodoroMode.Work;
+            CompletedWorkSessions = 0;
+            CompletedCycles = 0;
+            RemainingSeconds = GetModeLengthSeconds(CurrentMode, settings);
+            LastTickUtc = DateTime.UtcNow;
+            ResetFocusTracking();
+            completionSequence = 0;
+            lastNotifiedCompletionSequence = 0;
+        }
+
+        private void ResetFocusTracking()
+        {
+            focusSegmentStartUtc = null;
+            focusSegments.Clear();
         }
 
         private int GetModeLengthSeconds(PomodoroMode mode, PomodoroSettings settings)
@@ -345,6 +510,7 @@ namespace TransparentClock
             settings.ShortBreakMinutes = Math.Max(1, settings.ShortBreakMinutes);
             settings.LongBreakMinutes = Math.Max(1, settings.LongBreakMinutes);
             settings.SessionsBeforeLongBreak = Math.Max(1, settings.SessionsBeforeLongBreak);
+            settings.SessionLimit = Math.Max(0, settings.SessionLimit);
         }
 
         private void MigrateLegacySettingsIfMissing(PomodoroSettings settings)
@@ -360,7 +526,8 @@ namespace TransparentClock
                 settings.LongBreakMinutes == 15 &&
                 settings.SessionsBeforeLongBreak == 4 &&
                 settings.AutoStartNextSession == false &&
-                settings.AutoStartBreaks == false;
+                settings.AutoStartBreaks == false &&
+                settings.SessionLimit == 0;
 
             if (!settingsAreDefault)
             {
@@ -385,5 +552,56 @@ namespace TransparentClock
             settings.SessionsBeforeLongBreak = LongBreakInterval;
             settings.AutoStartNextSession = AutoStartNextSession;
         }
+
+        public bool TryConsumeCompletion(out PomodoroCompletionInfo info)
+        {
+            if (completionSequence == lastNotifiedCompletionSequence)
+            {
+                info = default;
+                return false;
+            }
+
+            lastNotifiedCompletionSequence = completionSequence;
+            info = lastCompletionInfo;
+            return true;
+        }
+
+        private void RegisterCompletion(PomodoroMode mode, bool cycleCompleted, bool sessionLimitReached)
+        {
+            completionSequence++;
+            lastCompletionInfo = new PomodoroCompletionInfo(
+                mode,
+                cycleCompleted,
+                sessionLimitReached,
+                CompletedCycles);
+        }
+
+        private readonly struct FocusSegment
+        {
+            public FocusSegment(DateTime startUtc, DateTime endUtc)
+            {
+                StartUtc = startUtc;
+                EndUtc = endUtc;
+            }
+
+            public DateTime StartUtc { get; }
+            public DateTime EndUtc { get; }
+        }
+    }
+
+    public readonly struct PomodoroCompletionInfo
+    {
+        public PomodoroCompletionInfo(PomodoroState.PomodoroMode mode, bool cycleCompleted, bool sessionLimitReached, int completedCycles)
+        {
+            Mode = mode;
+            CycleCompleted = cycleCompleted;
+            SessionLimitReached = sessionLimitReached;
+            CompletedCycles = completedCycles;
+        }
+
+        public PomodoroState.PomodoroMode Mode { get; }
+        public bool CycleCompleted { get; }
+        public bool SessionLimitReached { get; }
+        public int CompletedCycles { get; }
     }
 }

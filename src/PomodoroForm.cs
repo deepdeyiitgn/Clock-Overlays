@@ -23,6 +23,7 @@ public class PomodoroForm : Form
     private readonly NumericUpDown shortBreakMinutesUpDown;
     private readonly NumericUpDown longBreakMinutesUpDown;
     private readonly NumericUpDown longBreakIntervalUpDown;
+    private readonly NumericUpDown sessionLimitUpDown;
     private readonly CheckBox autoStartCheckBox;
     private readonly CheckBox autoStartBreaksCheckBox;
     private bool isInitializingSettings;
@@ -138,7 +139,7 @@ public class PomodoroForm : Form
         {
             Dock = DockStyle.Fill,
             ColumnCount = 2,
-            RowCount = 6,
+            RowCount = 7,
             Padding = new Padding(2, 2, 2, 2),
             AutoSize = true,
             AutoSizeMode = AutoSizeMode.GrowAndShrink,
@@ -146,7 +147,7 @@ public class PomodoroForm : Form
         };
         settingsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
         settingsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 7; i++)
         {
             settingsLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         }
@@ -162,6 +163,9 @@ public class PomodoroForm : Form
 
         var intervalLabel = CreateSettingsLabel("Sessions before long break");
         longBreakIntervalUpDown = CreateIntervalUpDown();
+
+        var sessionLimitLabel = CreateSettingsLabel("Session limit (0 = no limit)");
+        sessionLimitUpDown = CreateSessionLimitUpDown();
 
         autoStartCheckBox = new CheckBox
         {
@@ -187,9 +191,11 @@ public class PomodoroForm : Form
         settingsLayout.Controls.Add(longBreakMinutesUpDown, 1, 2);
         settingsLayout.Controls.Add(intervalLabel, 0, 3);
         settingsLayout.Controls.Add(longBreakIntervalUpDown, 1, 3);
-        settingsLayout.Controls.Add(autoStartCheckBox, 0, 4);
+        settingsLayout.Controls.Add(sessionLimitLabel, 0, 4);
+        settingsLayout.Controls.Add(sessionLimitUpDown, 1, 4);
+        settingsLayout.Controls.Add(autoStartCheckBox, 0, 5);
         settingsLayout.SetColumnSpan(autoStartCheckBox, 2);
-        settingsLayout.Controls.Add(autoStartBreaksCheckBox, 0, 5);
+        settingsLayout.Controls.Add(autoStartBreaksCheckBox, 0, 6);
         settingsLayout.SetColumnSpan(autoStartBreaksCheckBox, 2);
 
         var actionButtonsPanel = new TableLayoutPanel
@@ -220,7 +226,7 @@ public class PomodoroForm : Form
 
         startButton.Click += (_, __) =>
         {
-            State.Start(Settings);
+            State.StartSession(Settings);
             AppStateStorage.Save(Program.CurrentState);
             UpdateDisplay();
             UpdateButtons();
@@ -228,7 +234,7 @@ public class PomodoroForm : Form
 
         pauseButton.Click += (_, __) =>
         {
-            State.Pause(Settings);
+            State.PauseSession(Settings);
             AppStateStorage.Save(Program.CurrentState);
             UpdateDisplay();
             UpdateButtons();
@@ -236,7 +242,7 @@ public class PomodoroForm : Form
 
         resumeButton.Click += (_, __) =>
         {
-            State.Resume();
+            State.ResumeSession();
             AppStateStorage.Save(Program.CurrentState);
             UpdateDisplay();
             UpdateButtons();
@@ -244,7 +250,7 @@ public class PomodoroForm : Form
 
         stopButton.Click += (_, __) =>
         {
-            State.Stop(Settings);
+            State.StopSession(Settings);
             AppStateStorage.Save(Program.CurrentState);
             UpdateDisplay();
             UpdateButtons();
@@ -311,6 +317,7 @@ public class PomodoroForm : Form
             State.Tick(DateTime.UtcNow, Settings);
             UpdateDisplay();
             UpdateButtons();
+            HandleCompletionNotifications();
             progressBar.AdvancePhase();
         };
         uiTimer.Start();
@@ -327,6 +334,7 @@ public class PomodoroForm : Form
         shortBreakMinutesUpDown.ValueChanged += (_, __) => ApplySettingsFromUi();
         longBreakMinutesUpDown.ValueChanged += (_, __) => ApplySettingsFromUi();
         longBreakIntervalUpDown.ValueChanged += (_, __) => ApplySettingsFromUi();
+        sessionLimitUpDown.ValueChanged += (_, __) => ApplySettingsFromUi();
         autoStartCheckBox.CheckedChanged += (_, __) =>
         {
             if (isInitializingSettings)
@@ -358,6 +366,7 @@ public class PomodoroForm : Form
         shortBreakMinutesUpDown.Value = ClampToRange(Settings.ShortBreakMinutes, shortBreakMinutesUpDown.Minimum, shortBreakMinutesUpDown.Maximum);
         longBreakMinutesUpDown.Value = ClampToRange(Settings.LongBreakMinutes, longBreakMinutesUpDown.Minimum, longBreakMinutesUpDown.Maximum);
         longBreakIntervalUpDown.Value = ClampToRange(Settings.SessionsBeforeLongBreak, longBreakIntervalUpDown.Minimum, longBreakIntervalUpDown.Maximum);
+        sessionLimitUpDown.Value = ClampToRange(Settings.SessionLimit, sessionLimitUpDown.Minimum, sessionLimitUpDown.Maximum);
         autoStartCheckBox.Checked = Settings.AutoStartNextSession;
         autoStartBreaksCheckBox.Checked = Settings.AutoStartBreaks;
 
@@ -375,6 +384,7 @@ public class PomodoroForm : Form
         Settings.ShortBreakMinutes = (int)shortBreakMinutesUpDown.Value;
         Settings.LongBreakMinutes = (int)longBreakMinutesUpDown.Value;
         Settings.SessionsBeforeLongBreak = (int)longBreakIntervalUpDown.Value;
+        Settings.SessionLimit = (int)sessionLimitUpDown.Value;
 
         State.ApplySettings(Settings);
 
@@ -502,6 +512,36 @@ public class PomodoroForm : Form
         pauseButton.Enabled = running && !paused;
         resumeButton.Enabled = running && paused;
         stopButton.Enabled = running || State.RemainingSeconds > 0;
+    }
+
+    private void HandleCompletionNotifications()
+    {
+        if (!State.TryConsumeCompletion(out var completion))
+        {
+            return;
+        }
+
+        string title = completion.Mode switch
+        {
+            PomodoroState.PomodoroMode.Work => "Work complete",
+            PomodoroState.PomodoroMode.ShortBreak => "Short break complete",
+            PomodoroState.PomodoroMode.LongBreak => "Long break complete",
+            _ => "Session complete"
+        };
+
+        if (completion.SessionLimitReached)
+        {
+            PomodoroToast.Show(title, $"Session limit reached ({completion.CompletedCycles}).");
+            return;
+        }
+
+        string nextLabel = GetModeText(State.CurrentMode);
+        string nextState = State.IsRunning ? "started" : "ready";
+        string message = completion.CycleCompleted
+            ? $"Cycle {completion.CompletedCycles} complete. {nextLabel} {nextState}."
+            : $"{nextLabel} {nextState}.";
+
+        PomodoroToast.Show(title, message);
     }
 
     private void UpdateModeButtonsAppearance()
@@ -638,6 +678,17 @@ public class PomodoroForm : Form
         {
             Minimum = 1,
             Maximum = 12,
+            Width = 70,
+            Anchor = AnchorStyles.Right
+        };
+    }
+
+    private static NumericUpDown CreateSessionLimitUpDown()
+    {
+        return new NumericUpDown
+        {
+            Minimum = 0,
+            Maximum = 20,
             Width = 70,
             Anchor = AnchorStyles.Right
         };

@@ -10,9 +10,9 @@
     <ApplicationIcon>Clock.ico</ApplicationIcon>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <SelfContained>true</SelfContained>
-    <PublishSingleFile>true</PublishSingleFile>
-    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <SelfContained>false</SelfContained>
+    <PublishSingleFile>false</PublishSingleFile>
+    <IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
     <PublishReadyToRun>true</PublishReadyToRun>
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
@@ -20,9 +20,14 @@
   <ItemGroup>
     <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="QRCoder" Version="1.4.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="SkiaSharp" Version="2.88.6" />
+    <PackageReference Include="Svg.Skia" Version="1.0.0.18" />
     <PackageReference Include="ZXing.Net" Version="0.16.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Clock.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

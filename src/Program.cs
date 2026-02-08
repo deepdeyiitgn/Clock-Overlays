@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -13,6 +14,7 @@ namespace TransparentClock
         private static System.Threading.Timer? pomodoroAutoSaveTimer;
         public static TransparentClockForm? ClockForm { get; private set; }
         public static DashboardForm? DashboardForm { get; private set; }
+        private static PomodoroTrayForm? pomodoroTrayForm;
 
         public static readonly IReadOnlyDictionary<string, Color> ClockColors =
             new Dictionary<string, Color>(StringComparer.OrdinalIgnoreCase)
@@ -25,6 +27,23 @@ namespace TransparentClock
                 ["Pink"] = Color.HotPink,
                 ["Yellow"] = Color.Gold
             };
+
+        public static Icon GetAppIcon()
+        {
+            try
+            {
+                string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Clock.ico");
+                if (File.Exists(iconPath))
+                {
+                    return new Icon(iconPath);
+                }
+            }
+            catch
+            {
+            }
+
+            return Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application;
+        }
 
         [STAThread]
         static void Main()
@@ -124,9 +143,13 @@ namespace TransparentClock
 
         public static void ShowPomodoro()
         {
-            PomodoroForm? pomodoro = new PomodoroForm();
-            pomodoro.Show();
-            pomodoro.BringToFront();
+            if (pomodoroTrayForm == null || pomodoroTrayForm.IsDisposed)
+            {
+                pomodoroTrayForm = new PomodoroTrayForm();
+            }
+
+            pomodoroTrayForm.Show();
+            pomodoroTrayForm.BringToFront();
         }
 
         public static void ExitApplication()
@@ -179,6 +202,10 @@ namespace TransparentClock
             ClockForm.ApplyClockColor(ResolveClockColorFromState());
             ClockForm.ApplyClockFontFamily(CurrentState.ClockFontFamily);
             ClockForm.ApplyClockFontSize(CurrentState.ClockFontSize);
+            ClockForm.ApplyClockBorder(
+                CurrentState.ClockBorderEnabled,
+                ResolveClockBorderColorFromState(),
+                CurrentState.ClockBorderWidth);
             if (CurrentState.ClockUseCustomPosition &&
                 CurrentState.ClockCustomPositionX.HasValue &&
                 CurrentState.ClockCustomPositionY.HasValue)
@@ -202,6 +229,16 @@ namespace TransparentClock
             }
 
             return ResolveClockColor(CurrentState.ClockColorName);
+        }
+
+        public static Color ResolveClockBorderColorFromState()
+        {
+            if (CurrentState.ClockBorderUseCustomColor && CurrentState.ClockBorderCustomColorArgb.HasValue)
+            {
+                return Color.FromArgb(CurrentState.ClockBorderCustomColorArgb.Value);
+            }
+
+            return ResolveClockColor(CurrentState.ClockBorderColorName);
         }
 
         public static string GetGreetingText()

@@ -16,7 +16,8 @@ public class MainForm : Form
     {
         this.clockForm = clockForm;
 
-        Text = "Clock-Overlays";
+        Text = $"{AppInfo.AppName} — {AppInfo.DisplayVersion}";
+        Icon = Program.GetAppIcon();
         Size = new Size(420, 320);
         StartPosition = FormStartPosition.CenterScreen;
 

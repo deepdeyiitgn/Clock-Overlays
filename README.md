@@ -1,14 +1,16 @@
 # Transparent Clock / Clock Overlays
 
-**v05.02.2026 (BETA)** — Professional Windows Desktop Productivity Tool
+**v08.02.2026 (Stable)** — Professional Windows Desktop Productivity Tool
 
 A lightweight, always-on-top clock overlay with advanced focus tracking, productivity dashboard, and integrated utilities. Pure local storage, zero cloud tracking, 100% user privacy.
 
-> ⚠️ **BETA Release**: Features and behavior may change. Report issues on [GitHub](https://github.com/deepdeyiitgn/Clock-Overlays/issues).
+> ✅ **Final Stable Release**: v08.02.2026 is complete and production-ready. Only small fixes may follow.
 
 ## Overview
 
 Transparent Clock combines a persistent overlay clock with a powerful companion dashboard. Track daily focus patterns, manage tasks, run Pomodoro cycles, and scan/generate QR codes—all stored locally on your machine.
+
+**Offline-first:** Core features run fully offline with local storage only.
 
 **Perfect for**: Students, developers, remote workers, focus-seeking professionals, and anyone tracking productivity.
 
@@ -24,33 +26,35 @@ Transparent Clock combines a persistent overlay clock with a powerful companion 
 - **Focus History & Analytics** — 7-day rolling history with time range selectors (Last 7/30 Days, 6/12 Months)
 - **Smart Statistics** — Average daily focus, best/worst focus slots, daily distribution analysis
 - **Focus Graphs** — Line graphs showing focus trends + 24-hour heatmaps for pattern recognition
-- **Heatmap Visualization** — Daily focus heatmap (beta, in-progress; cell interaction coming soon)
+- **Heatmap Visualization** — Daily focus heatmap for quick pattern review
 - **Pomodoro System** — Work, short break, and long break cycles with auto-cycle progression and sound notifications
 - **To-Do List** — Full task management with date range filtering, completion tracking, bulk operations
 
-### Utilities Suite (Beta)
+### Utilities Suite (Online-assisted)
 - **QR Code Generator** — Create 13+ QR code types (URL, WiFi, Email, vCard, Calendar, UPI, Phone, SMS, WhatsApp, Location, Cryptocurrency, Bluetooth, and more)
 - **QR Export Options** — PNG, JPG, SVG, PDF, HEIC formats with embedded QuickLink logo and metadata
 - **QR Code Scanner** — Scan saved QR images with drag-drop support, automatic type detection, and payload preview
 - **QuickLink URL Shortener** — Generate short URLs with API key management, result caching, and error handling
 - **Smart QR Detection** — Auto-detects QR type and extracts structured data (WiFi credentials, contact info, etc.)
 
+*Utilities note:* QR generation, QR scanning, and QuickLink shortening require an internet connection.
+
 ### System & Privacy
 - **100% Local Storage** — All data stays on your machine (settings, focus history, to-do items)
 - **Zero Tracking** — No telemetry, analytics, or external data collection
 - **Logo Caching** — QuickLink logo downloaded once and cached locally for offline operation
-- **Version Awareness** — Built-in update notifications for new beta releases
+- **Version Awareness** — Built-in update notifications for new stable releases
 
 ## Installation (Windows)
 
 ### For End Users (Recommended)
-1. Download the latest installer: [TransparentClock-v05.02.2026-Beta-Setup.exe](https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v05.02.2026)
+1. Download the latest installer: [TransparentClock-Setup-v08.02.2026-Stable.exe](https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026)
 2. Run the installer
 3. Select installation directory
 4. Optionally create desktop shortcut
 5. Launch application
 
-**System Requirements**: Windows 10/11, .NET 8 Runtime (included in installer)
+**System Requirements**: Windows 10/11, .NET 8 Desktop Runtime (x64)
 
 ### For Developers
 Requirements: [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
@@ -64,8 +68,8 @@ dotnet run
 ## System Requirements
 - **OS**: Windows 10 / 11 (x64)
 - **RAM**: 4 GB recommended
-- **Storage**: ~500 MB (self-contained .NET 8 runtime included)
-- **Framework**: .NET 8 (bundled in installer)
+- **Storage**: ~500 MB (plus .NET 8 Desktop Runtime)
+- **Framework**: .NET 8 Desktop Runtime (x64)
 
 ## Local Data & Privacy
 All user data stored locally at:
@@ -80,17 +84,15 @@ All user data stored locally at:
 
 ✅ **No cloud sync**  
 ✅ **No tracking or telemetry**  
-✅ **No internet required** (except optional QuickLink API for URL shortening)  
+✅ **No internet required** for core features (utilities are optional and online-assisted)  
 ✅ **Full user control**
 
-## Beta Notice
+## Release Status
 
-**Transparent Clock is currently in BETA.** Features and interfaces may change as the product evolves. We welcome feedback and bug reports via [GitHub Issues](https://github.com/deepdeyiitgn/Clock-Overlays/issues).
+**Transparent Clock v08.02.2026 (Stable)** is the final stable release. Core features are complete and stable.
 
 **Known Limitations**:
-- Heatmap visualization still in development
-- Some focus graph edge cases may cause display artifacts
-- QR code customization (gradient, eye styles, logo selection) deferred to stable release
+- HEIC export falls back to JPEG (system codec limitation)
 
 **Supported Platforms**: Windows 10 (21H2+), Windows 11
 
@@ -112,6 +114,18 @@ Built with:
 ## Author
 
 **Deep Dey** — Created January 2026
+
+---
+
+## Previous Versions
+
+- v08.02.2026 (Stable)
+- v05.02.2026
+- v04.02.2026
+- v03.02.2026
+- v02.02.2026
+- v01.02.2026
+- v29.01.2026 (Previous Stable Release)
 
 ---
 

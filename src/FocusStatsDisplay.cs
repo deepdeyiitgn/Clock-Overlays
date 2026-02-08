@@ -12,10 +12,10 @@ namespace TransparentClock
     /// </summary>
     public class FocusStatsDisplay : FlowLayoutPanel
     {
-        private static readonly Color StatBackground = Color.FromArgb(45, 45, 45);
-        private static readonly Color StatText = Color.FromArgb(220, 220, 220);
-        private static readonly Color StatLabel = Color.FromArgb(120, 120, 120);
-        private static readonly Font StatFont = new Font("Segoe UI", 10F, FontStyle.Regular);
+        private static readonly Color StatBackground = Color.White;
+        private static readonly Color StatText = Color.FromArgb(50, 50, 50);
+        private static readonly Color StatLabel = Color.FromArgb(110, 110, 110);
+        private static readonly Font StatFont = new Font("Segoe UI", 10F, FontStyle.Bold);
         private static readonly Font StatLabelFont = new Font("Segoe UI", 9F, FontStyle.Regular);
 
         private Label? averageLabel;
@@ -55,10 +55,11 @@ namespace TransparentClock
             var card = new Panel
             {
                 BackColor = StatBackground,
-                Width = 160,
-                Height = 120,
+                Width = 180,
+                Height = 110,
                 Margin = new Padding(0, 0, 10, 0),
-                Padding = new Padding(12)
+                Padding = new Padding(12),
+                BorderStyle = BorderStyle.FixedSingle
             };
 
             var layout = new TableLayoutPanel

@@ -73,6 +73,31 @@ namespace TransparentClock
         public string ClockFontFamily { get; set; } = "Segoe UI";
 
         /// <summary>
+        /// Enables the clock border.
+        /// </summary>
+        public bool ClockBorderEnabled { get; set; }
+
+        /// <summary>
+        /// Selected clock border color name (e.g., "White", "Red").
+        /// </summary>
+        public string ClockBorderColorName { get; set; } = "White";
+
+        /// <summary>
+        /// Indicates if a custom clock border color is in use.
+        /// </summary>
+        public bool ClockBorderUseCustomColor { get; set; }
+
+        /// <summary>
+        /// Custom clock border color stored as ARGB integer.
+        /// </summary>
+        public int? ClockBorderCustomColorArgb { get; set; }
+
+        /// <summary>
+        /// Clock border width in pixels (base size).
+        /// </summary>
+        public int ClockBorderWidth { get; set; } = 2;
+
+        /// <summary>
         /// Clock position preset (Top Left, Top Right, Bottom Left, Bottom Right).
         /// </summary>
         public string ClockPosition { get; set; } = "Top Right";
@@ -187,6 +212,11 @@ namespace TransparentClock
                 ClockCustomColorArgb = null,
                 ClockFontSize = 20f,
                 ClockFontFamily = "Segoe UI",
+                ClockBorderEnabled = false,
+                ClockBorderColorName = "White",
+                ClockBorderUseCustomColor = false,
+                ClockBorderCustomColorArgb = null,
+                ClockBorderWidth = 2,
                 ClockPosition = "Top Right",
                 ClockUseCustomPosition = false,
                 ClockCustomPositionX = null,

@@ -85,7 +85,7 @@ public class PositionControllerForm : Form
         return btn;
     }
 
-    private void Move(int dx, int dy)
+    private new void Move(int dx, int dy)
     {
         target.Location = new Point(
             target.Location.X + dx,

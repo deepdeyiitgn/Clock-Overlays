@@ -24,8 +24,18 @@ namespace TransparentClock
         private readonly ComboBox fontFamilyComboBox;
         private readonly ComboBox colorComboBox;
         private readonly Button customColorButton;
+        private readonly CheckBox borderEnabledCheckBox;
+        private readonly ComboBox borderColorComboBox;
+        private readonly NumericUpDown borderWidthInput;
         private readonly ComboBox positionComboBox;
+        private readonly Button clockSaveButton;
+        private readonly Button clockResetButton;
+        private readonly Button clockHardResetButton;
         private readonly Label greetingLabel;
+
+        private bool isClockSettingsLoading;
+        private ClockSettings savedClockSettings = new ClockSettings();
+        private ClockSettings pendingClockSettings = new ClockSettings();
 
         private readonly TextBox profileNameTextBox;
         private readonly ComboBox profileGenderComboBox;
@@ -53,7 +63,8 @@ namespace TransparentClock
 
         public DashboardForm()
         {
-            Text = "Transparent Clock";
+            Text = $"{AppInfo.AppName} — {AppInfo.DisplayVersion}";
+            Icon = Program.GetAppIcon();
             StartPosition = FormStartPosition.CenterScreen;
             Size = new Size(640, 460);
             Font = BaseFont;
@@ -72,6 +83,7 @@ namespace TransparentClock
             var historyTab = new TabPage("History") { Padding = new Padding(14), BackColor = AppBackground };
             var focusHistoryTab = new TabPage("Focus Insights") { Padding = new Padding(14), BackColor = AppBackground };
             var utilitiesTab = UtilitiesTabFactory.CreateUtilitiesTab();
+            var aboutTab = AboutTabFactory.CreateAboutTab();
 
             tabs.TabPages.Add(clockTab);
             tabs.TabPages.Add(pomodoroTab);
@@ -81,6 +93,7 @@ namespace TransparentClock
             tabs.TabPages.Add(historyTab);
             tabs.TabPages.Add(focusHistoryTab);
             tabs.TabPages.Add(utilitiesTab);
+            tabs.TabPages.Add(aboutTab);
 
             Controls.Add(tabs);
 
@@ -95,10 +108,14 @@ namespace TransparentClock
                 Dock = DockStyle.Fill,
                 Padding = new Padding(10),
                 ColumnCount = 2,
-                RowCount = 8
+                RowCount = 12
             };
             clockLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
             clockLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            clockLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            clockLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            clockLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            clockLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             clockLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             clockLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             clockLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -133,10 +150,13 @@ namespace TransparentClock
             };
             clockEnabledCheckBox.CheckedChanged += (_, __) =>
             {
-                Program.CurrentState.ClockEnabled = clockEnabledCheckBox.Checked;
-                clockForm.ApplyClockEnabled(clockEnabledCheckBox.Checked);
-                clockForm.RefreshClockToggleText();
-                AppStateStorage.Save(Program.CurrentState);
+                if (isClockSettingsLoading)
+                {
+                    return;
+                }
+
+                pendingClockSettings.ClockEnabled = clockEnabledCheckBox.Checked;
+                ApplyClockSettingsToOverlay(pendingClockSettings);
             };
 
             var fontFamilyLabel = new Label { Text = "Font", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
@@ -148,9 +168,13 @@ namespace TransparentClock
             {
                 if (fontFamilyComboBox.SelectedItem is string family)
                 {
-                    Program.CurrentState.ClockFontFamily = family;
-                    clockForm.ApplyClockFontFamily(family);
-                    AppStateStorage.Save(Program.CurrentState);
+                    if (isClockSettingsLoading)
+                    {
+                        return;
+                    }
+
+                    pendingClockSettings.ClockFontFamily = family;
+                    ApplyClockSettingsToOverlay(pendingClockSettings);
                 }
             };
 
@@ -165,9 +189,13 @@ namespace TransparentClock
             };
             fontSizeTrackBar.ValueChanged += (_, __) =>
             {
-                Program.CurrentState.ClockFontSize = fontSizeTrackBar.Value;
-                clockForm.ApplyClockFontSize(Program.CurrentState.ClockFontSize);
-                AppStateStorage.Save(Program.CurrentState);
+                if (isClockSettingsLoading)
+                {
+                    return;
+                }
+
+                pendingClockSettings.ClockFontSize = fontSizeTrackBar.Value;
+                ApplyClockSettingsToOverlay(pendingClockSettings);
             };
 
             var colorLabel = new Label { Text = "Color", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
@@ -183,18 +211,17 @@ namespace TransparentClock
             customColorButton.Click += (_, __) =>
             {
                 using var dialog = new ColorDialog();
-                if (Program.CurrentState.ClockCustomColorArgb.HasValue)
+                if (pendingClockSettings.ClockCustomColorArgb.HasValue)
                 {
-                    dialog.Color = Color.FromArgb(Program.CurrentState.ClockCustomColorArgb.Value);
+                    dialog.Color = Color.FromArgb(pendingClockSettings.ClockCustomColorArgb.Value);
                 }
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    Program.CurrentState.ClockUseCustomColor = true;
-                    Program.CurrentState.ClockCustomColorArgb = dialog.Color.ToArgb();
+                    pendingClockSettings.ClockUseCustomColor = true;
+                    pendingClockSettings.ClockCustomColorArgb = dialog.Color.ToArgb();
                     colorComboBox.SelectedItem = "Custom";
-                    clockForm.ApplyClockColor(dialog.Color);
-                    AppStateStorage.Save(Program.CurrentState);
+                    ApplyClockSettingsToOverlay(pendingClockSettings);
                 }
             };
 
@@ -202,23 +229,26 @@ namespace TransparentClock
             {
                 if (colorComboBox.SelectedItem is string name)
                 {
+                    if (isClockSettingsLoading)
+                    {
+                        return;
+                    }
+
                     if (string.Equals(name, "Custom", StringComparison.OrdinalIgnoreCase))
                     {
-                        Program.CurrentState.ClockUseCustomColor = true;
-                        if (Program.CurrentState.ClockCustomColorArgb.HasValue)
+                        pendingClockSettings.ClockUseCustomColor = true;
+                        if (pendingClockSettings.ClockCustomColorArgb.HasValue)
                         {
-                            var color = Color.FromArgb(Program.CurrentState.ClockCustomColorArgb.Value);
-                            clockForm.ApplyClockColor(color);
+                            var color = Color.FromArgb(pendingClockSettings.ClockCustomColorArgb.Value);
+                            ApplyClockSettingsToOverlay(pendingClockSettings);
                         }
                     }
                     else
                     {
-                        Program.CurrentState.ClockUseCustomColor = false;
-                        Program.CurrentState.ClockColorName = name;
-                        clockForm.ApplyClockColor(Program.ResolveClockColor(name));
+                        pendingClockSettings.ClockUseCustomColor = false;
+                        pendingClockSettings.ClockColorName = name;
+                        ApplyClockSettingsToOverlay(pendingClockSettings);
                     }
-
-                    AppStateStorage.Save(Program.CurrentState);
                 }
             };
 
@@ -232,6 +262,108 @@ namespace TransparentClock
             colorPanel.Controls.Add(colorComboBox);
             colorPanel.Controls.Add(customColorButton);
 
+            borderEnabledCheckBox = new CheckBox
+            {
+                Text = "Enable Border",
+                Checked = Program.CurrentState.ClockBorderEnabled,
+                AutoSize = true,
+                Margin = new Padding(0, 0, 0, 8)
+            };
+            borderEnabledCheckBox.CheckedChanged += (_, __) =>
+            {
+                if (isClockSettingsLoading)
+                {
+                    return;
+                }
+
+                pendingClockSettings.ClockBorderEnabled = borderEnabledCheckBox.Checked;
+                ApplyClockSettingsToOverlay(pendingClockSettings);
+            };
+
+            var borderColorLabel = new Label { Text = "Border Color", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
+            borderColorComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 140 };
+            foreach (var name in Program.ClockColors.Keys.OrderBy(k => k))
+            {
+                borderColorComboBox.Items.Add(name);
+            }
+            borderColorComboBox.Items.Add("Custom");
+            borderColorComboBox.SelectedItem = Program.CurrentState.ClockBorderUseCustomColor
+                ? "Custom"
+                : Program.CurrentState.ClockBorderColorName;
+
+            var borderCustomColorButton = new Button { Text = "Pick", Width = 60 };
+            borderCustomColorButton.Click += (_, __) =>
+            {
+                using var dialog = new ColorDialog();
+                if (pendingClockSettings.ClockBorderCustomColorArgb.HasValue)
+                {
+                    dialog.Color = Color.FromArgb(pendingClockSettings.ClockBorderCustomColorArgb.Value);
+                }
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    pendingClockSettings.ClockBorderUseCustomColor = true;
+                    pendingClockSettings.ClockBorderCustomColorArgb = dialog.Color.ToArgb();
+                    borderColorComboBox.SelectedItem = "Custom";
+                    ApplyClockSettingsToOverlay(pendingClockSettings);
+                }
+            };
+
+            borderColorComboBox.SelectedIndexChanged += (_, __) =>
+            {
+                if (borderColorComboBox.SelectedItem is string name)
+                {
+                    if (isClockSettingsLoading)
+                    {
+                        return;
+                    }
+
+                    if (string.Equals(name, "Custom", StringComparison.OrdinalIgnoreCase))
+                    {
+                        pendingClockSettings.ClockBorderUseCustomColor = true;
+                        if (pendingClockSettings.ClockBorderCustomColorArgb.HasValue)
+                        {
+                            ApplyClockSettingsToOverlay(pendingClockSettings);
+                        }
+                    }
+                    else
+                    {
+                        pendingClockSettings.ClockBorderUseCustomColor = false;
+                        pendingClockSettings.ClockBorderColorName = name;
+                        ApplyClockSettingsToOverlay(pendingClockSettings);
+                    }
+                }
+            };
+
+            var borderColorPanel = new FlowLayoutPanel
+            {
+                FlowDirection = FlowDirection.LeftToRight,
+                AutoSize = true,
+                WrapContents = false,
+                Margin = new Padding(0, 0, 0, 8)
+            };
+            borderColorPanel.Controls.Add(borderColorComboBox);
+            borderColorPanel.Controls.Add(borderCustomColorButton);
+
+            var borderWidthLabel = new Label { Text = "Border Width", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
+            borderWidthInput = new NumericUpDown
+            {
+                Minimum = 1,
+                Maximum = 10,
+                Value = Math.Max(1, Math.Min(10, Program.CurrentState.ClockBorderWidth)),
+                Width = 70
+            };
+            borderWidthInput.ValueChanged += (_, __) =>
+            {
+                if (isClockSettingsLoading)
+                {
+                    return;
+                }
+
+                pendingClockSettings.ClockBorderWidth = (int)borderWidthInput.Value;
+                ApplyClockSettingsToOverlay(pendingClockSettings);
+            };
+
             var positionLabel = new Label { Text = "Position", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
             positionComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 140 };
             positionComboBox.Items.AddRange(new object[] { "Top Left", "Top Right", "Bottom Right", "Bottom Left", "Custom" });
@@ -243,25 +375,95 @@ namespace TransparentClock
                     return;
                 }
 
+                if (isClockSettingsLoading)
+                {
+                    return;
+                }
+
                 if (string.Equals(position, "Custom", StringComparison.OrdinalIgnoreCase))
                 {
                     using var form = new PositionControllerForm(clockForm);
                     form.ShowDialog(this);
-                    Program.CurrentState.ClockUseCustomPosition = true;
-                    Program.CurrentState.ClockPosition = "Custom";
-                    Program.CurrentState.ClockCustomPositionX = clockForm.Location.X;
-                    Program.CurrentState.ClockCustomPositionY = clockForm.Location.Y;
-                    clockForm.ApplyClockCustomPosition(clockForm.Location.X, clockForm.Location.Y);
+                    pendingClockSettings.ClockUseCustomPosition = true;
+                    pendingClockSettings.ClockPosition = "Custom";
+                    pendingClockSettings.ClockCustomPositionX = clockForm.Location.X;
+                    pendingClockSettings.ClockCustomPositionY = clockForm.Location.Y;
+                    ApplyClockSettingsToOverlay(pendingClockSettings);
                 }
                 else
                 {
-                    Program.CurrentState.ClockUseCustomPosition = false;
-                    Program.CurrentState.ClockPosition = position;
-                    clockForm.ApplyClockPosition(position);
+                    pendingClockSettings.ClockUseCustomPosition = false;
+                    pendingClockSettings.ClockPosition = position;
+                    ApplyClockSettingsToOverlay(pendingClockSettings);
                 }
+            };
 
+            var clockButtonsPanel = new FlowLayoutPanel
+            {
+                FlowDirection = FlowDirection.LeftToRight,
+                AutoSize = true,
+                WrapContents = false,
+                Margin = new Padding(0, 6, 0, 0)
+            };
+
+            clockSaveButton = new Button
+            {
+                Text = "Save",
+                AutoSize = true,
+                BackColor = Color.FromArgb(66, 160, 100),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            clockSaveButton.FlatAppearance.BorderSize = 0;
+
+            clockResetButton = new Button
+            {
+                Text = "Reset",
+                AutoSize = true,
+                Margin = new Padding(6, 0, 0, 0)
+            };
+
+            clockHardResetButton = new Button
+            {
+                Text = "Hard Reset",
+                AutoSize = true,
+                Margin = new Padding(6, 0, 0, 0),
+                BackColor = Color.FromArgb(220, 90, 90),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            clockHardResetButton.FlatAppearance.BorderSize = 0;
+
+            clockSaveButton.Click += (_, __) =>
+            {
+                savedClockSettings = pendingClockSettings;
+                ApplyClockSettingsToState(savedClockSettings);
                 AppStateStorage.Save(Program.CurrentState);
             };
+
+            clockResetButton.Click += (_, __) =>
+            {
+                pendingClockSettings = savedClockSettings;
+                LoadClockSettingsIntoUi(savedClockSettings, true);
+            };
+
+            clockHardResetButton.Click += (_, __) =>
+            {
+                var result = MessageBox.Show(
+                    "This will reset all app data to factory defaults and close the app. Continue?",
+                    "Hard Reset",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    AppStateStorage.DeleteStateFile();
+                    Program.ExitApplication();
+                }
+            };
+
+            clockButtonsPanel.Controls.Add(clockSaveButton);
+            clockButtonsPanel.Controls.Add(clockResetButton);
+            clockButtonsPanel.Controls.Add(clockHardResetButton);
 
             clockLayout.Controls.Add(clockHeader, 0, 0);
             clockLayout.SetColumnSpan(clockHeader, 2);
@@ -275,11 +477,22 @@ namespace TransparentClock
             clockLayout.Controls.Add(fontSizeTrackBar, 1, 4);
             clockLayout.Controls.Add(colorLabel, 0, 5);
             clockLayout.Controls.Add(colorPanel, 1, 5);
-            clockLayout.Controls.Add(positionLabel, 0, 6);
-            clockLayout.Controls.Add(positionComboBox, 1, 6);
+            clockLayout.Controls.Add(borderEnabledCheckBox, 0, 6);
+            clockLayout.SetColumnSpan(borderEnabledCheckBox, 2);
+            clockLayout.Controls.Add(borderColorLabel, 0, 7);
+            clockLayout.Controls.Add(borderColorPanel, 1, 7);
+            clockLayout.Controls.Add(borderWidthLabel, 0, 8);
+            clockLayout.Controls.Add(borderWidthInput, 1, 8);
+            clockLayout.Controls.Add(positionLabel, 0, 9);
+            clockLayout.Controls.Add(positionComboBox, 1, 9);
+            clockLayout.Controls.Add(clockButtonsPanel, 1, 10);
 
             clockCard.Controls.Add(clockLayout);
             clockTab.Controls.Add(clockCard);
+
+            savedClockSettings = CaptureClockSettingsFromState(Program.CurrentState);
+            pendingClockSettings = savedClockSettings;
+            LoadClockSettingsIntoUi(savedClockSettings, true);
 
             var pomodoroCard = CreateCardPanel();
             var pomodoroLayout = new TableLayoutPanel
@@ -590,7 +803,7 @@ namespace TransparentClock
             };
             sessionHistoryListView.Columns.Add("Date", 110);
             sessionHistoryListView.Columns.Add("Time", 80);
-            sessionHistoryListView.Columns.Add("Minutes", 80);
+            sessionHistoryListView.Columns.Add("Duration", 90);
 
             historyLayout.Controls.Add(historyHeader, 0, 0);
             historyLayout.Controls.Add(sessionHistoryListView, 0, 1);
@@ -634,7 +847,7 @@ namespace TransparentClock
                 FlowDirection = FlowDirection.LeftToRight,
                 AutoSize = true,
                 WrapContents = false,
-                Margin = new Padding(0, 0, 0, 10)
+                Margin = new Padding(0, 0, 0, 6)
             };
 
             var timeRangeLabel = new Label
@@ -643,13 +856,14 @@ namespace TransparentClock
                 AutoSize = true,
                 Font = SectionFont,
                 ForeColor = SubtleText,
-                Margin = new Padding(0, 6, 8, 0)
+                Margin = new Padding(0, 4, 6, 0)
             };
 
             focusTimeRangeComboBox = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 140
+                Width = 150,
+                Margin = new Padding(0, 2, 0, 0)
             };
             foreach (var (range, displayName) in FocusTimeRangeFilter.GetAllOptions())
             {
@@ -675,7 +889,7 @@ namespace TransparentClock
                 AutoSize = true,
                 Font = SectionFont,
                 ForeColor = SubtleText,
-                Margin = new Padding(0, 6, 8, 0)
+                Margin = new Padding(0, 4, 6, 0)
             };
 
             focusDayPicker = new FocusDatePicker
@@ -684,7 +898,7 @@ namespace TransparentClock
                 Margin = new Padding(0, 0, 0, 0)
             };
             breakdownTopPanel.Controls.Add(breakdownHeader);
-            breakdownTopPanel.Controls.Add(new Label { Text = "Day", AutoSize = true, Margin = new Padding(0, 6, 6, 0) });
+            breakdownTopPanel.Controls.Add(new Label { Text = "Day", AutoSize = true, Margin = new Padding(0, 4, 6, 0) });
             breakdownTopPanel.Controls.Add(focusDayPicker);
 
             focusBarGraph = new FocusBarGraph
@@ -739,6 +953,16 @@ namespace TransparentClock
                 RefreshSessionHistoryList();
             };
             focusRefreshTimer.Start();
+
+            AddTabFooter(clockTab);
+            AddTabFooter(pomodoroTab);
+            AddTabFooter(todoTab);
+            AddTabFooter(profileTab);
+            AddTabFooter(settingsTab);
+            AddTabFooter(historyTab);
+            AddTabFooter(focusHistoryTab);
+            AddTabFooter(utilitiesTab);
+            AddTabFooter(aboutTab);
         }
 
         private static Panel CreateCardPanel()
@@ -750,6 +974,202 @@ namespace TransparentClock
                 Padding = new Padding(16),
                 Margin = new Padding(8)
             };
+        }
+
+        private void AddTabFooter(TabPage tab)
+        {
+            var footer = new Label
+            {
+                Text = $"© {DateTime.Now.Year} Deep Dey | All Right Reserved | Quicklink x Transperent Clock",
+                Dock = DockStyle.Bottom,
+                Height = 24,
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = SubtleText,
+                BackColor = tab.BackColor,
+                Font = new Font("Segoe UI", 8F, FontStyle.Regular)
+            };
+
+            tab.Controls.Add(footer);
+            footer.BringToFront();
+        }
+
+        private ClockSettings CaptureClockSettingsFromState(AppState state)
+        {
+            return new ClockSettings
+            {
+                ClockEnabled = state.ClockEnabled,
+                ClockColorName = state.ClockColorName,
+                ClockUseCustomColor = state.ClockUseCustomColor,
+                ClockCustomColorArgb = state.ClockCustomColorArgb,
+                ClockFontSize = state.ClockFontSize,
+                ClockFontFamily = state.ClockFontFamily,
+                ClockBorderEnabled = state.ClockBorderEnabled,
+                ClockBorderColorName = state.ClockBorderColorName,
+                ClockBorderUseCustomColor = state.ClockBorderUseCustomColor,
+                ClockBorderCustomColorArgb = state.ClockBorderCustomColorArgb,
+                ClockBorderWidth = state.ClockBorderWidth,
+                ClockPosition = state.ClockPosition,
+                ClockUseCustomPosition = state.ClockUseCustomPosition,
+                ClockCustomPositionX = state.ClockCustomPositionX,
+                ClockCustomPositionY = state.ClockCustomPositionY
+            };
+        }
+
+        private void ApplyClockSettingsToState(ClockSettings settings)
+        {
+            Program.CurrentState.ClockEnabled = settings.ClockEnabled;
+            Program.CurrentState.ClockColorName = settings.ClockColorName;
+            Program.CurrentState.ClockUseCustomColor = settings.ClockUseCustomColor;
+            Program.CurrentState.ClockCustomColorArgb = settings.ClockCustomColorArgb;
+            Program.CurrentState.ClockFontSize = settings.ClockFontSize;
+            Program.CurrentState.ClockFontFamily = settings.ClockFontFamily;
+            Program.CurrentState.ClockBorderEnabled = settings.ClockBorderEnabled;
+            Program.CurrentState.ClockBorderColorName = settings.ClockBorderColorName;
+            Program.CurrentState.ClockBorderUseCustomColor = settings.ClockBorderUseCustomColor;
+            Program.CurrentState.ClockBorderCustomColorArgb = settings.ClockBorderCustomColorArgb;
+            Program.CurrentState.ClockBorderWidth = settings.ClockBorderWidth;
+            Program.CurrentState.ClockPosition = settings.ClockPosition;
+            Program.CurrentState.ClockUseCustomPosition = settings.ClockUseCustomPosition;
+            Program.CurrentState.ClockCustomPositionX = settings.ClockCustomPositionX;
+            Program.CurrentState.ClockCustomPositionY = settings.ClockCustomPositionY;
+
+            ApplyClockSettingsToOverlay(settings);
+        }
+
+        private void LoadClockSettingsIntoUi(ClockSettings settings, bool applyOverlay)
+        {
+            isClockSettingsLoading = true;
+
+            clockEnabledCheckBox.Checked = settings.ClockEnabled;
+
+            if (fontFamilyComboBox.Items.Contains(settings.ClockFontFamily))
+            {
+                fontFamilyComboBox.SelectedItem = settings.ClockFontFamily;
+            }
+            else if (fontFamilyComboBox.Items.Count > 0)
+            {
+                fontFamilyComboBox.SelectedIndex = 0;
+            }
+
+            fontSizeTrackBar.Value = Math.Max(fontSizeTrackBar.Minimum, Math.Min(fontSizeTrackBar.Maximum, (int)Math.Round(settings.ClockFontSize)));
+
+            if (settings.ClockUseCustomColor)
+            {
+                colorComboBox.SelectedItem = "Custom";
+            }
+            else if (colorComboBox.Items.Contains(settings.ClockColorName))
+            {
+                colorComboBox.SelectedItem = settings.ClockColorName;
+            }
+            else
+            {
+                colorComboBox.SelectedItem = "White";
+            }
+
+            borderEnabledCheckBox.Checked = settings.ClockBorderEnabled;
+            if (settings.ClockBorderUseCustomColor)
+            {
+                borderColorComboBox.SelectedItem = "Custom";
+            }
+            else if (borderColorComboBox.Items.Contains(settings.ClockBorderColorName))
+            {
+                borderColorComboBox.SelectedItem = settings.ClockBorderColorName;
+            }
+            else
+            {
+                borderColorComboBox.SelectedItem = "White";
+            }
+            borderWidthInput.Value = Math.Max(borderWidthInput.Minimum, Math.Min(borderWidthInput.Maximum, settings.ClockBorderWidth));
+
+            if (settings.ClockUseCustomPosition)
+            {
+                positionComboBox.SelectedItem = "Custom";
+            }
+            else if (positionComboBox.Items.Contains(settings.ClockPosition))
+            {
+                positionComboBox.SelectedItem = settings.ClockPosition;
+            }
+            else
+            {
+                positionComboBox.SelectedItem = "Top Right";
+            }
+
+            isClockSettingsLoading = false;
+
+            if (applyOverlay)
+            {
+                ApplyClockSettingsToOverlay(settings);
+            }
+        }
+
+        private void ApplyClockSettingsToOverlay(ClockSettings settings)
+        {
+            if (clockForm == null || clockForm.IsDisposed)
+            {
+                return;
+            }
+
+            clockForm.ApplyClockColor(ResolveClockColor(settings));
+            clockForm.ApplyClockFontFamily(settings.ClockFontFamily);
+            clockForm.ApplyClockFontSize(settings.ClockFontSize);
+            clockForm.ApplyClockBorder(
+                settings.ClockBorderEnabled,
+                ResolveClockBorderColor(settings),
+                settings.ClockBorderWidth);
+
+            if (settings.ClockUseCustomPosition &&
+                settings.ClockCustomPositionX.HasValue &&
+                settings.ClockCustomPositionY.HasValue)
+            {
+                clockForm.ApplyClockCustomPosition(
+                    settings.ClockCustomPositionX.Value,
+                    settings.ClockCustomPositionY.Value);
+            }
+            else
+            {
+                clockForm.ApplyClockPosition(settings.ClockPosition);
+            }
+
+            clockForm.ApplyClockEnabled(settings.ClockEnabled);
+        }
+
+        private static Color ResolveClockColor(ClockSettings settings)
+        {
+            if (settings.ClockUseCustomColor && settings.ClockCustomColorArgb.HasValue)
+            {
+                return Color.FromArgb(settings.ClockCustomColorArgb.Value);
+            }
+
+            return Program.ResolveClockColor(settings.ClockColorName);
+        }
+
+        private static Color ResolveClockBorderColor(ClockSettings settings)
+        {
+            if (settings.ClockBorderUseCustomColor && settings.ClockBorderCustomColorArgb.HasValue)
+            {
+                return Color.FromArgb(settings.ClockBorderCustomColorArgb.Value);
+            }
+
+            return Program.ResolveClockColor(settings.ClockBorderColorName);
+        }
+
+        private sealed class ClockSettings
+        {
+            public bool ClockEnabled { get; set; }
+            public string ClockColorName { get; set; } = "White";
+            public bool ClockUseCustomColor { get; set; }
+            public int? ClockCustomColorArgb { get; set; }
+            public float ClockFontSize { get; set; } = 20f;
+            public string ClockFontFamily { get; set; } = "Segoe UI";
+            public bool ClockBorderEnabled { get; set; }
+            public string ClockBorderColorName { get; set; } = "White";
+            public bool ClockBorderUseCustomColor { get; set; }
+            public int? ClockBorderCustomColorArgb { get; set; }
+            public int ClockBorderWidth { get; set; } = 2;
+            public string ClockPosition { get; set; } = "Top Right";
+            public bool ClockUseCustomPosition { get; set; }
+            public int? ClockCustomPositionX { get; set; }
+            public int? ClockCustomPositionY { get; set; }
         }
 
         private void OnTimeRangeChanged()
@@ -766,7 +1186,7 @@ namespace TransparentClock
         {
             focusHistoryPanel.Controls.Clear();
 
-            var entries = FocusHistoryStorage.GetLast7Days();
+            var entries = FocusHistoryStorage.GetAll();
             
             // Filter entries by current time range
             int dayCount = FocusTimeRangeFilter.GetDayCount(currentTimeRange);
@@ -835,11 +1255,14 @@ namespace TransparentClock
             {
                 string dateText = entry.EndTime.ToString("yyyy-MM-dd");
                 string timeText = entry.EndTime.ToString("HH:mm");
-                string minutesText = entry.DurationMinutes.ToString();
+                int seconds = Math.Max(0, entry.DurationSeconds);
+                int minutes = seconds / 60;
+                int leftoverSeconds = seconds % 60;
+                string durationText = $"{minutes:D2}:{leftoverSeconds:D2}";
 
                 var item = new ListViewItem(dateText);
                 item.SubItems.Add(timeText);
-                item.SubItems.Add(minutesText);
+                item.SubItems.Add(durationText);
                 sessionHistoryListView.Items.Add(item);
             }
         }

@@ -140,7 +140,9 @@ namespace TransparentClock
             if (string.IsNullOrWhiteSpace(username))
                 return "";
 
-            return platform.ToLowerInvariant() switch
+            string normalized = NormalizePlatform(platform);
+
+            return normalized switch
             {
                 "instagram" => $"https://instagram.com/{username}",
                 "facebook" => $"https://facebook.com/{username}",
@@ -153,6 +155,75 @@ namespace TransparentClock
                 "whatsapp" => $"https://wa.me/{username.Replace("+", "")}",
                 _ => username
             };
+        }
+
+        public static bool IsValidDateTime(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+
+            return DateTime.TryParse(value, out _);
+        }
+
+        private static string NormalizePlatform(string platform)
+        {
+            if (string.IsNullOrWhiteSpace(platform))
+            {
+                return string.Empty;
+            }
+
+            string normalized = platform.ToLowerInvariant();
+            normalized = normalized.Replace("(", string.Empty).Replace(")", string.Empty);
+            normalized = normalized.Replace("-", " ").Replace("_", " ");
+
+            if (normalized.Contains("twitter") || normalized.Contains("x"))
+            {
+                return "x";
+            }
+
+            if (normalized.Contains("linkedin"))
+            {
+                return "linkedin";
+            }
+
+            if (normalized.Contains("youtube"))
+            {
+                return "youtube";
+            }
+
+            if (normalized.Contains("instagram"))
+            {
+                return "instagram";
+            }
+
+            if (normalized.Contains("facebook"))
+            {
+                return "facebook";
+            }
+
+            if (normalized.Contains("snapchat"))
+            {
+                return "snapchat";
+            }
+
+            if (normalized.Contains("github"))
+            {
+                return "github";
+            }
+
+            if (normalized.Contains("telegram"))
+            {
+                return "telegram";
+            }
+
+            if (normalized.Contains("whatsapp"))
+            {
+                return "whatsapp";
+            }
+
+            return normalized.Trim();
         }
 
         /// <summary>

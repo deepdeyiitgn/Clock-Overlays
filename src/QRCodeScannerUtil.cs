@@ -4,7 +4,11 @@ using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.Text.Json;
+using ZXing;
+using ZXing.Common;
 
 namespace TransparentClock
 {
@@ -33,36 +37,143 @@ namespace TransparentClock
 
             if (string.IsNullOrWhiteSpace(filePath))
             {
-                LastErrorMessage = "Please select a valid image file.";
+                LastErrorMessage = "No QR code detected in this image";
                 return null;
             }
 
             if (!File.Exists(filePath))
             {
-                LastErrorMessage = "Image file not found.";
+                LastErrorMessage = "No QR code detected in this image";
                 return null;
             }
 
             try
             {
-                return ScanQrFromImageOnline(filePath);
-            }
-            catch (HttpRequestException)
-            {
-                LastErrorMessage = "Network connection required. Please connect to the internet and try again.";
-                return null;
-            }
-            catch (TaskCanceledException)
-            {
-                LastErrorMessage = "Network timeout. Please check your connection and try again.";
+                var local = ScanQrFromImageLocal(filePath);
+                if (!string.IsNullOrWhiteSpace(local))
+                {
+                    return local;
+                }
+
+                var online = ScanQrFromImageOnline(filePath);
+                if (!string.IsNullOrWhiteSpace(online))
+                {
+                    return online;
+                }
+
+                LastErrorMessage = "No QR code detected in this image";
                 return null;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"QR Scan Error: {ex.Message}");
-                LastErrorMessage = "Unable to scan QR code. Please try another image.";
+                LastErrorMessage = "No QR code detected in this image";
                 return null;
             }
+        }
+
+        private static string? ScanQrFromImageLocal(string filePath)
+        {
+            try
+            {
+                using var bitmap = new Bitmap(filePath);
+
+                var decoded = TryDecodeBitmap(bitmap, tryHarder: false, tryInverted: true);
+                if (!string.IsNullOrWhiteSpace(decoded))
+                {
+                    return decoded;
+                }
+
+                decoded = TryDecodeBitmap(bitmap, tryHarder: true, tryInverted: true);
+                if (!string.IsNullOrWhiteSpace(decoded))
+                {
+                    return decoded;
+                }
+
+                using var inverted = InvertBitmap(bitmap);
+                decoded = TryDecodeBitmap(inverted, tryHarder: true, tryInverted: true);
+                if (!string.IsNullOrWhiteSpace(decoded))
+                {
+                    return decoded;
+                }
+
+                if (bitmap.Width < 400 || bitmap.Height < 400)
+                {
+                    using var scaled = new Bitmap(bitmap, new Size(bitmap.Width * 2, bitmap.Height * 2));
+                    decoded = TryDecodeBitmap(scaled, tryHarder: true, tryInverted: true);
+                    if (!string.IsNullOrWhiteSpace(decoded))
+                    {
+                        return decoded;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Local QR decode failed: {ex.Message}");
+            }
+
+            return null;
+        }
+
+        private static string? TryDecodeBitmap(Bitmap bitmap, bool tryHarder, bool tryInverted)
+        {
+            var reader = new BarcodeReaderGeneric
+            {
+                AutoRotate = true,
+                Options = new DecodingOptions
+                {
+                    TryHarder = tryHarder,
+                    TryInverted = tryInverted,
+                    PossibleFormats = new List<BarcodeFormat> { BarcodeFormat.QR_CODE }
+                }
+            };
+
+            using var sourceBitmap = EnsureArgb32(bitmap);
+            var luminance = CreateLuminanceSource(sourceBitmap);
+            var result = reader.Decode(luminance);
+            return result?.Text;
+        }
+
+        private static Bitmap EnsureArgb32(Bitmap bitmap)
+        {
+            if (bitmap.PixelFormat == PixelFormat.Format32bppArgb)
+            {
+                return (Bitmap)bitmap.Clone();
+            }
+
+            return bitmap.Clone(new Rectangle(0, 0, bitmap.Width, bitmap.Height), PixelFormat.Format32bppArgb);
+        }
+
+        private static LuminanceSource CreateLuminanceSource(Bitmap bitmap)
+        {
+            var rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            var data = bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            try
+            {
+                int byteCount = Math.Abs(data.Stride) * bitmap.Height;
+                var buffer = new byte[byteCount];
+                Marshal.Copy(data.Scan0, buffer, 0, byteCount);
+                return new RGBLuminanceSource(buffer, bitmap.Width, bitmap.Height, RGBLuminanceSource.BitmapFormat.BGRA32);
+            }
+            finally
+            {
+                bitmap.UnlockBits(data);
+            }
+        }
+
+        private static Bitmap InvertBitmap(Bitmap source)
+        {
+            var inverted = new Bitmap(source.Width, source.Height);
+            for (int y = 0; y < source.Height; y++)
+            {
+                for (int x = 0; x < source.Width; x++)
+                {
+                    var pixel = source.GetPixel(x, y);
+                    inverted.SetPixel(x, y, Color.FromArgb(pixel.A, 255 - pixel.R, 255 - pixel.G, 255 - pixel.B));
+                }
+            }
+
+            return inverted;
         }
 
         private static string? ScanQrFromImageOnline(string filePath)
@@ -81,13 +192,11 @@ namespace TransparentClock
 
             if (!response.IsSuccessStatusCode)
             {
-                LastErrorMessage = "Online QR service error. Please try again later.";
                 return null;
             }
 
             if (string.IsNullOrWhiteSpace(responseText) || !responseText.TrimStart().StartsWith("["))
             {
-                LastErrorMessage = "Online QR service returned an invalid response.";
                 return null;
             }
 
@@ -97,21 +206,18 @@ namespace TransparentClock
                 var root = doc.RootElement;
                 if (root.ValueKind != JsonValueKind.Array || root.GetArrayLength() == 0)
                 {
-                    LastErrorMessage = "No QR code detected in this image";
                     return null;
                 }
 
                 var symbolArray = root[0].GetProperty("symbol");
                 if (symbolArray.ValueKind != JsonValueKind.Array || symbolArray.GetArrayLength() == 0)
                 {
-                    LastErrorMessage = "No QR code detected in this image";
                     return null;
                 }
 
                 var data = symbolArray[0].GetProperty("data").GetString();
                 if (string.IsNullOrWhiteSpace(data))
                 {
-                    LastErrorMessage = "No QR code detected in this image";
                     return null;
                 }
 
@@ -119,7 +225,6 @@ namespace TransparentClock
             }
             catch (JsonException)
             {
-                LastErrorMessage = "Online QR service returned invalid data.";
                 return null;
             }
         }
@@ -137,6 +242,8 @@ namespace TransparentClock
 
             if (decodedText.StartsWith("http://") || decodedText.StartsWith("https://"))
             {
+                if (TryDetectSocial(decodedText, out _))
+                    return QRType.SocialProfile;
                 if (decodedText.Contains("wa.me"))
                     return QRType.WhatsApp;
                 if (decodedText.Contains("maps.google.com") || decodedText.StartsWith("geo:"))
@@ -179,7 +286,7 @@ namespace TransparentClock
                     case QRType.URL:
                     case QRType.AppLink:
                     case QRType.SocialProfile:
-                        payload.Data["url"] = decodedText;
+                        ParseSocialProfile(decodedText, payload);
                         break;
 
                     case QRType.WiFi:
@@ -256,10 +363,12 @@ namespace TransparentClock
             if (parts.Length > 1)
             {
                 var queryParams = System.Web.HttpUtility.ParseQueryString(parts[1]);
-                if (!string.IsNullOrEmpty(queryParams["subject"]))
-                    payload.Data["subject"] = queryParams["subject"];
-                if (!string.IsNullOrEmpty(queryParams["body"]))
-                    payload.Data["body"] = queryParams["body"];
+                var subject = queryParams["subject"];
+                if (!string.IsNullOrEmpty(subject))
+                    payload.Data["subject"] = subject;
+                var body = queryParams["body"];
+                if (!string.IsNullOrEmpty(body))
+                    payload.Data["body"] = body;
             }
         }
 
@@ -281,8 +390,9 @@ namespace TransparentClock
             if (!string.IsNullOrEmpty(uri.Query))
             {
                 var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
-                if (!string.IsNullOrEmpty(queryParams["text"]))
-                    payload.Data["message"] = queryParams["text"];
+                var message = queryParams["text"];
+                if (!string.IsNullOrEmpty(message))
+                    payload.Data["message"] = message;
             }
         }
 
@@ -337,8 +447,9 @@ namespace TransparentClock
             if (parts.Length > 1)
             {
                 var queryParams = System.Web.HttpUtility.ParseQueryString(parts[1]);
-                if (!string.IsNullOrEmpty(queryParams["q"]))
-                    payload.Data["location"] = queryParams["q"];
+                var location = queryParams["q"];
+                if (!string.IsNullOrEmpty(location))
+                    payload.Data["location"] = location;
             }
         }
 
@@ -351,6 +462,55 @@ namespace TransparentClock
             payload.Data["name"] = queryParams["pn"] ?? "";
             payload.Data["description"] = queryParams["tn"] ?? "";
             payload.Data["amount"] = queryParams["am"] ?? "";
+        }
+
+        private static void ParseSocialProfile(string text, QRPayload payload)
+        {
+            payload.Data["url"] = text;
+
+            if (!Uri.TryCreate(text, UriKind.Absolute, out var uri))
+            {
+                return;
+            }
+
+            string host = uri.Host.ToLowerInvariant();
+            string platform = host switch
+            {
+                var h when h.Contains("instagram") => "Instagram",
+                var h when h.Contains("facebook") => "Facebook",
+                var h when h.Contains("youtube") => "YouTube",
+                var h when h.Contains("x.com") || h.Contains("twitter") => "X (Twitter)",
+                var h when h.Contains("linkedin") => "LinkedIn",
+                var h when h.Contains("github") => "GitHub",
+                var h when h.Contains("telegram") => "Telegram",
+                var h when h.Contains("whatsapp") => "WhatsApp",
+                var h when h.Contains("snapchat") => "Snapchat",
+                _ => "Social"
+            };
+
+            payload.Data["platform"] = platform;
+            payload.Data["username"] = uri.AbsolutePath.Trim('/');
+        }
+
+        private static bool TryDetectSocial(string text, out string platform)
+        {
+            platform = string.Empty;
+            if (!Uri.TryCreate(text, UriKind.Absolute, out var uri))
+            {
+                return false;
+            }
+
+            string host = uri.Host.ToLowerInvariant();
+            if (host.Contains("instagram") || host.Contains("facebook") || host.Contains("youtube") ||
+                host.Contains("twitter") || host.Contains("x.com") || host.Contains("linkedin") ||
+                host.Contains("github") || host.Contains("telegram") || host.Contains("whatsapp") ||
+                host.Contains("snapchat"))
+            {
+                platform = host;
+                return true;
+            }
+
+            return false;
         }
     }
 }

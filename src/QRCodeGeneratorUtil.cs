@@ -83,7 +83,7 @@ namespace TransparentClock
                     throw new ArgumentException("File path cannot be empty", nameof(filePath));
 
                 // Ensure directory exists
-                string directory = Path.GetDirectoryName(filePath);
+                string? directory = Path.GetDirectoryName(filePath);
                 if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
 

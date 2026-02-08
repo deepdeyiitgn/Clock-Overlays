@@ -101,7 +101,7 @@ namespace TransparentClock
         public async Task<QuickLinkSuccessResponse> ShortenUrlAsync(
             string apiKey,
             string longUrl,
-            string alias = null)
+            string? alias = null)
         {
             // Validate inputs
             if (apiKey == null)
@@ -120,7 +120,7 @@ namespace TransparentClock
             var requestBody = new
             {
                 longUrl,
-                alias = alias ?? (string)null
+                alias
             };
 
             var jsonContent = JsonSerializer.Serialize(requestBody, jsonOptions);
@@ -345,7 +345,7 @@ namespace TransparentClock
         /// The error status code from the QuickLink API (e.g., "INVALID_URL", "RATE_LIMIT_EXCEEDED").
         /// Null if the response could not be parsed or did not include a status.
         /// </summary>
-        public string ApiStatus { get; set; }
+        public string? ApiStatus { get; set; }
 
         /// <summary>
         /// Initializes a new instance with a message.
@@ -366,7 +366,7 @@ namespace TransparentClock
         /// <summary>
         /// Initializes a new instance with message, HTTP status code, and API status.
         /// </summary>
-        public QuickLinkApiException(string message, int statusCode, string apiStatus = null)
+        public QuickLinkApiException(string message, int statusCode, string? apiStatus = null)
             : base(message)
         {
             StatusCode = statusCode;

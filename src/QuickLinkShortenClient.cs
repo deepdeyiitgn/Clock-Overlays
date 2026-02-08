@@ -12,7 +12,7 @@ namespace TransparentClock
         private readonly HttpClient httpClient;
         private readonly JsonSerializerOptions jsonOptions;
 
-        public QuickLinkShortenClient(HttpClient httpClient = null)
+        public QuickLinkShortenClient(HttpClient? httpClient = null)
         {
             this.httpClient = httpClient ?? new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
             jsonOptions = new JsonSerializerOptions
@@ -22,7 +22,7 @@ namespace TransparentClock
             };
         }
 
-        public async Task<QuickLinkShortenResult> ShortenAsync(string apiKey, string longUrl, string alias)
+        public async Task<QuickLinkShortenResult> ShortenAsync(string apiKey, string longUrl, string? alias)
         {
             if (string.IsNullOrWhiteSpace(apiKey))
             {
@@ -83,7 +83,7 @@ namespace TransparentClock
                 }
 
                 // === Parse JSON safely ===
-                QuickLinkApiResponse apiResponse;
+                QuickLinkApiResponse? apiResponse;
                 try
                 {
                     apiResponse = JsonSerializer.Deserialize<QuickLinkApiResponse>(responseText, jsonOptions);
@@ -127,13 +127,18 @@ namespace TransparentClock
 
                 return QuickLinkShortenResult.Ok(new QuickLinkShortenSuccess
                 {
+                    Status = apiResponse.Status ?? "success",
                     ShortenedUrl = apiResponse.ShortenedUrl,
+                    DirectRedirectUrl = apiResponse.DirectRedirectUrl,
+                    LongUrl = apiResponse.LongUrl ?? longUrl,
+                    Alias = apiResponse.Alias ?? alias,
                     RemainingCredits = apiResponse.RemainingCredits ?? 0,
                     ExpiresAt = apiResponse.ExpiresAt
                 });
             }
             catch (HttpRequestException ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex);
                 return QuickLinkShortenResult.Fail(new QuickLinkShortenError
                 {
                     Code = "NETWORK_ERROR",
@@ -152,6 +157,7 @@ namespace TransparentClock
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex);
                 return QuickLinkShortenResult.Fail(new QuickLinkShortenError
                 {
                     Code = "UNKNOWN_ERROR",
@@ -219,11 +225,13 @@ namespace TransparentClock
     /// </summary>
     public class QuickLinkApiResponse
     {
-        public string Status { get; set; }
-        public string ShortenedUrl { get; set; }
-        public string DirectRedirectUrl { get; set; }
+        public string? Status { get; set; }
+        public string? ShortenedUrl { get; set; }
+        public string? DirectRedirectUrl { get; set; }
+        public string? LongUrl { get; set; }
+        public string? Alias { get; set; }
         public int? RemainingCredits { get; set; }
-        public string ExpiresAt { get; set; }
+        public string? ExpiresAt { get; set; }
     }
 
     /// <summary>
@@ -231,9 +239,13 @@ namespace TransparentClock
     /// </summary>
     public class QuickLinkShortenSuccess
     {
-        public string ShortenedUrl { get; set; }
+        public string? Status { get; set; }
+        public string? ShortenedUrl { get; set; }
+        public string? DirectRedirectUrl { get; set; }
+        public string? LongUrl { get; set; }
+        public string? Alias { get; set; }
         public int RemainingCredits { get; set; }
-        public string ExpiresAt { get; set; }
+        public string? ExpiresAt { get; set; }
     }
 
     /// <summary>
@@ -241,8 +253,8 @@ namespace TransparentClock
     /// </summary>
     public class QuickLinkShortenError
     {
-        public string Code { get; set; }
-        public string Message { get; set; }
+        public string? Code { get; set; }
+        public string? Message { get; set; }
         public int? StatusCode { get; set; }
     }
 
@@ -252,8 +264,8 @@ namespace TransparentClock
     public class QuickLinkShortenResult
     {
         public bool IsSuccess { get; set; }
-        public QuickLinkShortenSuccess Success { get; set; }
-        public QuickLinkShortenError Error { get; set; }
+        public QuickLinkShortenSuccess? Success { get; set; }
+        public QuickLinkShortenError? Error { get; set; }
 
         public static QuickLinkShortenResult Ok(QuickLinkShortenSuccess success)
         {

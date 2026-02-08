@@ -79,33 +79,44 @@ namespace TransparentClock
                 Margin = new Padding(0, 0, 0, 8)
             };
 
+            Label BuildFilterLabel(string text, int leftMargin) => new Label
+            {
+                Text = text,
+                AutoSize = true,
+                ForeColor = SubtleText,
+                Margin = new Padding(leftMargin, 6, 6, 0)
+            };
+
             filterComboBox = new ComboBox
             {
                 Items = { "All", "Completed", "Pending" },
                 SelectedIndex = 0,
                 Width = 100,
-                DropDownStyle = ComboBoxStyle.DropDownList
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Margin = new Padding(0, 2, 0, 0)
             };
 
             fromDatePicker = new DateTimePicker
             {
                 Value = DateTime.Today.AddDays(-7),
                 Format = DateTimePickerFormat.Short,
-                Width = 110
+                Width = 110,
+                Margin = new Padding(0, 2, 0, 0)
             };
 
             toDatePicker = new DateTimePicker
             {
                 Value = DateTime.Today.AddDays(7),
                 Format = DateTimePickerFormat.Short,
-                Width = 110
+                Width = 110,
+                Margin = new Padding(0, 2, 0, 0)
             };
 
-            filterPanel.Controls.Add(new Label { Text = "Status:", AutoSize = true, Margin = new Padding(0, 5, 5, 0) });
+            filterPanel.Controls.Add(BuildFilterLabel("Status", 0));
             filterPanel.Controls.Add(filterComboBox);
-            filterPanel.Controls.Add(new Label { Text = "From:", AutoSize = true, Margin = new Padding(10, 5, 5, 0) });
+            filterPanel.Controls.Add(BuildFilterLabel("From", 12));
             filterPanel.Controls.Add(fromDatePicker);
-            filterPanel.Controls.Add(new Label { Text = "To:", AutoSize = true, Margin = new Padding(10, 5, 5, 0) });
+            filterPanel.Controls.Add(BuildFilterLabel("To", 10));
             filterPanel.Controls.Add(toDatePicker);
 
             todoListView = new ListView
@@ -113,16 +124,29 @@ namespace TransparentClock
                 Dock = DockStyle.Fill,
                 View = View.Details,
                 FullRowSelect = true,
-                CheckBoxes = true
+                CheckBoxes = true,
+                HideSelection = false,
+                MultiSelect = false,
+                GridLines = true
             };
-            todoListView.Columns.Add("Task", 300);
-            todoListView.Columns.Add("Created", 100);
+            todoListView.Columns.Add("Task", 260, HorizontalAlignment.Left);
+            todoListView.Columns.Add("From", 90, HorizontalAlignment.Left);
+            todoListView.Columns.Add("To", 90, HorizontalAlignment.Left);
+            todoListView.Columns.Add("Created", 90, HorizontalAlignment.Left);
+
+            var rowImageList = new ImageList
+            {
+                ImageSize = new Size(1, 26)
+            };
+            todoListView.SmallImageList = rowImageList;
 
             // Add context menu for right-click
             var contextMenu = new ContextMenuStrip();
-            var editMenuItem = new ToolStripMenuItem("Edit Task", null, (_, __) => EditSelected());
-            var deleteMenuItem = new ToolStripMenuItem("Delete Task", null, (_, __) => DeleteSelected());
+            var editMenuItem = new ToolStripMenuItem("Edit", null, (_, __) => EditSelected());
+            var toggleMenuItem = new ToolStripMenuItem("Mark as Done", null, (_, __) => ToggleSelectedCompletion());
+            var deleteMenuItem = new ToolStripMenuItem("Delete", null, (_, __) => DeleteSelected());
             contextMenu.Items.Add(editMenuItem);
+            contextMenu.Items.Add(toggleMenuItem);
             contextMenu.Items.Add(deleteMenuItem);
             todoListView.ContextMenuStrip = contextMenu;
 
@@ -132,12 +156,12 @@ namespace TransparentClock
                 FlowDirection = FlowDirection.LeftToRight,
                 AutoSize = true,
                 WrapContents = false,
-                Margin = new Padding(0, 6, 0, 0)
+                Margin = new Padding(0, 4, 0, 0)
             };
 
             deleteButton = new Button { Text = "Delete Selected", AutoSize = true };
-            deleteCompletedButton = new Button { Text = "Delete Completed", AutoSize = true, Margin = new Padding(6, 0, 0, 0) };
-            deleteAllButton = new Button { Text = "Delete All", AutoSize = true, Margin = new Padding(6, 0, 0, 0) };
+            deleteCompletedButton = new Button { Text = "Delete Completed", AutoSize = true, Margin = new Padding(4, 0, 0, 0) };
+            deleteAllButton = new Button { Text = "Delete All", AutoSize = true, Margin = new Padding(4, 0, 0, 0) };
 
             actionPanel.Controls.Add(deleteButton);
             actionPanel.Controls.Add(deleteCompletedButton);
@@ -165,6 +189,20 @@ namespace TransparentClock
             };
 
             todoListView.ItemChecked += (_, e) => HandleItemChecked(e);
+            todoListView.MouseUp += (_, e) =>
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    var item = todoListView.GetItemAt(e.X, e.Y);
+                    if (item != null)
+                    {
+                        item.Selected = true;
+                        todoListView.FocusedItem = item;
+
+                        toggleMenuItem.Text = item.Checked ? "Undo" : "Mark as Done";
+                    }
+                }
+            };
             deleteButton.Click += (_, __) => DeleteSelected();
             filterComboBox.SelectedIndexChanged += (_, __) => ApplyFilters();
             fromDatePicker.ValueChanged += (_, __) => ApplyFilters();
@@ -311,6 +349,34 @@ namespace TransparentClock
         }
 
         /// <summary>
+        /// Toggles completion status for the selected task.
+        /// </summary>
+        private void ToggleSelectedCompletion()
+        {
+            if (todoListView.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            if (todoListView.SelectedItems[0].Tag is not Guid itemId)
+            {
+                return;
+            }
+
+            var todo = todos.FirstOrDefault(t => t.Id == itemId);
+            if (todo == null)
+            {
+                return;
+            }
+
+            todo.IsCompleted = !todo.IsCompleted;
+            todo.CompletedAt = todo.IsCompleted ? DateTime.UtcNow : null;
+
+            SaveToStorage();
+            RefreshUI();
+        }
+
+        /// <summary>
         /// Applies current filter settings and refreshes the UI.
         /// Safe and crash-proof; handles null/empty collections gracefully.
         /// </summary>
@@ -448,17 +514,22 @@ namespace TransparentClock
                         Checked = todo.IsCompleted
                     };
 
+                    listItem.SubItems.Add(todo.FromDate.ToString("yyyy-MM-dd"));
+                    listItem.SubItems.Add(todo.ToDate.ToString("yyyy-MM-dd"));
                     listItem.SubItems.Add(todo.CreatedAt.ToString("yyyy-MM-dd"));
 
                     // Apply visual style for completed items
                     if (todo.IsCompleted)
                     {
-                        listItem.ForeColor = Color.Gray;
+                        listItem.ForeColor = Color.FromArgb(130, 130, 130);
                         listItem.Font = new Font(listItem.Font, FontStyle.Strikeout);
                     }
 
                     todoListView.Items.Add(listItem);
                 }
+
+                todoListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                todoListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             }
             catch
             {

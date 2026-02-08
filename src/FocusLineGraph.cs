@@ -17,15 +17,15 @@ namespace TransparentClock
         private readonly Color lineColor = Color.FromArgb(66, 139, 244);        // Blue
         private readonly Color pointColor = Color.FromArgb(66, 139, 244);       // Blue
         private readonly Color gridColor = Color.FromArgb(200, 200, 200);       // Light gray
-        private readonly Color axisColor = Color.Black;
-        private readonly Color textColor = Color.Black;
+        private readonly Color axisColor = Color.FromArgb(70, 70, 70);
+        private readonly Color textColor = Color.FromArgb(60, 60, 60);
         private readonly Color backgroundColor = Color.White;
 
         // Margins and sizes
-        private const int LeftMargin = 50;
-        private const int RightMargin = 20;
-        private const int TopMargin = 30;
-        private const int BottomMargin = 50;
+        private const int LeftMargin = 60;
+        private const int RightMargin = 24;
+        private const int TopMargin = 24;
+        private const int BottomMargin = 60;
         private const int PointRadius = 5;
 
         public FocusLineGraph()
@@ -91,7 +91,7 @@ namespace TransparentClock
             }
 
             // Draw Y-axis labels (minutes)
-            using (Font font = new Font("Arial", 9f))
+            using (Font font = new Font("Segoe UI", 9f))
             using (Brush brush = new SolidBrush(textColor))
             {
                 int maxMinutes = GetMaxMinutes();
@@ -109,7 +109,7 @@ namespace TransparentClock
             // Draw X-axis labels (dates)
             if (dataPoints.Count > 0)
             {
-                using (Font font = new Font("Arial", 9f))
+                using (Font font = new Font("Segoe UI", 9f))
                 using (Brush brush = new SolidBrush(textColor))
                 {
                     int labelInterval = Math.Max(1, dataPoints.Count / 6);
@@ -133,7 +133,7 @@ namespace TransparentClock
             }
 
             // Draw axis titles
-            using (Font font = new Font("Arial", 10f, FontStyle.Bold))
+            using (Font font = new Font("Segoe UI", 9.5f, FontStyle.Bold))
             using (Brush brush = new SolidBrush(textColor))
             {
                 // Y-axis title
@@ -144,7 +144,7 @@ namespace TransparentClock
                 g.Restore(state);
 
                 // X-axis title
-                g.DrawString("Date", font, brush, Width / 2 - 20, Height - 15);
+                g.DrawString("Date", font, brush, Width / 2 - 20, Height - 18);
             }
         }
 
@@ -201,7 +201,7 @@ namespace TransparentClock
 
         private void DrawEmptyMessage(Graphics g)
         {
-            using (Font font = new Font("Arial", 12f))
+            using (Font font = new Font("Segoe UI", 10f))
             using (Brush brush = new SolidBrush(Color.Gray))
             {
                 string message = "No focus data available";
@@ -218,7 +218,7 @@ namespace TransparentClock
             return ((max / 10) + 1) * 10;
         }
 
-        private void FocusLineGraph_MouseMove(object sender, MouseEventArgs e)
+        private void FocusLineGraph_MouseMove(object? sender, MouseEventArgs e)
         {
             int graphWidth = Width - LeftMargin - RightMargin;
             int graphHeight = Height - TopMargin - BottomMargin;
@@ -251,7 +251,7 @@ namespace TransparentClock
             }
         }
 
-        private void FocusLineGraph_MouseLeave(object sender, EventArgs e)
+        private void FocusLineGraph_MouseLeave(object? sender, EventArgs e)
         {
             hoveredPointIndex = -1;
             tooltip.SetToolTip(this, "");

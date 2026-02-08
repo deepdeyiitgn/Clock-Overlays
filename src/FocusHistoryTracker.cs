@@ -22,7 +22,7 @@ namespace TransparentClock
             DateTime today = DateTime.Today;
             var history = state.FocusHistory;
 
-            if (!history.TryGetValue(today, out FocusDay day))
+            if (!history.TryGetValue(today, out var day) || day == null)
             {
                 day = new FocusDay { Date = today, TotalFocusMinutes = 0 };
                 history[today] = day;

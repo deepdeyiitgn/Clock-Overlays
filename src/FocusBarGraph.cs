@@ -19,15 +19,15 @@ namespace TransparentClock
         private readonly Color emptyBarColor = Color.FromArgb(220, 220, 220);    // Light gray for 0 minutes
         private readonly Color barHoverColor = Color.FromArgb(255, 100, 0);       // Orange on hover
         private readonly Color gridColor = Color.FromArgb(200, 200, 200);         // Light gray
-        private readonly Color axisColor = Color.Black;
-        private readonly Color textColor = Color.Black;
+        private readonly Color axisColor = Color.FromArgb(70, 70, 70);
+        private readonly Color textColor = Color.FromArgb(60, 60, 60);
         private readonly Color backgroundColor = Color.White;
 
         // Margins and sizes
-        private const int LeftMargin = 50;
-        private const int RightMargin = 20;
-        private const int TopMargin = 30;
-        private const int BottomMargin = 50;
+        private const int LeftMargin = 60;
+        private const int RightMargin = 24;
+        private const int TopMargin = 24;
+        private const int BottomMargin = 60;
         private const int BarSpacing = 2;
 
         public FocusBarGraph()
@@ -94,7 +94,7 @@ namespace TransparentClock
             }
 
             // Draw Y-axis labels (minutes)
-            using (Font font = new Font("Arial", 9f))
+            using (Font font = new Font("Segoe UI", 9f))
             using (Brush brush = new SolidBrush(textColor))
             {
                 int maxMinutes = GetMaxMinutes();
@@ -110,7 +110,7 @@ namespace TransparentClock
             }
 
             // Draw X-axis labels (hours)
-            using (Font font = new Font("Arial", 9f))
+            using (Font font = new Font("Segoe UI", 9f))
             using (Brush brush = new SolidBrush(textColor))
             {
                 int graphWidth2 = Width - LeftMargin - RightMargin;
@@ -132,7 +132,7 @@ namespace TransparentClock
             }
 
             // Draw axis titles
-            using (Font font = new Font("Arial", 10f, FontStyle.Bold))
+            using (Font font = new Font("Segoe UI", 9.5f, FontStyle.Bold))
             using (Brush brush = new SolidBrush(textColor))
             {
                 // Y-axis title
@@ -143,7 +143,7 @@ namespace TransparentClock
                 g.Restore(state);
 
                 // X-axis title
-                g.DrawString("Hour of Day", font, brush, Width / 2 - 35, Height - 15);
+                g.DrawString("Hour of Day", font, brush, Width / 2 - 40, Height - 18);
             }
         }
 
@@ -201,7 +201,7 @@ namespace TransparentClock
             return ((max / 10) + 1) * 10;
         }
 
-        private void FocusBarGraph_MouseMove(object sender, MouseEventArgs e)
+        private void FocusBarGraph_MouseMove(object? sender, MouseEventArgs e)
         {
             int graphWidth = Width - LeftMargin - RightMargin;
             int barWidth = graphWidth / 24;
@@ -231,7 +231,7 @@ namespace TransparentClock
             }
         }
 
-        private void FocusBarGraph_MouseLeave(object sender, EventArgs e)
+        private void FocusBarGraph_MouseLeave(object? sender, EventArgs e)
         {
             hoveredHour = -1;
             tooltip.SetToolTip(this, "");

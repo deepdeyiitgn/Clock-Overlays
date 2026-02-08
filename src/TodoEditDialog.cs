@@ -96,7 +96,7 @@ namespace TransparentClock
             CancelButton = cancelButton;
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object? sender, EventArgs e)
         {
             // Validate title
             string title = titleTextBox.Text.Trim();

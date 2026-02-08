@@ -232,7 +232,7 @@ namespace TransparentClock
             DateTime cutoff = DateTime.Now.AddDays(-dayCount);
 
             // Get all available history
-            var entries = FocusHistoryStorage.GetLast7Days();
+            var entries = FocusHistoryStorage.GetAll();
             var filteredEntries = entries
                 .Where(e => 
                 {

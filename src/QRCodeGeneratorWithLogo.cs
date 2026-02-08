@@ -1,9 +1,6 @@
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using QRCoder;
-using SkiaSharp;
 
 namespace TransparentClock
 {
@@ -34,8 +31,21 @@ namespace TransparentClock
                 if (string.IsNullOrEmpty(encodedString))
                     throw new InvalidOperationException("Failed to encode QR payload data");
 
-                // Generate base QR code with specified ECC level (H for logo, M otherwise)
-                Bitmap baseQR = GenerateBaseQRCode(encodedString, pixelsPerModule, eccLevel);
+                bool useOnline = ShouldUseOnline(customization);
+                Bitmap? baseQR = null;
+
+                if (useOnline)
+                {
+                    int size = Math.Max(512, pixelsPerModule * 29);
+                    baseQR = QRCodeOnlineGenerator.GenerateBitmap(
+                        encodedString,
+                        customization.ForegroundColor,
+                        customization.BackgroundColor,
+                        size,
+                        Math.Max(0, customization.Padding));
+                }
+
+                baseQR ??= QRCodeRenderEngine.Render(encodedString, customization, pixelsPerModule, eccLevel);
 
                 // Embed logo if provided or if using default
                 if (customLogo != null)
@@ -80,32 +90,14 @@ namespace TransparentClock
         }
 
         /// <summary>
-        /// Generates the base QR code image (without logo).
-        /// </summary>
-        private static Bitmap GenerateBaseQRCode(string encodedString, int pixelsPerModule, string eccLevel = "H")
+        private static bool ShouldUseOnline(QRCustomization customization)
         {
-            using (var generator = new QRCoder.QRCodeGenerator())
-            {
-                // Parse ECC level: H (High), M (Medium), L (Low), Q (Quartile)
-                var ecc = eccLevel.ToUpperInvariant() switch
-                {
-                    "L" => QRCoder.QRCodeGenerator.ECCLevel.L,
-                    "M" => QRCoder.QRCodeGenerator.ECCLevel.M,
-                    "Q" => QRCoder.QRCodeGenerator.ECCLevel.Q,
-                    "H" => QRCoder.QRCodeGenerator.ECCLevel.H,
-                    _ => QRCoder.QRCodeGenerator.ECCLevel.H
-                };
-
-                QRCodeData qrCodeData = generator.CreateQrCode(encodedString, ecc);
-
-                using (var qrCode = new QRCode(qrCodeData))
-                {
-                    return qrCode.GetGraphic(pixelsPerModule,
-                        Color.Black,
-                        Color.White,
-                        drawQuietZones: true);
-                }
-            }
+            return customization.Shape == QRCustomization.QRShape.Square
+                && customization.CornerEyeStyle == QRCustomization.EyeStyle.Square
+                && !customization.UseGradient
+                && customization.Padding == 0
+                && customization.ForegroundColor == Color.Black
+                && customization.BackgroundColor == Color.White;
         }
 
         /// <summary>

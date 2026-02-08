@@ -2,15 +2,29 @@
 
 ## Release Timeline
 
-### v05.02.2026 — Beta (Current Release) — *05 Feb 2026*
-- **Focus Insights** — Smart time range selector (Last 7/30 Days, 6/12 Months) with advanced statistics
-- **Focus Analytics** — Average daily focus, best/worst slot detection with intelligent filtering
-- **QR Utilities Suite** — QR Generator (13 types), QR Scanner (online API, smart detection), QuickLink Shortener
-- **Advanced Export** — PNG, JPG, SVG, PDF, HEIC with logo embedding
-- **Network-Aware QR Scanning** — Online API with clear error messaging for network status
-- **Focus Graphs** — Line graphs and 24-hour heatmaps with date picker (foundation complete)
-- **QuickLink API** — Robust error handling with Accept header and fallback endpoints
-- **Stability** — Enhanced error handling across all features and improved user messaging
+Versions in order:
+- v08.02.2026 (Stable)
+- v05.02.2026
+- v04.02.2026
+- v03.02.2026
+- v02.02.2026
+- v01.02.2026
+
+### v08.02.2026 — Stable — *08 Feb 2026*
+- Finalized Pomodoro system with accurate focus tracking
+- Stable QR Generator and Scanner
+- Utilities tab finalized
+- UI polish and consistency improvements
+- Bug fixes and performance stability
+
+### v05.02.2026 — Beta — *05 Feb 2026*
+- Focus Insights time range selector (Last 7/30 Days, 6/12 Months)
+- Focus analytics with average/best/worst slot detection
+- QR Generator (13 types), QR Scanner (online API), QuickLink Shortener
+- Export support: PNG, JPG, SVG, PDF, HEIC with logo embedding
+- Network-aware QR scanning with clear error messaging
+- Focus graphs and 24-hour heatmaps (foundation)
+- QuickLink API error handling and fallback endpoints
 
 ### v04.02.2026 — Beta (Previous Release) — *04 Feb 2026*
 - Version awareness system with update prompts
@@ -36,18 +50,23 @@
 - Dashboard-based control interface
 - Local profile and settings storage
 
+### v29.01.2026 — Stable (Previous Stable Release) — *29 Jan 2026*
+- Real-time clock overlay only
+- Lightweight always-on-top display
+
 ---
 
 ## Development Status
 
-**Current Version**: v05.02.2026 (BETA)
+**Current Version**: v08.02.2026 (Stable)
+**Previous Stable Release**: v29.01.2026
 
 - ✅ Core Features: Complete
 - ✅ Focus Tracking: Complete
 - ✅ QR Utilities: Complete (with online API)
 - ✅ QuickLink Integration: Complete
-- 🔄 Heatmap System: In Progress
-- 📋 Future: Eye styles, QR gradients, advanced analytics (v06+)
+- ✅ Heatmap System: Foundation complete
+- 📋 Future: Only small fixes and minor improvements
 
 ---
 

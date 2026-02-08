@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using TransparentClock;
@@ -8,16 +10,35 @@ using Timer = System.Windows.Forms.Timer;
 
 public class TransparentClockForm : Form
 {
-    private Label timeLabel;
-    private Timer clockTimer;
-    private Timer selfHealTimer;
-    private NotifyIcon trayIcon;
-    private PomodoroForm? pomodoroForm;
+    private OutlineLabel timeLabel = null!;
+    private Timer clockTimer = null!;
+    private Timer selfHealTimer = null!;
+    private NotifyIcon trayIcon = null!;
+    private PomodoroTrayForm? pomodoroForm;
     private ToolStripMenuItem? clockToggleItem;
+    private Form? trayStatusPopup;
+    private Label? trayStatusLabel;
+    private Label? trayElapsedLabel;
+    private Label? trayTodayLabel;
 
     private Color currentColor = Color.White;
+    private Color borderColor = Color.White;
+    private int borderWidth = 2;
+    private bool borderEnabled;
     private Point defaultPos;
     private bool customMove = false;
+
+    private static Rectangle GetWorkingArea()
+    {
+        if (Screen.PrimaryScreen != null)
+        {
+            return Screen.PrimaryScreen.WorkingArea;
+        }
+
+        return Screen.AllScreens.Length > 0
+            ? Screen.AllScreens[0].WorkingArea
+            : new Rectangle(0, 0, 1920, 1080);
+    }
 
     public TransparentClockForm()
     {
@@ -37,7 +58,7 @@ public class TransparentClockForm : Form
 
         StartPosition = FormStartPosition.Manual;
 
-        var area = Screen.PrimaryScreen.WorkingArea;
+        var area = GetWorkingArea();
         defaultPos = new Point(
             area.Right - Width - 5,
             area.Top + 15
@@ -63,26 +84,23 @@ public class TransparentClockForm : Form
 
     private void InitializeClock()
     {
-var container = new Panel
-{
-    Dock = DockStyle.Fill,
-    BackColor = Color.Magenta   // SAME as TransparencyKey
-};
+        var container = new Panel
+        {
+            Dock = DockStyle.Fill,
+            BackColor = Color.Magenta   // SAME as TransparencyKey
+        };
 
-timeLabel = new Label
-{
-    Font = new Font("Segoe UI", 20, FontStyle.Bold),
-    ForeColor = currentColor,
-    Dock = DockStyle.Fill,
-    TextAlign = ContentAlignment.MiddleCenter,
-    BackColor = Color.Magenta,  // IMPORTANT
-    UseCompatibleTextRendering = false,
-    Padding = new Padding(4, 0, 4, 0)
-};
+        timeLabel = new OutlineLabel
+        {
+            Font = new Font("Segoe UI", 20, FontStyle.Bold),
+            ForeColor = currentColor,
+            Dock = DockStyle.Fill,
+            BackColor = Color.Magenta,  // IMPORTANT
+            Padding = new Padding(4, 0, 4, 0)
+        };
 
-container.Controls.Add(timeLabel);
-Controls.Add(container);
-
+        container.Controls.Add(timeLabel);
+        Controls.Add(container);
 
         clockTimer = new Timer { Interval = 1000 };
         clockTimer.Tick += (s, e) =>
@@ -127,7 +145,7 @@ Controls.Add(container);
         MouseDown += HandleDrag;
     }
 
-    private void HandleDrag(object s, MouseEventArgs e)
+    private void HandleDrag(object? s, MouseEventArgs e)
     {
         if (!customMove || e.Button != MouseButtons.Left) return;
 
@@ -143,18 +161,18 @@ Controls.Add(container);
 
     private void InitializeTray()
     {
-trayIcon = new NotifyIcon
-{
-    Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath),
-    Visible = true,
-    Text = "Transparent Clock"
-};
+        trayIcon = new NotifyIcon
+        {
+            Icon = Program.GetAppIcon(),
+            Visible = true,
+            Text = "Transparent Clock"
+        };
 
         trayIcon.MouseClick += (s, e) =>
         {
             if (e.Button == MouseButtons.Left)
             {
-                Program.ToggleDashboard();
+                Program.ShowMainForm();
             }
         };
 
@@ -175,7 +193,6 @@ trayIcon = new NotifyIcon
 
         // Theme
         var theme = new ToolStripMenuItem("Theme");
-        AddTheme(theme, "White", Color.White);
         AddTheme(theme, "Soft Black", Color.FromArgb(30, 30, 30));
         AddTheme(theme, "Red", Color.Red);
         AddTheme(theme, "Green", Color.LimeGreen);
@@ -211,20 +228,137 @@ trayIcon = new NotifyIcon
         return menu;
     }
 
+    private void ShowTrayStatusPopup()
+    {
+        if (trayStatusPopup == null || trayStatusPopup.IsDisposed)
+        {
+            trayStatusPopup = new Form
+            {
+                FormBorderStyle = FormBorderStyle.None,
+                StartPosition = FormStartPosition.Manual,
+                ShowInTaskbar = false,
+                TopMost = true,
+                BackColor = Color.White,
+                Size = new Size(240, 110)
+            };
+
+            var panel = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Padding = new Padding(10),
+                BackColor = Color.White
+            };
+
+            trayStatusLabel = new Label
+            {
+                Dock = DockStyle.Top,
+                Height = 22,
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(30, 30, 30)
+            };
+
+            trayElapsedLabel = new Label
+            {
+                Dock = DockStyle.Top,
+                Height = 20,
+                Font = new Font("Segoe UI", 9F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(60, 60, 60)
+            };
+
+            trayTodayLabel = new Label
+            {
+                Dock = DockStyle.Top,
+                Height = 20,
+                Font = new Font("Segoe UI", 9F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(60, 60, 60)
+            };
+
+            panel.Controls.Add(trayTodayLabel);
+            panel.Controls.Add(trayElapsedLabel);
+            panel.Controls.Add(trayStatusLabel);
+            trayStatusPopup.Controls.Add(panel);
+            trayStatusPopup.Deactivate += (_, __) => trayStatusPopup.Hide();
+        }
+
+        UpdateTrayStatusPopup();
+
+        var cursor = Control.MousePosition;
+        int x = Math.Max(0, cursor.X - trayStatusPopup.Width / 2);
+        int y = Math.Max(0, cursor.Y - trayStatusPopup.Height - 10);
+        trayStatusPopup.Location = new Point(x, y);
+        trayStatusPopup.Show();
+        trayStatusPopup.BringToFront();
+    }
+
+    private void UpdateTrayStatusPopup()
+    {
+        if (trayStatusLabel == null || trayElapsedLabel == null || trayTodayLabel == null)
+        {
+            return;
+        }
+
+        var state = Program.CurrentState.Pomodoro;
+        var settings = Program.CurrentState.PomodoroSettings;
+
+        string statusText = GetPomodoroStatusText(state);
+        int totalSeconds = state.GetModeTotalSeconds(state.CurrentMode, settings);
+        int elapsedSeconds = Math.Max(0, totalSeconds - state.RemainingSeconds);
+        var elapsed = TimeSpan.FromSeconds(elapsedSeconds);
+
+        var today = FocusHistoryStorage.GetDay(DateTime.Today);
+        int todayMinutes = today?.TotalFocusMinutes ?? 0;
+
+        trayStatusLabel.Text = $"Status: {statusText}";
+        trayElapsedLabel.Text = $"Elapsed: {FormatElapsed(elapsed)}";
+        trayTodayLabel.Text = $"Today: {todayMinutes} min";
+    }
+
+    private static string GetPomodoroStatusText(PomodoroState state)
+    {
+        if (!state.IsRunning)
+        {
+            return "Idle";
+        }
+
+        if (state.IsPaused)
+        {
+            return "Paused";
+        }
+
+        return state.CurrentMode switch
+        {
+            PomodoroState.PomodoroMode.Work => "Running",
+            PomodoroState.PomodoroMode.ShortBreak => "Break",
+            PomodoroState.PomodoroMode.LongBreak => "Break",
+            _ => "Running"
+        };
+    }
+
+    private static string FormatElapsed(TimeSpan elapsed)
+    {
+        if (elapsed.TotalHours >= 1)
+        {
+            return elapsed.ToString("hh\\:mm\\:ss");
+        }
+
+        return elapsed.ToString("mm\\:ss");
+    }
+
     private void AddTheme(ToolStripMenuItem menu, string name, Color color)
     {
         menu.DropDownItems.Add(name, null, (s,e)=>{
             currentColor = color;
             timeLabel.ForeColor = color;
-            Program.CurrentState.ClockColorName = name;
             Program.CurrentState.ClockUseCustomColor = false;
+            Program.CurrentState.ClockCustomColorArgb = null;
+            Program.CurrentState.ClockColorName = name;
             AppStateStorage.Save(Program.CurrentState);
         });
     }
 
     private void SetCorner(int pos)
     {
-        var a = Screen.PrimaryScreen.WorkingArea;
+        var a = GetWorkingArea();
         customMove = false;
 
         Location = pos switch
@@ -285,6 +419,16 @@ trayIcon = new NotifyIcon
         timeLabel.ForeColor = color;
     }
 
+    public void ApplyClockBorder(bool enabled, Color color, int width)
+    {
+        borderEnabled = enabled;
+        borderColor = color;
+        borderWidth = Math.Max(1, width);
+        UpdateBorderScale();
+        UpdateClockSize();
+        timeLabel.Invalidate();
+    }
+
     public void ApplyClockFontSize(float fontSize)
     {
         if (fontSize <= 0)
@@ -293,6 +437,7 @@ trayIcon = new NotifyIcon
         }
 
         timeLabel.Font = new Font(timeLabel.Font.FontFamily, fontSize, FontStyle.Bold);
+        UpdateBorderScale();
         UpdateClockSize();
     }
 
@@ -306,12 +451,22 @@ trayIcon = new NotifyIcon
         try
         {
             timeLabel.Font = new Font(family, timeLabel.Font.Size, FontStyle.Bold);
+            UpdateBorderScale();
             UpdateClockSize();
         }
         catch
         {
             // Ignore invalid fonts.
         }
+    }
+
+    private void UpdateBorderScale()
+    {
+        float scale = timeLabel.Font.Size / 20f;
+        float scaledWidth = Math.Max(1f, borderWidth * scale);
+        timeLabel.BorderEnabled = borderEnabled;
+        timeLabel.BorderColor = borderColor;
+        timeLabel.BorderWidth = scaledWidth;
     }
 
     private void UpdateClockSize()
@@ -325,15 +480,71 @@ trayIcon = new NotifyIcon
 
         int paddingX = 24;
         int paddingY = 10;
-        int width = Math.Max(70, textSize.Width + paddingX);
-        int height = Math.Max(34, textSize.Height + paddingY);
+        int borderPad = borderEnabled ? (int)Math.Ceiling(timeLabel.BorderWidth) * 2 : 0;
+        int width = Math.Max(70, textSize.Width + paddingX + borderPad);
+        int height = Math.Max(34, textSize.Height + paddingY + borderPad);
 
         Size = new Size(width, height);
     }
 
+    private sealed class OutlineLabel : Control
+    {
+        public bool BorderEnabled { get; set; }
+        public Color BorderColor { get; set; } = Color.White;
+        public float BorderWidth { get; set; } = 2f;
+
+        public OutlineLabel()
+        {
+            SetStyle(
+                ControlStyles.UserPaint |
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.SupportsTransparentBackColor,
+                true);
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            e.Graphics.Clear(BackColor);
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            if (string.IsNullOrWhiteSpace(Text))
+            {
+                return;
+            }
+
+            var rect = new Rectangle(
+                Padding.Left,
+                Padding.Top,
+                Math.Max(1, ClientSize.Width - Padding.Horizontal),
+                Math.Max(1, ClientSize.Height - Padding.Vertical));
+            using var format = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            using var path = new GraphicsPath();
+            float emSize = e.Graphics.DpiY * Font.SizeInPoints / 72f;
+            path.AddString(Text, Font.FontFamily, (int)Font.Style, emSize, rect, format);
+
+            if (BorderEnabled && BorderWidth > 0f)
+            {
+                using var pen = new Pen(BorderColor, BorderWidth) { LineJoin = LineJoin.Round };
+                e.Graphics.DrawPath(pen, path);
+            }
+
+            using var brush = new SolidBrush(ForeColor);
+            e.Graphics.FillPath(brush, path);
+        }
+    }
+
     public void ApplyClockPosition(string? position)
     {
-        var a = Screen.PrimaryScreen.WorkingArea;
+        var a = GetWorkingArea();
         customMove = false;
 
         var pos = position?.Trim() ?? "Top Right";
@@ -376,7 +587,7 @@ trayIcon = new NotifyIcon
     {
         if (pomodoroForm == null || pomodoroForm.IsDisposed)
         {
-            pomodoroForm = new PomodoroForm();
+            pomodoroForm = new PomodoroTrayForm();
         }
 
         pomodoroForm.Show();

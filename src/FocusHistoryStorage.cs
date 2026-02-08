@@ -21,43 +21,126 @@ namespace TransparentClock
             {
                 return;
             }
-
             hour = Math.Max(0, Math.Min(23, hour));
 
+            var start = date.Date.AddHours(hour);
+            var end = start.AddMinutes(minutes);
+            AddFocusSegments(new List<(DateTime Start, DateTime End)> { (start, end) });
+        }
+
+        public static void AddFocusSegments(IReadOnlyList<(DateTime Start, DateTime End)> segments)
+        {
+            if (segments == null || segments.Count == 0)
+            {
+                return;
+            }
+
             var history = LoadAll();
-            string key = date.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var secondsByHour = new Dictionary<(DateTime Date, int Hour), int>();
 
-            var entry = history.FirstOrDefault(item => item.Date == key);
-            if (entry == null)
+            foreach (var segment in segments)
             {
-                entry = new FocusHistory { Date = key, TotalFocusMinutes = 0 };
-                history.Add(entry);
+                if (segment.End <= segment.Start)
+                {
+                    continue;
+                }
+
+                var current = segment.Start;
+                var end = segment.End;
+
+                while (current < end)
+                {
+                    var hourStart = new DateTime(current.Year, current.Month, current.Day, current.Hour, 0, 0, current.Kind);
+                    var hourEnd = hourStart.AddHours(1);
+                    var overlapEnd = end < hourEnd ? end : hourEnd;
+                    int overlapSeconds = (int)Math.Floor((overlapEnd - current).TotalSeconds);
+
+                    if (overlapSeconds > 0)
+                    {
+                        var key = (hourStart.Date, hourStart.Hour);
+                        if (!secondsByHour.ContainsKey(key))
+                        {
+                            secondsByHour[key] = 0;
+                        }
+                        secondsByHour[key] += overlapSeconds;
+                    }
+
+                    current = overlapEnd;
+                }
             }
 
-            if (entry.HourlyFocus == null || entry.HourlyFocus.Length != 24)
+            if (secondsByHour.Count == 0)
             {
-                entry.HourlyFocus = NormalizeHourly(entry.HourlyFocus);
+                return;
             }
 
-            entry.TotalFocusMinutes += minutes;
-            entry.HourlyFocus[hour] += minutes;
+            int totalSeconds = secondsByHour.Values.Sum();
+            int totalMinutes = totalSeconds / 60;
+            if (totalMinutes <= 0)
+            {
+                return;
+            }
 
-            DateTime cutoff = DateTime.Today.AddDays(-6);
-            history = history
-                .Where(item => TryParseDate(item.Date, out var parsed) && parsed >= cutoff)
-                .OrderBy(item => item.Date)
-                .ToList();
+            var minutesByHour = new Dictionary<(DateTime Date, int Hour), int>();
+            foreach (var kvp in secondsByHour)
+            {
+                minutesByHour[kvp.Key] = kvp.Value / 60;
+            }
 
+            int allocatedMinutes = minutesByHour.Values.Sum();
+            int remainingMinutes = totalMinutes - allocatedMinutes;
+            if (remainingMinutes > 0)
+            {
+                var byRemainder = secondsByHour
+                    .Select(kvp => new { kvp.Key, Remainder = kvp.Value % 60 })
+                    .OrderByDescending(item => item.Remainder)
+                    .ToList();
+
+                for (int i = 0; i < remainingMinutes && i < byRemainder.Count; i++)
+                {
+                    var key = byRemainder[i].Key;
+                    minutesByHour[key] += 1;
+                }
+            }
+
+            foreach (var kvp in minutesByHour)
+            {
+                if (kvp.Value <= 0)
+                {
+                    continue;
+                }
+
+                string key = kvp.Key.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+                var entry = history.FirstOrDefault(item => item.Date == key);
+                if (entry == null)
+                {
+                    entry = new FocusHistory { Date = key, TotalFocusMinutes = 0 };
+                    history.Add(entry);
+                }
+
+                if (entry.HourlyFocus == null || entry.HourlyFocus.Length != 24)
+                {
+                    entry.HourlyFocus = NormalizeHourly(entry.HourlyFocus);
+                }
+
+                entry.HourlyFocus[kvp.Key.Hour] += kvp.Value;
+                entry.TotalFocusMinutes += kvp.Value;
+            }
+
+            history = history.OrderBy(item => item.Date).ToList();
             SaveAll(history);
         }
 
         public static IReadOnlyList<FocusHistory> GetLast7Days()
         {
-            var history = LoadAll();
-            DateTime cutoff = DateTime.Today.AddDays(-6);
+            return GetAll();
+        }
 
+        public static IReadOnlyList<FocusHistory> GetAll()
+        {
+            var history = LoadAll();
             return history
-                .Where(item => TryParseDate(item.Date, out var parsed) && parsed >= cutoff)
+                .Where(item => TryParseDate(item.Date, out _))
                 .OrderBy(item => item.Date)
                 .ToList();
         }

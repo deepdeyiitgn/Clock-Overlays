@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SkiaSharp;
+using Svg.Skia;
 
 namespace TransparentClock
 {
@@ -61,9 +63,8 @@ namespace TransparentClock
         }
 
         /// <summary>
-        /// Downloads the QuickLink logo and caches it locally.
-        /// The URL returns an SVG, which we save as-is for now.
-        /// Future: Convert SVG to PNG for better compatibility.
+        /// Downloads the QuickLink logo and caches it locally as PNG.
+        /// The source is an SVG that is rasterized for embedding.
         /// </summary>
         private static async Task DownloadAndCacheLogoAsync()
         {
@@ -77,13 +78,61 @@ namespace TransparentClock
 
                 if (logoContent?.Length > 0)
                 {
-                    // Save to cache
-                    File.WriteAllBytes(LogoCachePath, logoContent);
+                    var pngBytes = RasterizeSvgToPng(logoContent, 256, 256);
+                    if (pngBytes.Length > 0)
+                    {
+                        File.WriteAllBytes(LogoCachePath, pngBytes);
+                    }
                 }
             }
             catch
             {
                 // Silently fail - logo is optional
+            }
+        }
+
+        private static byte[] RasterizeSvgToPng(byte[] svgBytes, int width, int height)
+        {
+            try
+            {
+                var svg = new SKSvg();
+                using var svgStream = new MemoryStream(svgBytes);
+                svg.Load(svgStream);
+
+                if (svg.Picture == null)
+                {
+                    return Array.Empty<byte>();
+                }
+
+                using var bitmap = new SKBitmap(width, height);
+                using var canvas = new SKCanvas(bitmap);
+                canvas.Clear(SKColors.Transparent);
+
+                var bounds = svg.Picture.CullRect;
+                if (bounds.Width <= 0 || bounds.Height <= 0)
+                {
+                    return Array.Empty<byte>();
+                }
+
+                float scaleX = width / bounds.Width;
+                float scaleY = height / bounds.Height;
+                float scale = Math.Min(scaleX, scaleY);
+
+                float offsetX = (width - bounds.Width * scale) / 2f;
+                float offsetY = (height - bounds.Height * scale) / 2f;
+
+                canvas.Translate(offsetX, offsetY);
+                canvas.Scale(scale);
+                canvas.DrawPicture(svg.Picture);
+                canvas.Flush();
+
+                using var image = SKImage.FromBitmap(bitmap);
+                using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+                return data?.ToArray() ?? Array.Empty<byte>();
+            }
+            catch
+            {
+                return Array.Empty<byte>();
             }
         }
 
