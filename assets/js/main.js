@@ -6,3 +6,11 @@ if (toggle && navLinks) {
     navLinks.classList.toggle('open');
   });
 }
+
+const yearTargets = document.querySelectorAll('.js-year');
+if (yearTargets.length) {
+  const year = new Date().getFullYear();
+  yearTargets.forEach((target) => {
+    target.textContent = year;
+  });
+}
