@@ -17,6 +17,181 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="icon" href="assets/images/logo.png" />
   <link rel="canonical" href="https://clock.qlynk.me/download.html" />
+  <style>
+    .download-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      padding: 60px 0;
+      position: relative;
+    }
+    
+    .download-hero-left {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .download-hero-right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    
+    .download-logo-showcase {
+      width: 300px;
+      height: 300px;
+      position: relative;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .download-logo-showcase img {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 20px 60px rgba(255, 107, 53, 0.4));
+    }
+    
+    .download-logo-showcase::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      right: -20px;
+      bottom: -20px;
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      border-radius: 50%;
+      opacity: 0.2;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.2; }
+      50% { transform: scale(1.1); opacity: 0.3; }
+    }
+    
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #ff6b35;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: particleFloat 15s linear infinite;
+    }
+    
+    @keyframes particleFloat {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-100px) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 20%; animation-delay: 2s; }
+    .particle:nth-child(3) { left: 30%; animation-delay: 4s; }
+    .particle:nth-child(4) { left: 40%; animation-delay: 1s; }
+    .particle:nth-child(5) { left: 50%; animation-delay: 3s; }
+    .particle:nth-child(6) { left: 60%; animation-delay: 5s; }
+    .particle:nth-child(7) { left: 70%; animation-delay: 2.5s; }
+    .particle:nth-child(8) { left: 80%; animation-delay: 4.5s; }
+    .particle:nth-child(9) { left: 90%; animation-delay: 1.5s; }
+    .particle:nth-child(10) { left: 15%; animation-delay: 6s; }
+    
+    .features-highlight {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 60px 20px;
+      margin: 40px 0;
+      border-radius: 12px;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+    }
+    
+    .feature-card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      border-left: 4px solid #ff6b35;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .feature-card h3 {
+      color: #ff6b35;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .feature-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .feature-card li {
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+      color: #495057;
+    }
+    
+    .feature-card li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #28a745;
+      font-weight: bold;
+    }
+    
+    @media (max-width: 768px) {
+      .download-hero {
+        grid-template-columns: 1fr;
+      }
+      
+      .download-logo-showcase {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  </style>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -120,19 +295,148 @@
   </header>
 
   <main class="section">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    
     <div class="container">
-      <span class="tag">Windows 10 / 11</span>
-      <h1>Download Transparent Clock</h1>
-      <p>Version: v08.02.2026 (Stable)</p>
-      <div class="btn-group">
-        <a class="btn primary" href="https://github.com/deepdeyiitgn/Clock-Overlays/releases/download/v08.02.2026/TransparentClock-Setup-v08.02.2026-Stable.exe">Download Windows EXE</a>
-        <a class="btn primary" href="https://github.com/deepdeyiitgn/Clock-Overlays/archive/refs/tags/v08.02.2026.zip">Download Source Code</a>
+      <div class="download-hero">
+        <div class="download-hero-left">
+          <span class="tag">Windows 10 / 11</span>
+          <h1>Download Transparent Clock</h1>
+          <p style="font-size: 1.2rem; margin-bottom: 10px;">Version: v08.02.2026 (Stable)</p>
+          <p style="font-size: 1.1rem; color: #6c757d; margin-bottom: 30px;">🎉 Your focus companion awaits! Free, offline-first, and privacy-friendly.</p>
+          <div class="btn-group">
+            <a class="btn primary" href="https://github.com/deepdeyiitgn/Clock-Overlays/releases/download/v08.02.2026/TransparentClock-Setup-v08.02.2026-Stable.exe">Download Windows EXE</a>
+            <a class="btn primary" href="https://github.com/deepdeyiitgn/Clock-Overlays/archive/refs/tags/v08.02.2026.zip">Download Source Code</a>
+          </div>
+          <p><strong>✅ Installer available:</strong> Includes desktop and Start Menu shortcuts.</p>
+          <p><strong>✅ Stable release:</strong> Complete and production-ready.</p>
+          <p><strong>⚠️ Known limitations:</strong> HEIC export falls back to JPEG (system codec limitation).</p>
+          <p><a href="CHANGELOG.md">View changelog</a> | <a href="https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026">Release Notes</a></p>
+        </div>
+        
+        <div class="download-hero-right">
+          <div class="download-logo-showcase">
+            <img src="assets/images/logo.png" alt="Transparent Clock Logo" />
+          </div>
+        </div>
       </div>
-      <p><strong>Installer available:</strong> Includes desktop and Start Menu shortcuts.</p>
-      <p><strong>Stable release:</strong> Complete and production-ready.</p>
-      <p><strong>Known limitations:</strong> HEIC export falls back to JPEG (system codec limitation).</p>
-      <p><a href="CHANGELOG.md">View changelog</a></p>
-      <p><a href="https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026">Please Check Release Notes</a></p>      
+      
+      <div class="features-highlight">
+        <h2 style="text-align: center; font-size: 2.5rem; color: #2c3e50; margin-bottom: 15px;">Complete Feature Set</h2>
+        <p style="text-align: center; font-size: 1.2rem; color: #6c757d; margin-bottom: 40px;">Everything you need to boost productivity and stay focused</p>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">🕐</span> Clock Overlay</h3>
+            <ul>
+              <li>Always-on-top transparent clock</li>
+              <li>Customizable appearance</li>
+              <li>Draggable and resizable</li>
+              <li>Multiple time formats</li>
+              <li>Auto-hide in fullscreen</li>
+            </ul>
+          </div>
+          
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">🍅</span> Pomodoro Timer</h3>
+            <ul>
+              <li>25-minute focus sessions</li>
+              <li>Short & long breaks</li>
+              <li>Session history tracking</li>
+              <li>Audio notifications</li>
+              <li>Productivity insights</li>
+            </ul>
+          </div>
+          
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">📋</span> To-Do Manager</h3>
+            <ul>
+              <li>Create and manage tasks</li>
+              <li>Set priorities</li>
+              <li>Deadline tracking</li>
+              <li>Category organization</li>
+              <li>Daily task overview</li>
+            </ul>
+          </div>
+          
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">📊</span> Focus Insights</h3>
+            <ul>
+              <li>Track study hours</li>
+              <li>Weekly reports</li>
+              <li>Session analytics</li>
+              <li>Focus score</li>
+              <li>Progress visualization</li>
+            </ul>
+          </div>
+          
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">🛠️</span> Utilities Suite</h3>
+            <ul>
+              <li>QR Code Generator</li>
+              <li>QR Code Scanner</li>
+              <li>URL Shortener (QuickLink)</li>
+              <li>Image converter</li>
+              <li>Batch processing</li>
+            </ul>
+          </div>
+          
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">👤</span> User Profile</h3>
+            <ul>
+              <li>Personalized dashboard</li>
+              <li>Save preferences</li>
+              <li>Track milestones</li>
+              <li>Export data</li>
+              <li>Privacy-first design</li>
+            </ul>
+          </div>
+          
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">🎨</span> Customization</h3>
+            <ul>
+              <li>Custom fonts & colors</li>
+              <li>Opacity controls</li>
+              <li>Position saving</li>
+              <li>Theme options</li>
+              <li>Layout preferences</li>
+            </ul>
+          </div>
+          
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">⚡</span> Performance</h3>
+            <ul>
+              <li>Lightning-fast startup</li>
+              <li>Low resource usage</li>
+              <li>Smooth animations</li>
+              <li>No background bloat</li>
+              <li>Built on .NET 8</li>
+            </ul>
+          </div>
+          
+          <div class="feature-card">
+            <h3><span style="font-size: 2rem;">🔒</span> Privacy</h3>
+            <ul>
+              <li>100% offline operation*</li>
+              <li>No tracking</li>
+              <li>No data collection</li>
+              <li>Local storage only</li>
+              <li>Open-source code</li>
+            </ul>
+          </div>
+        </div>
+      </div>      
       
       <div class="section">
         <h2>Previous Releases</h2>

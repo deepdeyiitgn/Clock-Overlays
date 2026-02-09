@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thank You for Installing — Transparent Clock</title>
+  <meta name="description" content="Thank you for installing Transparent Clock! Get started with your new focus companion." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="assets/images/logo.png" />
+  <style>
+    .thank-you-hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+      background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .thank-you-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: moveGrid 20s linear infinite;
+    }
+    
+    @keyframes moveGrid {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    
+    .thank-you-hero .logo-big {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+      animation: bounceIn 0.8s ease-out;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+      position: relative;
+      z-index: 1;
+    }
+    
+    @keyframes bounceIn {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .thank-you-hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    
+    .thank-you-hero p {
+      font-size: 1.4rem;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .quick-start {
+      background: #f8f9fa;
+      padding: 60px 20px;
+    }
+    
+    .quick-start-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 40px auto 0;
+    }
+    
+    .quick-start-card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-top: 4px solid #ff6b35;
+    }
+    
+    .quick-start-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+    
+    .quick-start-card h3 {
+      color: #ff6b35;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .quick-start-card .icon {
+      font-size: 2rem;
+    }
+    
+    .features-showcase {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+    
+    .feature-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      padding: 30px;
+      border-radius: 12px;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      border-color: #ff6b35;
+      transform: scale(1.02);
+    }
+    
+    .feature-card h4 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .feature-card ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .feature-card li {
+      padding: 8px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+    
+    .feature-card li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #ff6b35;
+      font-weight: bold;
+    }
+    
+    .social-section {
+      background: #2c3e50;
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    .social-link:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: #ff6b35;
+      transform: translateY(-3px);
+    }
+    
+    .cta-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    
+    .cta-btn {
+      padding: 15px 35px;
+      background: white;
+      color: #667eea;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+    }
+    
+    .cta-btn.secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+  </style>
+</head>
+<body>
+  <div class="thank-you-hero">
+    <img src="assets/images/logo.png" alt="Transparent Clock Logo" class="logo-big" />
+    <h1>🎉 Installation Complete!</h1>
+    <p>Thank you for choosing Transparent Clock — Your focus companion is ready!</p>
+  </div>
+
+  <section class="quick-start">
+    <div class="container">
+      <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 20px;">Quick Start Guide</h2>
+      <p style="text-align: center; font-size: 1.2rem; color: #6c757d; max-width: 800px; margin: 0 auto;">Get started with Transparent Clock in three easy steps</p>
+      
+      <div class="quick-start-grid">
+        <div class="quick-start-card">
+          <h3><span class="icon">🚀</span> Step 1: Launch</h3>
+          <p>Find <strong>Transparent Clock</strong> in your Start Menu or Desktop and launch it. The clock will appear on your screen instantly.</p>
+        </div>
+        
+        <div class="quick-start-card">
+          <h3><span class="icon">⚙️</span> Step 2: Configure</h3>
+          <p>Right-click the clock to access Settings. Customize appearance, position, font, and opacity to match your workflow.</p>
+        </div>
+        
+        <div class="quick-start-card">
+          <h3><span class="icon">✨</span> Step 3: Explore Dashboard</h3>
+          <p>Click the clock to open the Dashboard. Access Pomodoro timer, To-Do lists, Focus Insights, and powerful Utilities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-showcase">
+    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 20px;">Everything You Need</h2>
+    <p style="text-align: center; font-size: 1.2rem; color: #6c757d; max-width: 800px; margin: 0 auto 40px;">Transparent Clock is packed with features to boost your productivity</p>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <h4>🕐 Clock Overlay</h4>
+        <ul>
+          <li>Always-on-top transparent clock</li>
+          <li>Customizable font, size, and color</li>
+          <li>Draggable and resizable</li>
+          <li>Multiple format options</li>
+          <li>Auto-hide in fullscreen mode</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>🍅 Pomodoro Timer</h4>
+        <ul>
+          <li>25-minute focus sessions</li>
+          <li>5-minute short breaks</li>
+          <li>15-minute long breaks</li>
+          <li>Session history tracking</li>
+          <li>Audio notifications</li>
+          <li>Productivity insights</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>📋 To-Do Manager</h4>
+        <ul>
+          <li>Create and manage tasks</li>
+          <li>Set priorities and deadlines</li>
+          <li>Mark tasks complete</li>
+          <li>Organize by categories</li>
+          <li>Daily task overview</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>📊 Focus Insights</h4>
+        <ul>
+          <li>Track your study hours</li>
+          <li>Weekly productivity reports</li>
+          <li>Session analytics</li>
+          <li>Focus score calculations</li>
+          <li>Progress visualization</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>🛠️ Powerful Utilities</h4>
+        <ul>
+          <li>QR Code Generator</li>
+          <li>QR Code Scanner (Webcam)</li>
+          <li>QuickLink URL Shortener</li>
+          <li>Image format converter</li>
+          <li>Batch image processing</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>👤 User Profile</h4>
+        <ul>
+          <li>Personalize your dashboard</li>
+          <li>Save study preferences</li>
+          <li>Track your milestones</li>
+          <li>Export your data</li>
+          <li>Privacy-first design</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>🎯 Smart Features</h4>
+        <ul>
+          <li>Offline-first operation</li>
+          <li>Local data storage only</li>
+          <li>No tracking or analytics</li>
+          <li>Minimal resource usage</li>
+          <li>Auto-start option</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>⚡ Performance</h4>
+        <ul>
+          <li>Lightning-fast startup</li>
+          <li>Low CPU and RAM usage</li>
+          <li>Smooth animations</li>
+          <li>No background processes</li>
+          <li>Built on .NET 8</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>🔒 Privacy & Security</h4>
+        <ul>
+          <li>100% offline functionality</li>
+          <li>No user tracking</li>
+          <li>No data collection</li>
+          <li>Local-only storage</li>
+          <li>Open-source code</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Need Help?</h2>
+      <p style="font-size: 1.3rem; opacity: 0.95; max-width: 700px; margin: 0 auto;">Check out our FAQ, read documentation, or reach out to our community</p>
+      <div class="cta-buttons">
+        <a href="https://clock.qlynk.me/faq.html" class="cta-btn" target="_blank" rel="noreferrer">View FAQ</a>
+        <a href="https://clock.qlynk.me/features.html" class="cta-btn" target="_blank" rel="noreferrer">Explore Features</a>
+        <a href="https://github.com/deepdeyiitgn/Clock-Overlays" class="cta-btn secondary" target="_blank" rel="noreferrer">GitHub Repository</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="social-section">
+    <div class="container">
+      <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Stay Connected</h2>
+      <p style="font-size: 1.2rem; opacity: 0.9; max-width: 700px; margin: 0 auto;">Follow Deep Dey for updates, tutorials, and more productivity tools</p>
+      
+      <div class="social-links">
+        <a href="https://github.com/deepdeyiitgn" class="social-link" target="_blank" rel="noreferrer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+        
+        <a href="https://www.youtube.com/channel/UCrh1Mx5CTTbbkgW5O6iS2Tw" class="social-link" target="_blank" rel="noreferrer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          YouTube
+        </a>
+        
+        <a href="https://www.instagram.com/deepdey.official/" class="social-link" target="_blank" rel="noreferrer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          Instagram
+        </a>
+        
+        <a href="https://www.linkedin.com/in/deepdeyiit/" class="social-link" target="_blank" rel="noreferrer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          LinkedIn
+        </a>
+        
+        <a href="https://www.facebook.com/deepdeyiit" class="social-link" target="_blank" rel="noreferrer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          Facebook
+        </a>
+        
+        <a href="https://qlynk.vercel.app" class="social-link" target="_blank" rel="noreferrer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm-1 5v10h2V7h-2z"/>
+          </svg>
+          Website
+        </a>
+      </div>
+      
+      <p style="margin-top: 40px; opacity: 0.8; font-size: 1.1rem;">
+        💌 Contact: <a href="mailto:team.deepdey@gmail.com" style="color: #ff6b35; text-decoration: none;">team.deepdey@gmail.com</a>
+      </p>
+    </div>
+  </section>
+
+  <footer style="background: #1a1a1a; color: white; padding: 40px 20px; text-align: center;">
+    <div class="container">
+      <strong>Transparent Clock</strong> — Minimal clock & focus companion for students.
+      <p style="margin-top: 15px; opacity: 0.7;">© <span class="js-year">2026</span> Deep Dey | All Rights Reserved | QuickLink × Transparent Clock</p>
+      <p style="margin-top: 10px; opacity: 0.6; font-size: 0.9rem;">* QR generation, QR scanning, and QuickLink shortening require an internet connection.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
