@@ -236,12 +236,19 @@ p {
   padding: 14px;
   border: 1px solid rgba(28, 27, 26, 0.08);
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
 .screenshot-frame img {
   border-radius: calc(var(--radius) - 8px);
   width: 100%;
   height: auto;
+  transition: transform 0.25s ease;
+  transform-origin: center;
+}
+
+.screenshot-frame:hover img {
+  transform: scale(1.04);
 }
 
 .screenshot-stack {
@@ -259,6 +266,11 @@ p {
 .feature-list {
   padding-left: 18px;
   color: var(--muted);
+}
+
+.back-link {
+  display: inline-flex;
+  margin-top: 16px;
 }
 
 footer {
