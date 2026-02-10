@@ -130,6 +130,20 @@ Built with:
 ---
 
 ### 📸 Some Screenshots Below: 
+New Screenshots:
+<img width="1943" height="1048" alt="Screenshot of Focus Insights" src="https://github.com/user-attachments/assets/98e1bc30-b495-4817-b06d-969482edf2e7" />
+<img width="1943" height="1057" alt="Screenshot of Utilities Feature 2" src="https://github.com/user-attachments/assets/8966b178-9f7b-43d6-8bc2-5912f310daa8" />
+<img width="1943" height="1052" alt="Screenshot of Utilities Feature 1" src="https://github.com/user-attachments/assets/4ff9fc3a-a409-4097-ba75-d0da3ea24ef1" />
+<img width="1943" height="1055" alt="Screenshot of To Do List Feature" src="https://github.com/user-attachments/assets/b74d33ee-660b-4606-b843-fe938c42fb85" />
+<img width="1943" height="1048" alt="Screenshot of Setting Feature" src="https://github.com/user-attachments/assets/dda85450-53cd-4ac0-8d33-d2073291d0eb" />
+<img width="1943" height="1051" alt="Screenshot of Profile Greetings Feature" src="https://github.com/user-attachments/assets/351e2095-a563-4c30-b67c-ea77220e2f21" />
+<img width="1943" height="1053" alt="Screenshot of Dashboard Feature" src="https://github.com/user-attachments/assets/87534d12-58c6-4082-9f4f-157d964fa7b3" />
+<img width="1943" height="1051" alt="Screenshot of pomodoro Feature" src="https://github.com/user-attachments/assets/0e7e7b62-1fc6-4159-af96-2eafc76f3c82" />
+<img width="1943" height="1053" alt="Screenshot of Clock Overlay Feature" src="https://github.com/user-attachments/assets/eec8953c-2f38-4113-87fd-07a69f1322d5" />
+<img width="1943" height="1053" alt="Screenshot on Home page as a Feature Image" src="https://github.com/user-attachments/assets/aa290ba9-70c3-45bc-a24c-4d448996000e" />
+<img width="1943" height="1103" alt="Screenshot on Home Page" src="https://github.com/user-attachments/assets/df1534ac-4b47-4466-8c2e-bd296c828232" />
+
+Old Screenshots: 
 
 <img width="288" height="209" alt="Screenshot 2026-02-02 202627" src="https://github.com/user-attachments/assets/ee2f565f-8c11-4a61-aa6f-0eedbd08f933" />
 <img width="1942" height="327" alt="Screenshot 2026-02-02 202606" src="https://github.com/user-attachments/assets/198112e5-52c2-439c-a725-645ffe6055e7" />
