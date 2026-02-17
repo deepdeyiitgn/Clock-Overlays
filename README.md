@@ -6,6 +6,14 @@ A lightweight, always-on-top clock overlay with advanced focus tracking, product
 
 > ✅ **Final Stable Release**: v08.02.2026 is complete and production-ready. Only small fixes may follow.
 
+---
+
+<a href='https://transparent-clock.en.uptodown.com/windows' title='Download Transparent Clock' >
+                <img src='https://stc.utdstc.com/img/mediakit/certified-free.png' alt='Download Transparent Clock'>
+                </a>
+
+---
+
 ## Overview
 
 Transparent Clock combines a persistent overlay clock with a powerful companion dashboard. Track daily focus patterns, manage tasks, run Pomodoro cycles, and scan/generate QR codes—all stored locally on your machine.
