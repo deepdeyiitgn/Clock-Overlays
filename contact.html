@@ -126,34 +126,262 @@
     </div>
   </header>
 
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 30px;
+    }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    .contact-info-card {
+      padding: 25px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-left: 4px solid #ff6b35;
+    }
+    .contact-info-card h3 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    .contact-info-card a {
+      color: #ff6b35;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .contact-info-card a:hover {
+      color: #e55a2b;
+      text-decoration: underline;
+    }
+    .contact-info-card p {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+    .contact-form {
+      background: #fafafa;
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid #e9ecef;
+    }
+    .contact-form label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+      font-size: 0.9rem;
+    }
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      margin-bottom: 18px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .contact-form input:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus {
+      border-color: #ff6b35;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+    }
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .contact-form .optional-label {
+      color: #999;
+      font-weight: 400;
+      font-size: 0.8rem;
+    }
+    .contact-form .submit-btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .contact-form .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+    }
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .social-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid #dee2e6;
+      color: #333;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .social-links a:hover {
+      background: #ff6b35;
+      color: #fff;
+      border-color: #ff6b35;
+    }
+  </style>
+
   <main class="section">
     <div class="container">
-      <h1>Contact</h1>
-      <p>We keep support simple and fast.</p>
-      <div class="card">
-        <h3>Email</h3>
-        <p>a@qlynk.me</p>
-        <h3>GitHub</h3>
-        <p>https://github.com/deepdeyiitgn/Clock-Overlays</p>
+      <h1>Contact Us</h1>
+      <p>We keep support simple and fast. Reach out through any channel below or use the contact form.</p>
+
+      <div class="contact-grid">
+        <!-- Left: Contact Info -->
+        <div>
+          <div class="contact-info-card" style="margin-bottom: 20px;">
+            <h3>📧 Official Support</h3>
+            <p><a href="mailto:a@qlynk.me">a@qlynk.me</a></p>
+            <p style="font-size: 0.85rem; color: #666;">For official inquiries, partnerships, and DMCA notices.</p>
+          </div>
+
+          <div class="contact-info-card" style="margin-bottom: 20px;">
+            <h3>🛠️ Developer Support</h3>
+            <p><a href="mailto:team.deepdey@gmail.com">team.deepdey@gmail.com</a></p>
+            <p style="font-size: 0.85rem; color: #666;">For bug reports, feature requests, and technical issues.</p>
+          </div>
+
+          <div class="contact-info-card" style="margin-bottom: 20px;">
+            <h3>💬 General Talk</h3>
+            <p><a href="mailto:thedeeparise@gmail.com">thedeeparise@gmail.com</a></p>
+            <p style="font-size: 0.85rem; color: #666;">For casual conversations, feedback, and suggestions.</p>
+          </div>
+
+          <div class="contact-info-card" style="margin-bottom: 20px;">
+            <h3>🔗 Links</h3>
+            <p><strong>GitHub:</strong> <a href="https://github.com/deepdeyiitgn/Clock-Overlays" target="_blank">github.com/deepdeyiitgn/Clock-Overlays</a></p>
+            <p><strong>Website:</strong> <a href="https://clock.qlynk.me" target="_blank">clock.qlynk.me</a></p>
+            <p><strong>Uptodown:</strong> <a href="https://transparent-clock.en.uptodown.com/windows" target="_blank">Transparent Clock on Uptodown</a></p>
+          </div>
+
+          <div class="contact-info-card">
+            <h3>🌐 Social</h3>
+            <div class="social-links">
+              <a href="https://github.com/deepdeyiitgn" target="_blank">GitHub</a>
+              <a href="https://www.instagram.com/deepdey.official" target="_blank">Instagram</a>
+              <a href="https://youtube.com/channel/UCrh1Mx5CTTbbkgW5O6iS2Tw/" target="_blank">YouTube</a>
+              <a href="https://discord.com/invite/t6ZKNw556n" target="_blank">Discord</a>
+              <a href="https://qlynk.vercel.app" target="_blank">QuickLink</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Contact Form -->
+        <div class="contact-form">
+          <h2 style="margin-top:0; color:#2c3e50;">Send a Message</h2>
+          <p style="color: #666; margin-bottom: 20px; font-size: 0.9rem;">Fill out the form below. Clicking send will open your email client with the details pre-filled.</p>
+
+          <form id="contactForm" onsubmit="return handleContactSubmit(event)">
+            <label for="cf-name">Name <span style="color:#e74c3c;">*</span></label>
+            <input type="text" id="cf-name" name="name" required placeholder="Your full name">
+
+            <label for="cf-email">Email Address <span style="color:#e74c3c;">*</span></label>
+            <input type="email" id="cf-email" name="email" required placeholder="your@email.com">
+
+            <label for="cf-phone">Phone Number <span class="optional-label">(optional)</span></label>
+            <input type="tel" id="cf-phone" name="phone" placeholder="+91 000 000 0000">
+
+            <label for="cf-category">Contact Type <span style="color:#e74c3c;">*</span></label>
+            <select id="cf-category" name="category" required>
+              <option value="">— Select —</option>
+              <option value="official">Official Support (a@qlynk.me)</option>
+              <option value="dev">Developer Support (team.deepdey@gmail.com)</option>
+              <option value="general">General Talk (thedeeparise@gmail.com)</option>
+            </select>
+
+            <label for="cf-subject">Subject <span style="color:#e74c3c;">*</span></label>
+            <input type="text" id="cf-subject" name="subject" required placeholder="Brief subject line">
+
+            <label for="cf-message">Message <span style="color:#e74c3c;">*</span></label>
+            <textarea id="cf-message" name="message" required placeholder="Describe your question, issue, or feedback in detail..."></textarea>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+          </form>
+        </div>
       </div>
     </div>
   </main>
+
+  <script>
+    function handleContactSubmit(e) {
+      e.preventDefault();
+
+      var name = document.getElementById('cf-name').value.trim();
+      var email = document.getElementById('cf-email').value.trim();
+      var phone = document.getElementById('cf-phone').value.trim() || 'Not provided';
+      var category = document.getElementById('cf-category').value;
+      var subject = document.getElementById('cf-subject').value.trim();
+      var message = document.getElementById('cf-message').value.trim();
+
+      var emailMap = {
+        'official': { addr: 'a@qlynk.me', label: 'Official Support' },
+        'dev': { addr: 'team.deepdey@gmail.com', label: 'Developer Support' },
+        'general': { addr: 'thedeeparise@gmail.com', label: 'General Talk' }
+      };
+
+      var target = emailMap[category];
+      if (!target) { alert('Please select a contact type.'); return false; }
+
+      var body = 'I am From Study Clock Site, want ' + target.label + ', Here is the details:\n\n'
+        + 'Name: ' + name + '\n'
+        + 'Email: ' + email + '\n'
+        + 'Phone: ' + phone + '\n\n'
+        + 'My Problems:\n' + message;
+
+      var mailtoUrl = 'mailto:' + target.addr
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(body);
+
+      window.location.href = mailtoUrl;
+      return false;
+    }
+  </script>
 
   <footer>
     <div class="container">
       <strong>Transparent Clock</strong> — Minimal clock & focus companion for students.
       <p class="footer-note">* QR generation, QR scanning, and QuickLink shortening require an internet connection.</p>
-      <p class="footer-meta">© <span class="js-year"></span> Deep Dey | All Right Resereved | Quicklink x Transperenet Clock</p>
+      <p class="footer-meta">&copy; <span class="js-year"></span> Deep Dey | All Rights Reserved | QuickLink x Transparent Clock</p>
       <div class="footer-links">
         <a href="index.html">Home</a>
         <a href="features.html">Features</a>
         <a href="download.html">Download</a>
         <a href="faq.html">FAQ</a>
         <a href="about.html">About</a>
+        <a href="legal.html">Legal</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="copyright.html">Copyright</a>
+        <a href="dmca.html">DMCA</a>
       </div>
     </div>
   </footer>
 
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/footer-extras.js"></script>
 </body>
 </html>
