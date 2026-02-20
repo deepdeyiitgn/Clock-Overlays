@@ -509,10 +509,17 @@
       + '  </div>'
       + '</div>';
 
-    // Insert watermarks after footer
+    // Copyright line below watermarks
+    var copyrightBar = document.createElement("div");
+    copyrightBar.id = "deep-copyright-bar";
+    copyrightBar.style.cssText = "text-align:center; padding:18px 10px; font-size:12px; color:#888; background:#111; border-top:1px solid #222; letter-spacing:0.3px;";
+    copyrightBar.innerHTML = '&copy; 2026 Deep Dey | All Rights Reserved | QuickLink &times; Transparent Clock';
+
+    // Insert watermarks + copyright after footer
     if (footer) {
       footer.parentNode.insertBefore(watermarkDiv, footer.nextSibling);
       footer.parentNode.insertBefore(deepWatermarkDiv, watermarkDiv.nextSibling);
+      footer.parentNode.insertBefore(copyrightBar, deepWatermarkDiv.nextSibling);
     }
 
     /* ===================================================
