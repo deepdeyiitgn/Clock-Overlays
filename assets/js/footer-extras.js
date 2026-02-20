@@ -580,5 +580,29 @@
       });
     }
 
+    /* ===================================================
+       4. LINK PREVIEW PROTECTION
+       Converts all <a> href links to onclick navigation
+       so browser status bar does not preview the URL.
+    =================================================== */
+    var allLinks = document.querySelectorAll("a[href]");
+    allLinks.forEach(function (link) {
+      var href = link.getAttribute("href");
+      if (!href || href === "#" || href.startsWith("javascript:") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+      var target = link.getAttribute("target");
+      link.setAttribute("data-href", href);
+      link.removeAttribute("href");
+      link.style.cursor = "pointer";
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        var dest = this.getAttribute("data-href");
+        if (target === "_blank") {
+          window.open(dest, "_blank", "noopener,noreferrer");
+        } else {
+          window.location.href = dest;
+        }
+      });
+    });
+
   });
 })();
