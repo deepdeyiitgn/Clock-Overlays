@@ -52,48 +52,18 @@
           "@type": "FAQPage",
           "name": "FAQ - Transparent Clock",
           "url": "https://clock.qlynk.me/faq.html",
-          "description": "Frequently asked questions about Transparent Clock: pricing, privacy, offline* use, and safety.",
+          "description": "85+ frequently asked questions about Transparent Clock: installation, privacy, Pomodoro, focus tracking, and more.",
           "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "Is this free?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. The stable release is free to use."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is data private?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. All settings are stored locally on your device."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Does it use internet?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Core features are fully offline*. Utilities (QR and QuickLink) are online-assisted."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is it safe?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. The app is lightweight and does not collect any personal data."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Future paid plans?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "No paid plans are announced. Any future plans will be optional and transparent."
-              }
-            }
+            { "@type": "Question", "name": "Is Transparent Clock free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The stable release is completely free with no hidden fees." } },
+            { "@type": "Question", "name": "Does it collect personal data?", "acceptedAnswer": { "@type": "Answer", "text": "No. Zero data collection. Everything stays on your device." } },
+            { "@type": "Question", "name": "Does it use internet?", "acceptedAnswer": { "@type": "Answer", "text": "Core features are fully offline. Utilities like QR and QuickLink are online-assisted." } },
+            { "@type": "Question", "name": "Is it open source?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Full source code available on GitHub under MIT license." } },
+            { "@type": "Question", "name": "What platforms are supported?", "acceptedAnswer": { "@type": "Answer", "text": "Windows 10 and Windows 11 are officially supported." } },
+            { "@type": "Question", "name": "Who created Transparent Clock?", "acceptedAnswer": { "@type": "Answer", "text": "Deep Dey, an AI engineer and class 11 student." } },
+            { "@type": "Question", "name": "What is the Pomodoro timer?", "acceptedAnswer": { "@type": "Answer", "text": "A time management method with 25 minutes of focused work followed by a 5-minute break." } },
+            { "@type": "Question", "name": "Can I customize Pomodoro durations?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Work, short break, and long break durations are all customizable." } },
+            { "@type": "Question", "name": "What are Focus Insights?", "acceptedAnswer": { "@type": "Answer", "text": "A dashboard showing productivity patterns with charts, graphs, and heatmaps." } },
+            { "@type": "Question", "name": "How do I report a bug?", "acceptedAnswer": { "@type": "Answer", "text": "Use the Contact page or open an issue on the GitHub repository." } }
           ],
           "isPartOf": {
             "@type": "WebSite",
@@ -168,28 +138,162 @@
   <main class="section">
     <div class="container">
       <h1>FAQ</h1>
-      <div class="card-grid">
-        <article class="card">
-          <h3>Is this free?</h3>
-          <p>Yes. The stable release is free to use.</p>
-        </article>
-        <article class="card">
-          <h3>Is data private?</h3>
-          <p>Yes. All settings are stored locally on your device.</p>
-        </article>
-        <article class="card">
-          <h3>Does it use internet?</h3>
-          <p>Core features are fully offline*. Utilities (QR and QuickLink) are online-assisted.</p>
-        </article>
-        <article class="card">
-          <h3>Is it safe?</h3>
-          <p>Yes. The app is lightweight and does not collect any personal data.</p>
-        </article>
-        <article class="card">
-          <h3>Future paid plans?</h3>
-          <p>No paid plans are announced. Any future plans will be optional and transparent.</p>
-        </article>
+      <p style="color:#888; margin-bottom: 30px;">Find answers to the most common questions about Transparent Clock.</p>
+
+      <div id="faq-container" class="card-grid"></div>
+
+      <!-- Pagination -->
+      <div id="faq-pagination" style="display:flex; align-items:center; justify-content:center; gap:16px; margin:40px 0 20px;">
+        <button id="faq-prev" style="padding:10px 24px; border:2px solid #ff6b35; background:transparent; color:#ff6b35; border-radius:8px; font-weight:600; cursor:pointer; font-size:15px;">&#8592; Previous</button>
+        <span id="faq-page-info" style="font-weight:600; color:#555; font-size:15px;"></span>
+        <button id="faq-next" style="padding:10px 24px; border:2px solid #ff6b35; background:#ff6b35; color:#fff; border-radius:8px; font-weight:600; cursor:pointer; font-size:15px;">Next &#8594;</button>
       </div>
+
+      <script>
+      (function() {
+        var faqs = [
+          // ── General ──
+          { q: "Is Transparent Clock free?", a: "Yes. The stable release is completely free to download and use, with no hidden fees." },
+          { q: "Is there a paid version?", a: "No paid version exists. Any future plans will be optional and communicated transparently." },
+          { q: "What platforms does it support?", a: "Currently, Transparent Clock supports Windows 10 and Windows 11." },
+          { q: "Is it open source?", a: "Yes. The full source code is available on GitHub under the MIT license." },
+          { q: "Who created Transparent Clock?", a: "Transparent Clock was created by Deep Dey, an AI engineer and class 11 student." },
+          { q: "How do I download it?", a: "Visit the Download page on our website or get it from GitHub Releases or Uptodown." },
+          { q: "What is the latest version?", a: "The latest stable release is v08.02.2026. Check the Download page for updates." },
+          { q: "How big is the installer?", a: "The installer is lightweight, typically under 15 MB for a full installation." },
+          { q: "Can I use it on multiple computers?", a: "Yes. There are no license restrictions — install it on as many PCs as you like." },
+          { q: "Does it auto-update?", a: "Currently, auto-update is not available. You can manually check for new releases on the website or GitHub." },
+
+          // ── Privacy & Data ──
+          { q: "Does it collect any personal data?", a: "No. Transparent Clock collects zero personal data. Everything stays on your device." },
+          { q: "Is my data stored in the cloud?", a: "No. All data (settings, focus history, todos) is stored locally on your computer." },
+          { q: "Does it use telemetry or analytics?", a: "No telemetry, analytics, or tracking of any kind. 100% offline-first." },
+          { q: "Does it phone home?", a: "No. The app never contacts external servers for core functionality." },
+          { q: "Can I verify the privacy claims?", a: "Yes. The source code is open on GitHub — you can inspect every line." },
+          { q: "Is my focus history shared anywhere?", a: "No. Focus history is stored exclusively in local files on your machine." },
+          { q: "Does the website use cookies?", a: "The website is a static site hosted on Vercel with no tracking cookies." },
+          { q: "What happens to my data if I uninstall?", a: "Your local data files remain in the app directory unless you manually delete them." },
+          { q: "Is there a privacy policy?", a: "Yes. Read our full Privacy Policy page for detailed information about our zero-data-collection approach." },
+          { q: "Does it access my files or folders?", a: "No. It only reads and writes its own configuration and data files." },
+
+          // ── Installation & Setup ──
+          { q: "How do I install Transparent Clock?", a: "Download the installer from the Download page and run the setup wizard. It takes under a minute." },
+          { q: "Does it need administrator rights?", a: "The installer may request admin rights for the initial setup, but the app itself runs without them." },
+          { q: "Can I install it without admin access?", a: "A portable version may be available on GitHub Releases that doesn't require installation." },
+          { q: "Where is it installed by default?", a: "By default, it installs to your Program Files directory under 'Transparent Clock'." },
+          { q: "How do I uninstall it?", a: "Use Windows Settings → Apps → Transparent Clock → Uninstall, or run the uninstaller from the install directory." },
+          { q: "Does it need .NET Framework?", a: "It requires .NET 8.0 runtime, which is usually bundled or auto-installed." },
+          { q: "Is there a portable version?", a: "Check GitHub Releases for portable/standalone builds that don't require installation." },
+          { q: "Does it work on Windows 7 or 8?", a: "Officially, only Windows 10 and 11 are supported. Older versions may work but aren't tested." },
+          { q: "Will there be a Mac or Linux version?", a: "Currently there are no plans, but since it's open source, community ports are possible." },
+          { q: "How do I update to a new version?", a: "Download the latest installer from the Download page and install over the existing version." },
+
+          // ── Clock Overlay ──
+          { q: "What is the clock overlay?", a: "It's a transparent, always-on-top clock that sits on your desktop so you can always see the time." },
+          { q: "Can I move the clock position?", a: "Yes. Use the Position Controller to drag the clock to any corner or edge of your screen." },
+          { q: "Can I resize the clock?", a: "Yes. The clock size can be adjusted through the Settings panel." },
+          { q: "Can I change the clock font or color?", a: "Yes. Multiple themes and customization options are available in Settings." },
+          { q: "Does it show seconds?", a: "Yes. You can toggle seconds display on or off in the Settings." },
+          { q: "Can I use 12-hour or 24-hour format?", a: "Yes. Both 12-hour (AM/PM) and 24-hour formats are supported." },
+          { q: "Does it show the date?", a: "Yes. Date display can be enabled alongside the clock." },
+          { q: "Can I make it more or less transparent?", a: "Yes. Opacity is fully adjustable from nearly invisible to fully opaque." },
+          { q: "Does it stay on top of other windows?", a: "Yes. The clock overlay is always-on-top by default so it's visible over all applications." },
+          { q: "Can I temporarily hide the clock?", a: "Yes. You can minimize or hide the overlay using keyboard shortcuts or the system tray." },
+
+          // ── Pomodoro Timer ──
+          { q: "What is a Pomodoro timer?", a: "A time management method: 25 minutes of focused work followed by a 5-minute break." },
+          { q: "Can I customize Pomodoro durations?", a: "Yes. Work, short break, and long break durations are all customizable." },
+          { q: "Does it play sound notifications?", a: "Yes. Toast notifications appear when sessions end, with optional sound alerts." },
+          { q: "How many Pomodoro sessions can I do?", a: "Unlimited. The timer cycles through work and break sessions continuously." },
+          { q: "Can I pause the Pomodoro timer?", a: "Yes. You can pause, resume, or reset the timer at any time." },
+          { q: "Does it track completed Pomodoros?", a: "Yes. Completed sessions are logged in your Focus History for analytics." },
+          { q: "What happens after 4 Pomodoros?", a: "After 4 work sessions, a long break is automatically suggested (configurable)." },
+          { q: "Can I skip a break?", a: "Yes. You can skip any break and go straight to the next work session." },
+          { q: "Does the Pomodoro work offline?", a: "Yes. The entire Pomodoro system works completely offline." },
+          { q: "Can I see Pomodoro stats?", a: "Yes. Focus Insights provides detailed analytics on your Pomodoro sessions." },
+
+          // ── To-Do List ──
+          { q: "How does the To-Do list work?", a: "Add tasks, mark them complete, and organize your work — all stored locally." },
+          { q: "Is there a task limit?", a: "No hard limit. You can add as many tasks as you need." },
+          { q: "Can I edit tasks after creating them?", a: "Yes. Tasks can be edited, deleted, or reordered at any time." },
+          { q: "Are tasks synced to the cloud?", a: "No. All tasks are stored locally on your device for privacy." },
+          { q: "Can I set due dates for tasks?", a: "The current version focuses on a simple checklist. Advanced features may come in future updates." },
+          { q: "Do tasks persist after closing the app?", a: "Yes. Tasks are saved to local storage and persist between sessions." },
+          { q: "Can I clear all completed tasks?", a: "Yes. You can clear completed tasks with a single action." },
+          { q: "Does it support task categories?", a: "The current version uses a flat list. Categories may be added in future updates." },
+          { q: "Can I drag and reorder tasks?", a: "Task reordering is available through the interface controls." },
+          { q: "Is there a task search feature?", a: "Currently not available, but planned for future releases." },
+
+          // ── Focus Insights ──
+          { q: "What are Focus Insights?", a: "Focus Insights is a dashboard showing your productivity patterns with charts and heatmaps." },
+          { q: "What data does Focus Insights track?", a: "It tracks focus session durations, Pomodoro completions, and time-of-day patterns — all locally." },
+          { q: "Can I see daily, weekly, or monthly stats?", a: "Yes. Filter your focus data by day, week, month, or custom date ranges." },
+          { q: "Does it show graphs?", a: "Yes. Bar graphs, line graphs, and heatmaps visualize your focus patterns." },
+          { q: "What is the heatmap?", a: "A visual grid showing which hours and days you're most productive." },
+          { q: "Can I export my focus data?", a: "Currently, data is stored locally in JSON format. Export features may come in future updates." },
+          { q: "Does Focus Insights need internet?", a: "No. All analytics are computed locally from your stored session data." },
+          { q: "How far back does history go?", a: "There's no limit — all sessions since you started using the app are stored." },
+          { q: "Can I reset my focus history?", a: "Yes. You can clear focus history from the Settings panel." },
+          { q: "Are insights accurate?", a: "Yes. They're calculated directly from your actual Pomodoro and focus sessions." },
+
+          // ── Utilities & Extras ──
+          { q: "What utilities are included?", a: "QR Code generator, QR Code scanner, and QuickLink URL shortener." },
+          { q: "Does the QR generator need internet?", a: "Yes. QR generation uses an online API for rendering." },
+          { q: "Can I scan QR codes?", a: "Yes. The built-in scanner can read QR codes from your screen or camera." },
+          { q: "What is QuickLink?", a: "QuickLink is an integrated URL shortener that creates short links from long URLs." },
+          { q: "Does QuickLink need internet?", a: "Yes. URL shortening requires an API call to the QuickLink service." },
+          { q: "Are shortened links permanent?", a: "Links are maintained by the QuickLink service. Check qlynk.me for details." },
+          { q: "Can I generate QR codes for any text?", a: "Yes. Generate QR codes for URLs, text, contact info, and more." },
+          { q: "Is there a QR code size limit?", a: "Standard QR limitations apply — very long text may not encode properly." },
+
+          // ── Troubleshooting ──
+          { q: "The clock overlay isn't showing up?", a: "Try restarting the app. Check that the overlay isn't minimized to the system tray." },
+          { q: "The app crashes on startup?", a: "Ensure .NET 8.0 runtime is installed. Try running the app as administrator." },
+          { q: "Settings aren't saving?", a: "Check that the app has write permissions to its data directory." },
+          { q: "The Pomodoro timer is off?", a: "Make sure your system clock is accurate. The timer uses system time." },
+          { q: "How do I report a bug?", a: "Use the Contact page or open an issue on the GitHub repository." },
+          { q: "Where can I request features?", a: "Feature requests are welcome via GitHub Issues or the Contact page." },
+          { q: "Is there a community or forum?", a: "Join discussions on the GitHub repository's Discussions tab." },
+          { q: "How do I contribute to the project?", a: "Fork the repository on GitHub, make your changes, and submit a pull request." },
+          { q: "The app won't install?", a: "Try downloading the installer again. Ensure you have sufficient disk space and admin rights." },
+          { q: "Can I run it on startup?", a: "Yes. Enable 'Start with Windows' in the Settings panel to launch on boot." }
+        ];
+
+        var perPage = 20;
+        var currentPage = 1;
+        var totalPages = Math.ceil(faqs.length / perPage);
+        var container = document.getElementById("faq-container");
+        var prevBtn = document.getElementById("faq-prev");
+        var nextBtn = document.getElementById("faq-next");
+        var pageInfo = document.getElementById("faq-page-info");
+
+        function renderPage(page) {
+          currentPage = page;
+          var start = (page - 1) * perPage;
+          var end = Math.min(start + perPage, faqs.length);
+          var html = "";
+          for (var i = start; i < end; i++) {
+            html += '<article class="card"><h3>' + (i + 1) + '. ' + faqs[i].q + '</h3><p>' + faqs[i].a + '</p></article>';
+          }
+          container.innerHTML = html;
+          pageInfo.textContent = "Page " + page + " of " + totalPages + " (" + faqs.length + " questions)";
+          prevBtn.style.opacity = page <= 1 ? "0.4" : "1";
+          prevBtn.style.pointerEvents = page <= 1 ? "none" : "auto";
+          nextBtn.style.opacity = page >= totalPages ? "0.4" : "1";
+          nextBtn.style.pointerEvents = page >= totalPages ? "none" : "auto";
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        prevBtn.addEventListener("click", function() {
+          if (currentPage > 1) renderPage(currentPage - 1);
+        });
+        nextBtn.addEventListener("click", function() {
+          if (currentPage < totalPages) renderPage(currentPage + 1);
+        });
+
+        renderPage(1);
+      })();
+      </script>
     </div>
   </main>
 

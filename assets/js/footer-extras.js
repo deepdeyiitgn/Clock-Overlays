@@ -584,11 +584,12 @@
        4. LINK PREVIEW PROTECTION
        Converts all <a> href links to onclick navigation
        so browser status bar does not preview the URL.
+       Includes mailto:, tel:, and # anchor links.
     =================================================== */
     var allLinks = document.querySelectorAll("a[href]");
     allLinks.forEach(function (link) {
       var href = link.getAttribute("href");
-      if (!href || href === "#" || href.startsWith("javascript:") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+      if (!href || href.startsWith("javascript:")) return;
       var target = link.getAttribute("target");
       link.setAttribute("data-href", href);
       link.removeAttribute("href");
@@ -596,7 +597,17 @@
       link.addEventListener("click", function (e) {
         e.preventDefault();
         var dest = this.getAttribute("data-href");
-        if (target === "_blank") {
+        if (dest.startsWith("mailto:") || dest.startsWith("tel:")) {
+          window.location.href = dest;
+        } else if (dest === "#" || dest.startsWith("#")) {
+          var id = dest.substring(1);
+          if (id) {
+            var el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        } else if (target === "_blank") {
           window.open(dest, "_blank", "noopener,noreferrer");
         } else {
           window.location.href = dest;
