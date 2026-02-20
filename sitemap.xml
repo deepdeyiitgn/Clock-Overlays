@@ -28,10 +28,16 @@
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://clock.qlynk.me/about.html</loc>
+    <loc>https://clock.qlynk.me/About.html</loc>
     <lastmod>2026-02-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://clock.qlynk.me/About-Deep.html</loc>
+    <lastmod>2026-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://clock.qlynk.me/faq.html</loc>
