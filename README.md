@@ -108,7 +108,7 @@ All user data stored locally at:
 
 - **Issues**: [Report bugs or request features](https://github.com/deepdeyiitgn/Clock-Overlays/issues)
 - **Discussions**: [Community feedback](https://github.com/deepdeyiitgn/Clock-Overlays/discussions)
-- **License**: MIT (see [LICENSE](LICENSE))
+- **License**: Custom Source License (see [LICENSE](LICENSE))
 
 ---
 
