@@ -1,24 +1,23 @@
 export default function middleware(request) {
   const url = new URL(request.url);
-  
-  // Rule 1: Agar path '/assets' se shuru ho raha hai
-  // Toh isko bypass kar do (koi ched-chhad nahi, images apne original capital/small naam se load hongi)
-  if (url.pathname.startsWith('/assets')) {
+  const pathname = url.pathname;
+
+  // Rule 1: Agar path mein "/assets" hai, toh usko chhod do (Bypass for images/CSS/JS)
+  if (pathname.includes('/assets/')) {
     return; 
   }
-  
-  // Rule 2: Baaki baache huye saare pages (jaise /About.html, /Features) ke liye
-  // Agar URL mein koi bhi Capital letter hai, toh usko small letter (lowercase) kardo
-  if (url.pathname !== url.pathname.toLowerCase()) {
-    url.pathname = url.pathname.toLowerCase();
-    return Response.redirect(url, 308); // User ko sahi small-letter wale URL par bhej do
+
+  // Rule 2: Agar kisi root file mein extension hai (jaise favicon.ico) par woh .html nahi hai, toh bypass karo
+  if (pathname.includes('.') && !pathname.toLowerCase().endsWith('.html')) {
+    return; 
+  }
+
+  // Rule 3: Baaki bache huye saare HTML pages ke liye
+  if (pathname !== pathname.toLowerCase()) {
+    url.pathname = pathname.toLowerCase();
+    
+    // SEO ke liye 308 (Modern 301 Moved Permanently) use kar rahe hain
+    // Isse SEO ranking direct naye lowercase URL par transfer ho jayegi
+    return Response.redirect(url, 308); 
   }
 }
-
-// Yeh Vercel ko batata hai ki middleware kin URL par chalana chahiye
-export const config = {
-  matcher: [
-    // '/assets' ko chhor kar baaki saare URLs ko pakro
-    '/((?!assets).*)'
-  ]
-};
