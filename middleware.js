@@ -1,12 +1,15 @@
 export default function middleware(request) {
   const url = new URL(request.url);
   
-  // Agar URL ke path mein koi bhi capital letter hai
+  // Agar request /assets folder ki hai, ya usme extension hai (jaise .png, .jpg, .css, .js)
+  // Toh usko bypass kar do (kuch mat karo), taaki images original naam se load hon.
+  if (url.pathname.startsWith('/assets') || url.pathname.includes('.')) {
+    return; 
+  }
+  
+  // Baaki sab pages ke URL ko small letters (lowercase) mein convert kar do
   if (url.pathname !== url.pathname.toLowerCase()) {
-    // Toh usko completely small letters (lowercase) mein convert kar do
     url.pathname = url.pathname.toLowerCase();
-    
-    // Aur user ko naye sahi URL par bhej do (308 Permanent Redirect)
     return Response.redirect(url, 308);
   }
 }
