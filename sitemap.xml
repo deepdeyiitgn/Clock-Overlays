@@ -159,7 +159,7 @@
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url> <!--
-</urlset> -->
+</urlset> 
 
 
   <!-- Error Pages -->
@@ -170,11 +170,11 @@
     <changefreq>yearly</changefreq>
     <priority>0.1</priority>
   </url>
-<!-- </urlset> -->
+<!-- </urlset> 
 
-  <!-- ---------------------------------------------------------NEW SETS START FROM HERE---------------------------------------------------------------------------- -->
+  ---------------------------------------------------------NEW SETS START FROM HERE---------------------------------------------------------------------------- 
 
-  <!-- Homepage --> 
+  Homepage (NEW SETS) --> 
 
   <url>
     <loc>https://clock.qlynk.me/index</loc>
