@@ -162,6 +162,18 @@
 </urlset>
 
 
+  <!-- Error Pages -->
+
+  <url>
+    <loc>https://clock.qlynk.me/404.html</loc>
+    <lastmod>2026-03-27</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
+</urlset>
+
+  <!-- ---------------------------------------------------------NEW SETS START FROM HERE------------------------------------------------------------------------------>
+
   <!-- Homepage --> 
 
   <url>
@@ -177,17 +189,8 @@
     <priority>1.0</priority>
   </url>
 
-  <!-- Error Pages -->
 
-  <url>
-    <loc>https://clock.qlynk.me/404.html</loc>
-    <lastmod>2026-03-27</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.1</priority>
-  </url>
-</urlset>
 
-  <!-- ---------------------------------------------------------NEW SETS START FROM HERE------------------------------------------------------------------------------>
 
   <!-- Main Pages (NEW SETS) -->
 
