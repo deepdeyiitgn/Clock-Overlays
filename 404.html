@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ff6b35" />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="language" content="English" />
+  <title>404 Page Not Found — Transparent Clock</title>
+  <meta name="description" content="The page you are looking for has been moved or doesn't exist." />
+  
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="assets/images/logo.png" />
+  
+  <style>
+    /* 404 Specific Styling matching your brand */
+    .error-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 75vh;
+      text-align: center;
+      padding: 60px 20px;
+      background: #fafafa;
+    }
+    
+    .error-svg-container {
+      width: 160px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    /* SVG Animations */
+    .spin-fast {
+      transform-origin: 50px 50px;
+      animation: spin 1.5s linear infinite;
+    }
+    .spin-slow {
+      transform-origin: 50px 50px;
+      animation: spin 12s linear infinite reverse;
+    }
+    .float-anim {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes spin { 
+      100% { transform: rotate(360deg); } 
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .error-code {
+      font-size: 7rem;
+      font-weight: 800;
+      color: #1a1a2e; /* Your dark blue brand color */
+      margin: 0;
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+    
+    .error-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ff6b35, #e55a2b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 10px 0 20px;
+    }
+    
+    .error-desc {
+      color: #555;
+      font-size: 1.15rem;
+      max-width: 500px;
+      margin: 0 auto 35px;
+      line-height: 1.6;
+    }
+
+    .cta-btn-primary {
+      background: #ff6b35;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    }
+
+    .cta-btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+      background: #e55a2b;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/images/logo.png" alt="Transparent Clock logo" />
+        Transparent Clock
+      </a>
+      <nav>
+        <button class="nav-toggle" aria-label="Toggle navigation">Menu</button>
+        <div class="nav-links">
+          <a href="features.html">Features</a>
+          <a href="download.html">Download</a>
+          <a href="faq.html">FAQ</a>
+          <a href="About.html">About</a>
+          <a href="About-Deep.html">Author</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="error-wrapper">
+      
+      <div class="error-svg-container float-anim">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#e8e8e8" stroke-width="6"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#1a1a2e" stroke-width="3" stroke-dasharray="4 6"/>
+          
+          <line x1="50" y1="50" x2="50" y2="18" stroke="#ff6b35" stroke-width="4" stroke-linecap="round" class="spin-fast" />
+          
+          <line x1="50" y1="50" x2="70" y2="65" stroke="#1a1a2e" stroke-width="5" stroke-linecap="round" class="spin-slow" />
+          
+          <circle cx="50" cy="50" r="5" fill="#ff6b35" />
+        </svg>
+      </div>
+
+      <h1 class="error-code">404</h1>
+      <h2 class="error-title">Lost in Time</h2>
+      <p class="error-desc">
+        It seems you've stepped outside your focus session. The page you are looking for has been moved, deleted, or never existed.
+      </p>
+      
+      <a href="index.html" class="cta-btn-primary">Return to Present (Home)</a>
+      
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <strong>Transparent Clock</strong> — Minimal clock & focus companion for students.
+      <p class="footer-note">* QR generation, QR scanning, and QuickLink shortening require an internet connection.</p>
+      <p class="footer-meta">&copy; <span class="js-year"></span> Deep Dey | All Rights Reserved | QuickLink x Transparent Clock</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="features.html">Features</a>
+        <a href="download.html">Download</a>
+        <a href="faq.html">FAQ</a>
+        <a href="About.html">About</a>
+        <a href="About-Deep.html">Author</a>
+        <a href="contact.html">Contact</a>
+        <a href="legal.html">Legal</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="copyright.html">Copyright</a>
+        <a href="dmca.html">DMCA</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/footer-extras.js"></script>
+</body>
+</html>
