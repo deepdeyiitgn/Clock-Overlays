@@ -78,6 +78,10 @@ namespace TransparentClock
             var clockTab = new TabPage("Clock") { Padding = new Padding(14), BackColor = AppBackground };
             var pomodoroTab = new TabPage("Pomodoro") { Padding = new Padding(14), BackColor = AppBackground };
             var todoTab = new TabPage("To-Do") { Padding = new Padding(14), BackColor = AppBackground };
+            
+            // --- NEW PREP METER TAB ADDED HERE ---
+            var prepMeterTab = new TabPage("Prep. Meter") { Padding = new Padding(14), BackColor = AppBackground };
+            
             var profileTab = new TabPage("Profile") { Padding = new Padding(14), BackColor = AppBackground };
             var settingsTab = new TabPage("Settings") { Padding = new Padding(14), BackColor = AppBackground };
             var historyTab = new TabPage("History") { Padding = new Padding(14), BackColor = AppBackground };
@@ -88,6 +92,7 @@ namespace TransparentClock
             tabs.TabPages.Add(clockTab);
             tabs.TabPages.Add(pomodoroTab);
             tabs.TabPages.Add(todoTab);
+            tabs.TabPages.Add(prepMeterTab); // --- ADDED TO CONTROL ---
             tabs.TabPages.Add(profileTab);
             tabs.TabPages.Add(settingsTab);
             tabs.TabPages.Add(historyTab);
@@ -576,6 +581,13 @@ namespace TransparentClock
             todoCard.Controls.Add(todoLayout);
             todoTab.Controls.Add(todoCard);
 
+            // --- NEW PREP METER DASHBOARD INITIALIZATION ---
+            var prepMeterDashboardControl = new TransparentClock.PrepMeter.PrepMeterDashboard
+            {
+                Dock = DockStyle.Fill
+            };
+            prepMeterTab.Controls.Add(prepMeterDashboardControl);
+
             var profileCard = CreateCardPanel();
             var profileLayout = new TableLayoutPanel
             {
@@ -957,6 +969,7 @@ namespace TransparentClock
             AddTabFooter(clockTab);
             AddTabFooter(pomodoroTab);
             AddTabFooter(todoTab);
+            AddTabFooter(prepMeterTab); // --- ADDED FOOTER TO PREP METER ---
             AddTabFooter(profileTab);
             AddTabFooter(settingsTab);
             AddTabFooter(historyTab);
