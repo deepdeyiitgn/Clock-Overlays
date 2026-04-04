@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using TransparentClock.PrepMeter;
 
 namespace TransparentClock
 {
@@ -62,6 +63,9 @@ namespace TransparentClock
             {
                 splash.ShowDialog();
             }
+
+            // Start Prep Meter notification service
+            PrepNotificationService.Start();
 
             Application.Run(new AppContext());
         }
