@@ -115,7 +115,7 @@ namespace TransparentClock
                     int labelInterval = Math.Max(1, dataPoints.Count / 6);
                     for (int i = 0; i < dataPoints.Count; i += labelInterval)
                     {
-                        int x = LeftMargin + (int)(graphWidth * i / (dataPoints.Count - 1));
+                        int x = dataPoints.Count == 1 ? LeftMargin + graphWidth / 2 : LeftMargin + (int)(graphWidth * i / (dataPoints.Count - 1));
                         string label = dataPoints[i].Date.ToString("MM/dd");
                         SizeF textSize = g.MeasureString(label, font);
                         g.DrawString(label, font, brush, x - textSize.Width / 2, Height - BottomMargin + 8);
@@ -160,7 +160,7 @@ namespace TransparentClock
             List<PointF> screenPoints = new List<PointF>();
             for (int i = 0; i < dataPoints.Count; i++)
             {
-                float x = LeftMargin + (graphWidth * i / (dataPoints.Count - 1));
+                float x = dataPoints.Count == 1 ? LeftMargin + graphWidth / 2.0f : LeftMargin + (graphWidth * i / (dataPoints.Count - 1.0f));
                 float y = Height - BottomMargin - (graphHeight * dataPoints[i].Minutes / maxMinutes);
                 screenPoints.Add(new PointF(x, y));
             }
@@ -231,7 +231,7 @@ namespace TransparentClock
             // Check if cursor is near any point
             for (int i = 0; i < dataPoints.Count; i++)
             {
-                float x = LeftMargin + (graphWidth * i / (dataPoints.Count - 1));
+                float x = dataPoints.Count == 1 ? LeftMargin + graphWidth / 2.0f : LeftMargin + (graphWidth * i / (dataPoints.Count - 1.0f));
                 float y = Height - BottomMargin - (graphHeight * dataPoints[i].Minutes / maxMinutes);
 
                 float distance = (float)Math.Sqrt(Math.Pow(e.X - x, 2) + Math.Pow(e.Y - y, 2));
