@@ -1,36 +1,38 @@
 {
-  "version": "v08.02.2026",
+  "version": "V05.04.2026",
   "channel": "stable",
-  "releaseDate": "2026-02-08",
+  "releaseDate": "2026-04-05",
   "currentBuild": {
-    "version": "v08.02.2026",
+    "version": "V05.04.2026",
     "status": "STABLE",
-    "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026",
-    "releaseNotesUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026",
-    "installerName": "TransparentClock-Setup-v08.02.2026-Stable.exe"
+    "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/V05.04.2026",
+    "releaseNotesUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/V05.04.2026",
+    "installerName": "TransparentClock-Setup-V05.04.2026.exe"
   },
   "previousReleases": [
+    {
+      "version": "v08.02.2026",
+      "status": "Previous Stable",
+      "releaseDate": "2026-02-08",
+      "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026",
+      "notes": "Finalized Pomodoro, QR tools, and Utilities suite."
+    },
     {
       "version": "v05.02.2026",
       "status": "Previous Beta",
       "releaseDate": "2026-02-05",
       "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v05.02.2026",
-      "notes": "Focus Insights, Utilities suite, QuickLink shortener, QR tools"
-    },
-    {
-      "version": "v29.01.2026",
-      "status": "Previous Stable",
-      "releaseDate": "2026-01-29",
-      "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v29.01.2026",
-      "notes": "Clock overlay only (previous stable baseline)"
+      "notes": "Focus Insights, QuickLink shortener, and QR tools."
     }
   ],
   "releaseNotes": [
-    "Finalized Pomodoro system with accurate focus tracking",
-    "Stable QR Generator and Scanner",
-    "Utilities tab finalized",
-    "UI polish and consistency improvements",
-    "Bug fixes and performance stability"
+    "Launched Prep-Meter Ecosystem 2.0 with high-intensity accountability",
+    "Added Monthly Strategic Review for cumulative performance analytics",
+    "Enhanced Tactical Calendar with Hover Intel and Smart Context Menus",
+    "Implemented Target Exam Countdown and Commander's Oath for logs",
+    "New Randomized Splash Engine with 40+ psychological and focus insights",
+    "Fixed background process persistence with new Hard-Kill logic",
+    "Professional-grade installer with active process detection"
   ],
   "knownIssues": [
     "HEIC export falls back to JPEG (system codec limitation)"
@@ -41,4 +43,3 @@
     "architecture": "x64"
   }
 }
-
