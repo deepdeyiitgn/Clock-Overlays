@@ -1,0 +1,8 @@
+# Windows App aur C# code ko Vercel se block karo
+Release/
+src/
+*.sln
+*.exe
+*.dll
+*.pdb
+*.cs

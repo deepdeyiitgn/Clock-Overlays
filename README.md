@@ -1,0 +1,168 @@
+# Transparent Clock / Clock Overlays
+
+**v08.02.2026 (Stable)** — Professional Windows Desktop Productivity Tool
+
+A lightweight, always-on-top clock overlay with advanced focus tracking, productivity dashboard, and integrated utilities. Pure local storage, zero cloud tracking, 100% user privacy.
+
+> ✅ **Final Stable Release**: v08.02.2026 is complete and production-ready. Only small fixes may follow.
+
+---
+
+<a href='https://transparent-clock.en.uptodown.com/windows' title='Download Transparent Clock' >
+                <img src='https://stc.utdstc.com/img/mediakit/certified-free.png' alt='Download Transparent Clock'>
+                </a>
+
+---
+
+## Overview
+
+Transparent Clock combines a persistent overlay clock with a powerful companion dashboard. Track daily focus patterns, manage tasks, run Pomodoro cycles, and scan/generate QR codes—all stored locally on your machine.
+
+**Offline-first:** Core features run fully offline with local storage only.
+
+**Perfect for**: Students, developers, remote workers, focus-seeking professionals, and anyone tracking productivity.
+
+## Implemented Features
+
+### Core Features
+- **Transparent Clock Overlay** — Always-on-top system clock with custom font, size, color, and position saving
+- **Dashboard Interface** — Tabbed control center with all features accessible in one window
+- **Persistent Settings** — All preferences stored locally (JSON files); nothing sent to cloud
+
+### Focus & Productivity
+- **Focus Tracking System** — 24-hour auto-tracked focus duration per session with intelligent session detection
+- **Focus History & Analytics** — 7-day rolling history with time range selectors (Last 7/30 Days, 6/12 Months)
+- **Smart Statistics** — Average daily focus, best/worst focus slots, daily distribution analysis
+- **Focus Graphs** — Line graphs showing focus trends + 24-hour heatmaps for pattern recognition
+- **Heatmap Visualization** — Daily focus heatmap for quick pattern review
+- **Pomodoro System** — Work, short break, and long break cycles with auto-cycle progression and sound notifications
+- **To-Do List** — Full task management with date range filtering, completion tracking, bulk operations
+
+### Utilities Suite (Online-assisted)
+- **QR Code Generator** — Create 13+ QR code types (URL, WiFi, Email, vCard, Calendar, UPI, Phone, SMS, WhatsApp, Location, Cryptocurrency, Bluetooth, and more)
+- **QR Export Options** — PNG, JPG, SVG, PDF, HEIC formats with embedded QuickLink logo and metadata
+- **QR Code Scanner** — Scan saved QR images with drag-drop support, automatic type detection, and payload preview
+- **QuickLink URL Shortener** — Generate short URLs with API key management, result caching, and error handling
+- **Smart QR Detection** — Auto-detects QR type and extracts structured data (WiFi credentials, contact info, etc.)
+
+*Utilities note:* QR generation, QR scanning, and QuickLink shortening require an internet connection.
+
+### System & Privacy
+- **100% Local Storage** — All data stays on your machine (settings, focus history, to-do items)
+- **Zero Tracking** — No telemetry, analytics, or external data collection
+- **Logo Caching** — QuickLink logo downloaded once and cached locally for offline operation
+- **Version Awareness** — Built-in update notifications for new stable releases
+
+## Installation (Windows)
+
+### For End Users (Recommended)
+1. Download the latest installer: [TransparentClock-Setup-v08.02.2026-Stable.exe](https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026)
+2. Run the installer
+3. Select installation directory
+4. Optionally create desktop shortcut
+5. Launch application
+
+**System Requirements**: Windows 10/11, .NET 8 Desktop Runtime (x64)
+
+### For Developers
+Requirements: [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+
+```bash
+git clone https://github.com/deepdeyiitgn/Clock-Overlays.git
+cd Clock-Overlays/src
+dotnet run
+```
+
+## System Requirements
+- **OS**: Windows 10 / 11 (x64)
+- **RAM**: 4 GB recommended
+- **Storage**: ~500 MB (plus .NET 8 Desktop Runtime)
+- **Framework**: .NET 8 Desktop Runtime (x64)
+
+## Local Data & Privacy
+All user data stored locally at:
+```
+%LOCALAPPDATA%\Clock-Overlays\
+  ├── appstate.json
+  ├── todos.json
+  ├── focus_history.json
+  ├── focus_sessions.json
+  └── quicklink_api_key.txt (if using URL shortener)
+```
+
+✅ **No cloud sync**  
+✅ **No tracking or telemetry**  
+✅ **No internet required** for core features (utilities are optional and online-assisted)  
+✅ **Full user control**
+
+## Release Status
+
+**Transparent Clock v08.02.2026 (Stable)** is the final stable release. Core features are complete and stable.
+
+**Known Limitations**:
+- HEIC export falls back to JPEG (system codec limitation)
+
+**Supported Platforms**: Windows 10 (21H2+), Windows 11
+
+## Contributing & Support
+
+- **Issues**: [Report bugs or request features](https://github.com/deepdeyiitgn/Clock-Overlays/issues)
+- **Discussions**: [Community feedback](https://github.com/deepdeyiitgn/Clock-Overlays/discussions)
+- **License**: Custom Source License (see [LICENSE](LICENSE))
+
+---
+
+## Development
+
+Built with:
+- **Language**: C# 12
+- **Framework**: .NET 8.0 WinForms
+- **Libraries**: QRCoder, ZXing.Net, SkiaSharp, PdfSharp, ImageSharp
+
+## Author
+
+**Deep Dey** — Created January 2026
+
+---
+
+## Previous Versions
+
+- v08.02.2026 (Stable)
+- v05.02.2026
+- v04.02.2026
+- v03.02.2026
+- v02.02.2026
+- v01.02.2026
+- v29.01.2026 (Previous Stable Release)
+
+---
+
+### 📸 Some Screenshots Below: 
+New Screenshots:
+<img width="1943" height="1048" alt="Screenshot of Focus Insights" src="https://github.com/user-attachments/assets/98e1bc30-b495-4817-b06d-969482edf2e7" />
+<img width="1943" height="1057" alt="Screenshot of Utilities Feature 2" src="https://github.com/user-attachments/assets/8966b178-9f7b-43d6-8bc2-5912f310daa8" />
+<img width="1943" height="1052" alt="Screenshot of Utilities Feature 1" src="https://github.com/user-attachments/assets/4ff9fc3a-a409-4097-ba75-d0da3ea24ef1" />
+<img width="1943" height="1055" alt="Screenshot of To Do List Feature" src="https://github.com/user-attachments/assets/b74d33ee-660b-4606-b843-fe938c42fb85" />
+<img width="1943" height="1048" alt="Screenshot of Setting Feature" src="https://github.com/user-attachments/assets/dda85450-53cd-4ac0-8d33-d2073291d0eb" />
+<img width="1943" height="1051" alt="Screenshot of Profile Greetings Feature" src="https://github.com/user-attachments/assets/351e2095-a563-4c30-b67c-ea77220e2f21" />
+<img width="1943" height="1053" alt="Screenshot of Dashboard Feature" src="https://github.com/user-attachments/assets/87534d12-58c6-4082-9f4f-157d964fa7b3" />
+<img width="1943" height="1051" alt="Screenshot of pomodoro Feature" src="https://github.com/user-attachments/assets/0e7e7b62-1fc6-4159-af96-2eafc76f3c82" />
+<img width="1943" height="1053" alt="Screenshot of Clock Overlay Feature" src="https://github.com/user-attachments/assets/eec8953c-2f38-4113-87fd-07a69f1322d5" />
+<img width="1943" height="1053" alt="Screenshot on Home page as a Feature Image" src="https://github.com/user-attachments/assets/aa290ba9-70c3-45bc-a24c-4d448996000e" />
+<img width="1943" height="1103" alt="Screenshot on Home Page" src="https://github.com/user-attachments/assets/df1534ac-4b47-4466-8c2e-bd296c828232" />
+
+Old Screenshots: 
+
+<img width="288" height="209" alt="Screenshot 2026-02-02 202627" src="https://github.com/user-attachments/assets/ee2f565f-8c11-4a61-aa6f-0eedbd08f933" />
+<img width="1942" height="327" alt="Screenshot 2026-02-02 202606" src="https://github.com/user-attachments/assets/198112e5-52c2-439c-a725-645ffe6055e7" />
+<img width="1943" height="369" alt="Screenshot 2026-02-02 202600" src="https://github.com/user-attachments/assets/3f36c66e-4b43-4bff-9aa5-873150e1c8ab" />
+<img width="1943" height="956" alt="Screenshot 2026-02-02 202553" src="https://github.com/user-attachments/assets/71185c69-70b8-4c83-b47d-9631042855cf" />
+<img width="1943" height="595" alt="Screenshot 2026-02-02 202546" src="https://github.com/user-attachments/assets/b6fb0a77-6f17-4493-a769-0c635399e7fd" />
+<img width="1943" height="1103" alt="Screenshot 2026-01-29 182932" src="https://github.com/user-attachments/assets/3a6b399b-77f5-425c-b959-84243f84b899" />
+<img width="246" height="291" alt="Screenshot 2026-01-29 182650" src="https://github.com/user-attachments/assets/b0261434-c31a-4a8f-b1bc-bdb4070ad7dc" />
+<img width="506" height="416" alt="Screenshot 2026-01-29 182638" src="https://github.com/user-attachments/assets/186d9a10-979c-4ab4-826f-153a22c095a7" />
+
+---
+
+## Author
+Deep Dey
