@@ -4,21 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#ff6b35" />
-  <meta name="keywords" content="transparent clock, focus timer, pomodoro, productivity, student, distraction-free, clock overlay, time management, offline" />
+  <meta name="keywords" content="transparent clock, focus timer, pomodoro, productivity, student, distraction-free, clock overlay, time management, prep meter, war room, offline" />
   <meta name="author" content="Deep Dey / QuickLink" />
   <meta name="robots" content="index, follow" />
   <meta name="language" content="English" />
-  <title>Transparent Clock v08.02.2026 (Stable) — Minimal Clock & Focus Companion</title>
-  <meta name="description" content="Transparent Clock is a minimal, offline-first clock overlay and focus companion for students. Features Pomodoro timer, To-Do list, Focus Insights, and zero data collection. Free, source-available, and privacy-focused." />
+  <title>Transparent Clock v04.04.2026 (Stable) — Minimal Clock & Focus Companion</title>
+  <meta name="description" content="Transparent Clock is a minimal, offline-first clock overlay and focus companion. Features Pomodoro timer, Prep-Meter, To-Do list, and zero data collection. Free and privacy-focused." />
   <meta property="og:title" content="Transparent Clock — Minimal Clock & Focus Companion for Students" />
-  <meta property="og:description" content="Offline-first clock overlay with Pomodoro focus sessions, task management, and focus analytics. Zero data collection, 100% privacy-focused, free to download." />
+  <meta property="og:description" content="Offline-first clock overlay with Pomodoro focus sessions, Prep-Meter tracking, and focus analytics. Zero data collection, 100% privacy-focused, free to download." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://clock.qlynk.me/index.html" />
   <meta property="og:image" content="https://clock.qlynk.me/assets/images/hero.png" />
   <meta property="og:site_name" content="Transparent Clock" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Transparent Clock — Minimal Clock & Focus Companion" />
-  <meta name="twitter:description" content="Free offline-first clock overlay with Pomodoro timer and focus analytics for deep work." />
+  <meta name="twitter:description" content="Free offline-first clock overlay with Pomodoro timer, Prep-Meter, and focus analytics for deep work." />
   <meta name="twitter:image" content="https://clock.qlynk.me/assets/images/hero.png" />
   <meta name="twitter:url" content="https://clock.qlynk.me/" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -27,6 +27,94 @@
   <link rel="icon" href="assets/images/logo.png" />
   <link rel="canonical" href="https://clock.qlynk.me/index.html" />
   <link rel="alternate" hreflang="en" href="https://clock.qlynk.me/" />
+  
+  <style>
+    /* Premium Home Page Specific Styles */
+    .war-mode-banner {
+      margin: 25px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2c0b0e 100%);
+      border-left: 5px solid #e74c3c;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(231, 76, 60, 0.15);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    .war-mode-banner:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(231, 76, 60, 0.25);
+    }
+    .war-mode-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(231, 76, 60, 0.1) 0%, transparent 60%);
+      animation: rotate-bg 15s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rotate-bg {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .war-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+    .war-title h3 {
+      margin: 0;
+      color: #ff6b6b;
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .war-desc {
+      margin: 0 0 15px 0;
+      font-size: 0.95rem;
+      color: #ddd;
+      line-height: 1.5;
+      position: relative;
+      z-index: 2;
+    }
+    .glow-btn-small {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+    .glow-btn-small:hover {
+      box-shadow: 0 0 25px rgba(231, 76, 60, 0.8);
+      color: white;
+    }
+    .stable-badge {
+      background: #27ae60;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+  </style>
+
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -64,14 +152,9 @@
           },
           "url": "https://clock.qlynk.me/download.html",
           "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases",
-          "image": "https://clock.qlynk.me/assets/images/hero.png"
-        }
-      ]
-    }
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
+          "image": "https://clock.qlynk.me/assets/images/hero.png",
+          "softwareVersion": "v04.04.2026"
+        },
         {
           "@type": "Organization",
           "name": "Deep Dey / QuickLink",
@@ -85,27 +168,6 @@
           ]
         },
         {
-          "@type": "WebSite",
-          "name": "Transparent Clock",
-          "url": "https://clock.qlynk.me",
-          "publisher": {
-            "@type": "Organization",
-            "name": "Deep Dey / QuickLink",
-            "url": "https://clock.qlynk.me"
-          }
-        },
-        {
-          "@type": "WebPage",
-          "name": "Transparent Clock v08.02.2026 (Stable) - Minimal Clock & Focus Companion",
-          "url": "https://clock.qlynk.me/",
-          "description": "Transparent Clock is a minimal clock overlay and focus companion for students. Offline*-first, distraction-free, and built for deep focus.",
-          "isPartOf": {
-            "@type": "WebSite",
-            "name": "Transparent Clock",
-            "url": "https://clock.qlynk.me"
-          }
-        },
-        {
           "@type": "BreadcrumbList",
           "itemListElement": [
             {
@@ -115,39 +177,6 @@
               "item": "https://clock.qlynk.me/"
             }
           ]
-        },
-        {
-          "@type": "ImageObject",
-          "name": "Transparent Clock Logo",
-          "contentUrl": "https://clock.qlynk.me/assets/images/logo.png"
-        },
-        {
-          "@type": "ImageObject",
-          "name": "Transparent Clock Home Screenshot",
-          "contentUrl": "https://clock.qlynk.me/assets/screenshots/Screenshot%20on%20Home%20Page.png"
-        },
-        {
-          "@type": "ImageObject",
-          "name": "Transparent Clock Feature Preview",
-          "contentUrl": "https://clock.qlynk.me/assets/screenshots/Screenshot%20on%20Home%20page%20as%20a%20Feature%20Image.png"
-        },
-        {
-          "@type": "SoftwareApplication",
-          "name": "Transparent Clock",
-          "operatingSystem": "Windows 10/11",
-          "applicationCategory": "ProductivityApplication",
-          "softwareVersion": "v08.02.2026",
-          "publisher": {
-            "@type": "Organization",
-            "name": "Deep Dey / QuickLink",
-            "url": "https://clock.qlynk.me"
-          },
-          "releaseNotes": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-          }
         }
       ]
     }
@@ -177,26 +206,37 @@
   <main>
     <section class="hero">
       <div class="container hero-grid">
-        <div>
-          <span class="eyebrow">v08.02.2026 (Stable)</span>
+        <div style="position: relative; z-index: 2;">
+          <span class="eyebrow" style="background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.3);">v04.04.2026 (Latest Stable)</span>
           <h1>Transparent Clock</h1>
-          <p>Minimal Clock & Focus Companion for Students.</p>
+          <p style="font-size: 1.3rem; font-weight: 500; color: #2c3e50;">Minimal Clock & Focus Companion for Students.</p>
           <p>Stay on time without clutter. Transparent Clock keeps a gentle overlay on your desktop while the built-in Pomodoro system keeps you in flow — all offline*.</p>
-          <div class="callout" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-            <div style="flex:1;min-width:200px;">✅ Final stable release v08.02.2026 is now available. This version is considered complete and stable. No major changes are planned. Only small improvements or fixes may be released in the future.</div>
-            <a href="https://transparent-clock.en.uptodown.com/windows" title="Download Transparent Clock" style="flex-shrink:0;">
+          
+          <div class="war-mode-banner">
+            <div class="war-title">
+              <svg style="width:24px; height:24px; fill:#ff6b6b;" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+              <h3>War Mode Edition Available</h3>
+            </div>
+            <p class="war-desc">Upgrade your discipline with the experimental <strong>V05.04.2026</strong>. Features the new Prep-Meter, Tactical Calendar, and Target Exam Countdowns designed for elite focus.</p>
+            <a href="download.html#special-builds" class="glow-btn-small">
+              Explore War Mode &rarr;
+            </a>
+          </div>
+
+          <div class="callout" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap; margin-top: 20px;">
+            <div style="flex:1;min-width:200px;">✅ <strong>Latest Stable (v04.04.2026)</strong> is now available. Includes the critical Focus Insights graph hotfix and extreme performance stability. Perfect for daily distraction-free sessions.</div>
+            <a href="https://transparent-clock.en.uptodown.com/windows" target="_blank" title="Download Transparent Clock" style="flex-shrink:0; transition: transform 0.3s; display: block;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';">
               <img src="https://stc.utdstc.com/img/mediakit/certified-free.png" alt="Download Transparent Clock" style="max-height:80px;">
             </a>
           </div>
-          <div class="callout" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-left:4px solid #4caf50;margin-top:12px;">
-            🎉 <strong>Big News!</strong> Transparent Clock is now officially live on <a href="https://transparent-clock.en.uptodown.com/windows" target="_blank" style="color:#2e7d32;font-weight:700;">Uptodown</a> — one of the largest trusted software download platforms! Download it with confidence.
-          </div>
-          <div class="btn-group">
-            <a class="btn primary" href="download.html">Download</a>
+
+          <div class="btn-group" style="margin-top: 25px;">
+            <a class="btn primary" href="download.html" style="background: #27ae60; border-color: #27ae60; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);">Download Stable</a>
             <a class="btn secondary" href="features.html">Explore Features</a>
           </div>
         </div>
-        <div class="screenshot-frame" aria-label="Transparent Clock home preview">
+        
+        <div class="screenshot-frame" aria-label="Transparent Clock home preview" style="box-shadow: 0 20px 40px rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; transform: perspective(1000px) rotateY(-5deg); transition: transform 0.5s;">
           <img src="assets/screenshots/Screenshot%20on%20Home%20Page.png" alt="Transparent Clock home preview" />
         </div>
       </div>
@@ -204,75 +244,75 @@
 
     <section class="section">
       <div class="container">
-        <h2>Focus-first by design</h2>
-        <p>Transparent Clock combines a calming clock overlay, a customizable Pomodoro timer, and a dashboard with To-Do and Focus Insights that stays out of your way.</p>
+        <h2 style="text-align: center; margin-bottom: 10px;">Focus-first by design</h2>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto 40px; color: #666;">Transparent Clock combines a calming clock overlay, a customizable Pomodoro timer, and an advanced dashboard that stays out of your way.</p>
         <div class="card-grid">
-          <article class="card">
+          <article class="card" style="border-top: 3px solid #ff6b35;">
             <h3>Clock Overlay</h3>
-            <p>Always-on-top time that never blocks your work.</p>
+            <p>Always-on-top time that never blocks your work or breaks your focus.</p>
           </article>
-          <article class="card">
+          <article class="card" style="border-top: 3px solid #e74c3c;">
+            <h3>Prep-Meter & War-Logs <span style="font-size: 10px; background: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: top;">NEW</span></h3>
+            <p>Track your target exams, swear Commander's Oaths, and review monthly strategies.</p>
+          </article>
+          <article class="card" style="border-top: 3px solid #27ae60;">
             <h3>Pomodoro Sessions</h3>
-            <p>Flexible work and break cycles tailored to you.</p>
+            <p>Flexible work and break cycles tailored to your personal rhythm.</p>
           </article>
-          <article class="card">
+          <article class="card" style="border-top: 3px solid #f1c40f;">
             <h3>Offline* & Private</h3>
-            <p>No tracking. No internet. Everything stays local.</p>
+            <p>No tracking. No internet. Everything stays safely on your local device.</p>
           </article>
-          <article class="card">
-            <h3>Student-ready</h3>
-            <p>Lightweight, fast, and distraction-free for study hours.</p>
-          </article>
-          <article class="card">
+          <article class="card" style="border-top: 3px solid #8e44ad;">
             <h3>To-Do & Insights</h3>
-            <p>Local tasks and focus summaries for better review.</p>
+            <p>Local tasks and visual focus summaries for deep productivity review.</p>
           </article>
-          <article class="card">
+          <article class="card" style="border-top: 3px solid #3498db;">
             <h3>Utilities (Online)</h3>
-            <p>QR tools and QuickLink shortening when you are connected.</p>
+            <p>QR tools and QuickLink URL shortening available when you are connected.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container split">
+    <section class="section" style="background: linear-gradient(to bottom, #ffffff, #f8f9fa);">
+      <div class="container split" style="align-items: center;">
         <div>
-          <h2>Built for deep focus</h2>
-          <p>Set your rhythm, reduce screen clutter, and keep time visible without switching apps.</p>
+          <span class="tag">System Design</span>
+          <h2>Built for elite discipline</h2>
+          <p style="font-size: 1.1rem; color: #555; margin-bottom: 20px;">Set your rhythm, reduce screen clutter, and keep time visible without constantly checking your phone.</p>
           <ul class="feature-list">
             <li>Adjustable work and break lengths</li>
             <li>One-click overlay toggle</li>
-            <li>Gentle UI with soft contrasts</li>
-            <li>To-Do list and Focus Insights built in</li>
-            <li>Optional utilities that use the internet</li>
+            <li>Gentle UI with soft, non-distracting contrasts</li>
+            <li>Tactical calendar and Focus Insights built in</li>
+            <li>Hard-kill process engine for zero background lag</li>
           </ul>
+          <a href="download.html" class="btn primary" style="margin-top: 15px;">Get Started Free</a>
         </div>
-        <div class="screenshot-frame">
+        <div class="screenshot-frame" style="box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-radius: 12px; border: 1px solid #eee;">
           <img src="assets/screenshots/Screenshot%20on%20Home%20page%20as%20a%20Feature%20Image.png" alt="Transparent Clock feature preview" />
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
+  <footer style="background: #1a1a1a; color: white; padding: 40px 20px; text-align: center; margin-top: 0;">
     <div class="container">
-      <strong>Transparent Clock</strong> — Minimal clock & focus companion for students.
-      <p class="footer-note">* QR generation, QR scanning, and QuickLink shortening require an internet connection.</p>
-      <p class="footer-meta">&copy; <span class="js-year"></span> Deep Dey | All Rights Reserved | QuickLink x Transparent Clock</p>
-      <div class="footer-links">
-        <a href="features.html">Features</a>
-        <a href="download.html">Download</a>
-        <a href="faq.html">FAQ</a>
-        <a href="About.html">About</a>
-        <a href="About-Deep.html">Author</a>
-        <a href="contact.html">Contact</a>
-        <a href="legal.html">Legal</a>
-        <a href="terms.html">Terms</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="copyright.html">Copyright</a>
-        <a href="dmca.html">DMCA</a>
+      <strong style="font-size: 1.1rem;">Transparent Clock</strong> — Minimal clock & focus companion for students.
+      <p class="footer-note" style="color: #aaa; margin: 15px 0;">* QR generation, QR scanning, and QuickLink shortening require an internet connection.</p>
+      <div class="footer-links" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+        <a href="features.html" style="color: #ddd; text-decoration: none;">Features</a>
+        <a href="download.html" style="color: #ddd; text-decoration: none;">Download</a>
+        <a href="faq.html" style="color: #ddd; text-decoration: none;">FAQ</a>
+        <a href="About.html" style="color: #ddd; text-decoration: none;">About</a>
+        <a href="About-Deep.html" style="color: #ddd; text-decoration: none;">Author</a>
+        <a href="contact.html" style="color: #ddd; text-decoration: none;">Contact</a>
+        <a href="legal.html" style="color: #ddd; text-decoration: none;">Legal</a>
+        <a href="terms.html" style="color: #ddd; text-decoration: none;">Terms</a>
+        <a href="privacy.html" style="color: #ddd; text-decoration: none;">Privacy</a>
       </div>
+      <p class="footer-meta" style="color: #777; font-size: 0.9rem;">&copy; <span class="js-year"></span> Deep Dey | All Rights Reserved | QuickLink x Transparent Clock</p>
     </div>
   </footer>
 
