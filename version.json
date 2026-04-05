@@ -1,18 +1,29 @@
 {
   "version": "V05.04.2026",
+  "latestVersion": "V05.04.2026",
+  "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/download/V05.04.2026/TransparentClock-Setup-V05.04.2026.exe",
+  "releaseNotes": "🔥 War Mode Edition (V05.04.2026) is ready for deployment!\n\n• Launched Prep-Meter Ecosystem with high-intensity accountability\n• Added Monthly Strategic Review for cumulative analytics\n• Enhanced Tactical Calendar with Hover Intel and Context Menus\n• Implemented Target Exam Countdown & Commander's Oath\n• New Splash Engine with 40+ psychological insights\n• Fixed background process persistence (Hard-Kill logic)\n• Professional-grade installer with active process detection",
+  "updateNotes": "🔥 War Mode Edition (V05.04.2026) is ready for deployment!\n\n• Launched Prep-Meter Ecosystem with high-intensity accountability\n• Added Monthly Strategic Review for cumulative analytics\n• Enhanced Tactical Calendar with Hover Intel and Context Menus\n• Implemented Target Exam Countdown & Commander's Oath\n• New Splash Engine with 40+ psychological insights\n• Fixed background process persistence (Hard-Kill logic)\n• Professional-grade installer with active process detection",
   "channel": "stable",
   "releaseDate": "2026-04-05",
   "currentBuild": {
     "version": "V05.04.2026",
     "status": "STABLE",
-    "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/V05.04.2026",
+    "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/download/V05.04.2026/TransparentClock-Setup-V05.04.2026.exe",
     "releaseNotesUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/V05.04.2026",
     "installerName": "TransparentClock-Setup-V05.04.2026.exe"
   },
   "previousReleases": [
     {
-      "version": "v08.02.2026",
+      "version": "v04.04.2026",
       "status": "Previous Stable",
+      "releaseDate": "2026-04-04",
+      "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/download/v04.04.2026/TransparentClock-Setup-v04.04.2026-Stable.exe",
+      "notes": "Critical hotfix for Focus Insights graph division-by-zero error."
+    },
+    {
+      "version": "v08.02.2026",
+      "status": "Legacy Stable",
       "releaseDate": "2026-02-08",
       "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026",
       "notes": "Finalized Pomodoro, QR tools, and Utilities suite."
@@ -25,7 +36,7 @@
       "notes": "Focus Insights, QuickLink shortener, and QR tools."
     }
   ],
-  "releaseNotes": [
+  "changelogArray": [
     "Launched Prep-Meter Ecosystem 2.0 with high-intensity accountability",
     "Added Monthly Strategic Review for cumulative performance analytics",
     "Enhanced Tactical Calendar with Hover Intel and Smart Context Menus",
