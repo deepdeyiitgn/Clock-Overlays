@@ -78,7 +78,14 @@ namespace TransparentClock
             var clockTab = new TabPage("Clock") { Padding = new Padding(14), BackColor = AppBackground };
             var pomodoroTab = new TabPage("Pomodoro") { Padding = new Padding(14), BackColor = AppBackground };
             var todoTab = new TabPage("To-Do") { Padding = new Padding(14), BackColor = AppBackground };
+<<<<<<< HEAD
             var prepMeterTab = new TabPage("Prep. Meter") { Padding = new Padding(14), BackColor = AppBackground };
+=======
+            
+            // --- NEW PREP METER TAB ADDED HERE ---
+            var prepMeterTab = new TabPage("Prep. Meter") { Padding = new Padding(14), BackColor = AppBackground };
+            
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             var profileTab = new TabPage("Profile") { Padding = new Padding(14), BackColor = AppBackground };
             var settingsTab = new TabPage("Settings") { Padding = new Padding(14), BackColor = AppBackground };
             var historyTab = new TabPage("History") { Padding = new Padding(14), BackColor = AppBackground };
@@ -89,7 +96,11 @@ namespace TransparentClock
             tabs.TabPages.Add(clockTab);
             tabs.TabPages.Add(pomodoroTab);
             tabs.TabPages.Add(todoTab);
+<<<<<<< HEAD
             tabs.TabPages.Add(prepMeterTab);
+=======
+            tabs.TabPages.Add(prepMeterTab); // --- ADDED TO CONTROL ---
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             tabs.TabPages.Add(profileTab);
             tabs.TabPages.Add(settingsTab);
             tabs.TabPages.Add(historyTab);
@@ -578,13 +589,18 @@ namespace TransparentClock
             todoCard.Controls.Add(todoLayout);
             todoTab.Controls.Add(todoCard);
 
+<<<<<<< HEAD
             // --- PREP METER DASHBOARD INITIALIZATION ---
+=======
+            // --- NEW PREP METER DASHBOARD INITIALIZATION ---
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             var prepMeterDashboardControl = new TransparentClock.PrepMeter.PrepMeterDashboard
             {
                 Dock = DockStyle.Fill
             };
             prepMeterTab.Controls.Add(prepMeterDashboardControl);
 
+<<<<<<< HEAD
             // Ensure Profile Exists for PrepMeter
             var existingProfile = TransparentClock.PrepMeter.PrepMeterStorage.LoadProfile();
             if (existingProfile == null || existingProfile.Subjects == null || existingProfile.Subjects.Count == 0)
@@ -600,36 +616,52 @@ namespace TransparentClock
             }
 
             // --- NEW PROFILE CARD WITH ADVANCED SETUP ---
+=======
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             var profileCard = CreateCardPanel();
             var profileLayout = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 Padding = new Padding(10),
                 ColumnCount = 2,
+<<<<<<< HEAD
                 RowCount = 10
             };
             profileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220));
+=======
+                RowCount = 5
+            };
+            profileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             profileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+<<<<<<< HEAD
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             profileLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+=======
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             profileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
             var profileHeader = new Label
             {
+<<<<<<< HEAD
                 Text = "Profile & War-Room Configuration",
+=======
+                Text = "Profile",
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
                 AutoSize = true,
                 Font = HeaderFont,
                 Margin = new Padding(0, 0, 0, 8)
             };
 
             var nameLabel = new Label { Text = "Name", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
+<<<<<<< HEAD
             profileNameTextBox = new TextBox { Text = Program.CurrentState.UserName ?? string.Empty, Width = 250 };
 
             var genderLabel = new Label { Text = "Gender", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
@@ -650,11 +682,21 @@ namespace TransparentClock
             var subjectsLabel = new Label { Text = "Subjects (Comma separated)", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
             var subjectsTextBox = new TextBox { Text = string.Join(", ", existingProfile.Subjects), Width = 250 };
 
+=======
+            profileNameTextBox = new TextBox { Text = Program.CurrentState.UserName ?? string.Empty, Width = 220 };
+
+            var genderLabel = new Label { Text = "Gender", AutoSize = true, Margin = new Padding(0, 6, 0, 2) };
+            profileGenderComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 220 };
+            profileGenderComboBox.Items.AddRange(new object[] { "Male", "Female", "Other" });
+            profileGenderComboBox.SelectedItem = string.IsNullOrWhiteSpace(Program.CurrentState.Gender) ? "Other" : Program.CurrentState.Gender;
+
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             var profileButtonsPanel = new FlowLayoutPanel
             {
                 FlowDirection = FlowDirection.LeftToRight,
                 AutoSize = true,
                 WrapContents = false,
+<<<<<<< HEAD
                 Margin = new Padding(0, 10, 0, 0)
             };
 
@@ -685,6 +727,24 @@ namespace TransparentClock
                 MessageBox.Show("War-Room Configuration Secure!", "Configuration Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
 resetProfileButton.Click += (_, __) =>
+=======
+                Margin = new Padding(0, 6, 0, 0)
+            };
+
+            saveProfileButton = new Button { Text = "Save", AutoSize = true };
+            resetProfileButton = new Button { Text = "Reset", AutoSize = true, Margin = new Padding(6, 0, 0, 0) };
+            deleteDataButton = new Button { Text = "Delete Data", AutoSize = true, Margin = new Padding(6, 0, 0, 0) };
+
+            saveProfileButton.Click += (_, __) =>
+            {
+                Program.CurrentState.UserName = profileNameTextBox.Text.Trim();
+                Program.CurrentState.Gender = profileGenderComboBox.SelectedItem?.ToString() ?? "Other";
+                AppStateStorage.Save(Program.CurrentState);
+                RefreshGreeting();
+            };
+
+            resetProfileButton.Click += (_, __) =>
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             {
                 profileNameTextBox.Text = string.Empty;
                 profileGenderComboBox.SelectedItem = "Other";
@@ -718,6 +778,7 @@ resetProfileButton.Click += (_, __) =>
             profileLayout.Controls.Add(profileNameTextBox, 1, 1);
             profileLayout.Controls.Add(genderLabel, 0, 2);
             profileLayout.Controls.Add(profileGenderComboBox, 1, 2);
+<<<<<<< HEAD
             profileLayout.Controls.Add(examLabel, 0, 3);
             profileLayout.Controls.Add(examTextBox, 1, 3);
             profileLayout.Controls.Add(targetDateLabel, 0, 4);
@@ -727,6 +788,9 @@ resetProfileButton.Click += (_, __) =>
             profileLayout.Controls.Add(subjectsLabel, 0, 6);
             profileLayout.Controls.Add(subjectsTextBox, 1, 6);
             profileLayout.Controls.Add(profileButtonsPanel, 1, 7);
+=======
+            profileLayout.Controls.Add(profileButtonsPanel, 1, 3);
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
 
             profileCard.Controls.Add(profileLayout);
             profileTab.Controls.Add(profileCard);
@@ -905,6 +969,10 @@ resetProfileButton.Click += (_, __) =>
                 WrapContents = false
             };
 
+<<<<<<< HEAD
+=======
+            // Time range selector for Focus Insights
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             var timeRangePanel = new FlowLayoutPanel
             {
                 FlowDirection = FlowDirection.LeftToRight,
@@ -1020,7 +1088,11 @@ resetProfileButton.Click += (_, __) =>
             AddTabFooter(clockTab);
             AddTabFooter(pomodoroTab);
             AddTabFooter(todoTab);
+<<<<<<< HEAD
             AddTabFooter(prepMeterTab);
+=======
+            AddTabFooter(prepMeterTab); // --- ADDED FOOTER TO PREP METER ---
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             AddTabFooter(profileTab);
             AddTabFooter(settingsTab);
             AddTabFooter(historyTab);
@@ -1044,7 +1116,11 @@ resetProfileButton.Click += (_, __) =>
         {
             var footer = new Label
             {
+<<<<<<< HEAD
                 Text = $"© {DateTime.Now.Year} Deep Dey | Quicklink x Transparent Clock",
+=======
+                Text = $"© {DateTime.Now.Year} Deep Dey | All Right Reserved | Quicklink x Transperent Clock",
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
                 Dock = DockStyle.Bottom,
                 Height = 24,
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -1252,6 +1328,10 @@ resetProfileButton.Click += (_, __) =>
 
             var entries = FocusHistoryStorage.GetAll();
             
+<<<<<<< HEAD
+=======
+            // Filter entries by current time range
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             int dayCount = FocusTimeRangeFilter.GetDayCount(currentTimeRange);
             DateTime cutoff = DateTime.Now.AddDays(-dayCount);
             var filteredEntries = entries
@@ -1260,33 +1340,59 @@ resetProfileButton.Click += (_, __) =>
             
             var entryMap = filteredEntries.ToDictionary(item => item.Date, item => item.TotalFocusMinutes);
 
+<<<<<<< HEAD
+=======
+            // Populate line graph with data
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             var graphData = filteredEntries
                 .Select(e => (DateTime.Parse(e.Date), e.TotalFocusMinutes))
                 .OrderBy(x => x.Item1)
                 .ToList();
             focusLineGraph.SetData(graphData);
 
+<<<<<<< HEAD
             var insights = FocusInsightsCalculator.CalculateForRange(currentTimeRange);
             focusStatsDisplay.UpdateStats(insights);
 
+=======
+            // Calculate and display insights
+            var insights = FocusInsightsCalculator.CalculateForRange(currentTimeRange);
+            focusStatsDisplay.UpdateStats(insights);
+
+            // Populate date picker with valid dates
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             var validDates = filteredEntries
                 .Select(e => DateTime.Parse(e.Date))
                 .OrderBy(d => d)
                 .ToList();
             focusDayPicker.SetValidDates(validDates);
             
+<<<<<<< HEAD
+=======
+            // Set to today if available, otherwise to the most recent date
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             if (validDates.Count > 0)
             {
                 DateTime targetDate = validDates.FirstOrDefault(d => d.Date == DateTime.Today);
                 if (targetDate == DateTime.MinValue)
                 {
+<<<<<<< HEAD
                     targetDate = validDates[validDates.Count - 1]; 
+=======
+                    targetDate = validDates[validDates.Count - 1]; // Most recent date
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
                 }
                 focusDayPicker.Value = targetDate;
             }
 
+<<<<<<< HEAD
             DateTime start = DateTime.Today.AddDays(-dayCount + 1);
             for (int i = 0; i < dayCount && i < 30; i++)
+=======
+            // Display day range based on current time range
+            DateTime start = DateTime.Today.AddDays(-dayCount + 1);
+            for (int i = 0; i < dayCount && i < 30; i++) // Cap display at 30 days to avoid clutter
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
             {
                 DateTime date = start.AddDays(i);
                 string key = date.ToString("yyyy-MM-dd");
@@ -1347,6 +1453,7 @@ resetProfileButton.Click += (_, __) =>
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+<<<<<<< HEAD
             // Case 1: Agar user ne [X] dabaya aur "Minimize to Tray" ON hai
             if (!allowClose && Program.CurrentState.MinimizeToTrayOnClose)
             {
@@ -1359,10 +1466,20 @@ resetProfileButton.Click += (_, __) =>
             if (!allowClose && !Program.CurrentState.MinimizeToTrayOnClose)
             {
                 Program.ExitApplication();
+=======
+            if (!allowClose && Program.CurrentState.MinimizeToTrayOnClose)
+            {
+                e.Cancel = true;
+                Hide();
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
                 return;
             }
 
             base.OnFormClosing(e);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
