@@ -1,10 +1,10 @@
 # Transparent Clock / Clock Overlays
 
-**v08.02.2026 (Stable)** — Professional Windows Desktop Productivity Tool
+**v04.04.2026 (Stable)** — Professional Windows Desktop Productivity Tool
 
 A lightweight, always-on-top clock overlay with advanced focus tracking, productivity dashboard, and integrated utilities. Pure local storage, zero cloud tracking, 100% user privacy.
 
-> ✅ **Final Stable Release**: v08.02.2026 is complete and production-ready. Only small fixes may follow.
+> ✅ **Final Stable Release**: v04.04.2026 is complete and production-ready. Only small fixes may follow.
 
 ---
 
