@@ -1,4 +1,41 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/uptodown(/)?",
+      "destination": "https://transparent-clock.en.uptodown.com/windows/",
+      "permanent": true
+    },
+    {
+      "source": "/instagram(/)?",
+      "destination": "https://www.instagram.com/deepdey.official",
+      "permanent": true
+    },
+    {
+      "source": "/github(/)?",
+      "destination": "https://github.com/deepdeyiitgn",
+      "permanent": true
+    },
+    {
+      "source": "/discord(/)?",
+      "destination": "https://discord.com/invite/t6ZKNw556n",
+      "permanent": true
+    },
+    {
+      "source": "/youtube(/)?",
+      "destination": "https://youtube.com/channel/UCrh1Mx5CTTbbkgW5O6iS2Tw/",
+      "permanent": true
+    },
+    {
+      "source": "/wiki(/)?",
+      "destination": "https://qlynk.vercel.app/wiki",
+      "permanent": true
+    },
+    {
+      "source": "/clock(/)?",
+      "destination": "https://clock.qlynk.me",
+      "permanent": true
+    }
+  ]
 }
