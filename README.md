@@ -6,7 +6,8 @@ A lightweight, always-on-top clock overlay with advanced focus tracking, product
 
 > ✅ **Final Stable Release**: v04.04.2026 is complete and production-ready. Only small fixes may follow.
 
-![Total Downloads](https://img.shields.io/github/downloads/deepdeyiitgn/Clock-Overlays/total?style=for-the-badge&color=2ea043&logo=github)
+![Total Downloads](https://img.shields.io/github/downloads/deepdeyiitgn/Clock-Overlays/total.svg?style=for-the-badge&color=2ea043&logo=github)
+
 
 
 ---
