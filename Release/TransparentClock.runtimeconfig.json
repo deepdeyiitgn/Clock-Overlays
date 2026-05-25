@@ -4,27 +4,16 @@
     "includedFrameworks": [
       {
         "name": "Microsoft.NETCore.App",
-<<<<<<< HEAD
-        "version": "8.0.25"
+        "version": "8.0.27"
       },
       {
         "name": "Microsoft.WindowsDesktop.App",
-        "version": "8.0.25"
-=======
-        "version": "8.0.22"
-      },
-      {
-        "name": "Microsoft.WindowsDesktop.App",
-        "version": "8.0.22"
->>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
+        "version": "8.0.27"
       }
     ],
     "configProperties": {
       "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
-<<<<<<< HEAD
       "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": true,
-=======
->>>>>>> fb78e9a755f0d7248d3204a59be8ab7f18eca15a
       "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
     }
   }

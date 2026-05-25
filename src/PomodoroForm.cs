@@ -405,7 +405,16 @@ public class PomodoroForm : Form
     {
         int seconds = Math.Max(0, State.RemainingSeconds);
         var time = TimeSpan.FromSeconds(seconds);
-        timeLabel.Text = $"{time.Minutes:00}:{time.Seconds:00}";
+
+        // Agar total time 60 minutes (1 hour) ya usse zyada hai, toh hour bhi dikhao
+        if (time.TotalHours >= 1)
+        {
+            timeLabel.Text = $"{(int)time.TotalHours}:{time.Minutes:00}:{time.Seconds:00}";
+        }
+        else
+        {
+            timeLabel.Text = $"{time.Minutes:00}:{time.Seconds:00}";
+        }
         modeLabel.Text = GetModeText(State.CurrentMode);
         modeLabel.BackColor = GetModeColor(State.CurrentMode);
         timeLabel.ForeColor = GetModeAccent(State.CurrentMode);

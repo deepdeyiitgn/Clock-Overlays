@@ -1,0 +1,44 @@
+{
+  "version": "v08.02.2026",
+  "channel": "stable",
+  "releaseDate": "2026-02-08",
+  "currentBuild": {
+    "version": "v08.02.2026",
+    "status": "STABLE",
+    "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026",
+    "releaseNotesUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v08.02.2026",
+    "installerName": "TransparentClock-Setup-v08.02.2026-Stable.exe"
+  },
+  "previousReleases": [
+    {
+      "version": "v05.02.2026",
+      "status": "Previous Beta",
+      "releaseDate": "2026-02-05",
+      "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v05.02.2026",
+      "notes": "Focus Insights, Utilities suite, QuickLink shortener, QR tools"
+    },
+    {
+      "version": "v29.01.2026",
+      "status": "Previous Stable",
+      "releaseDate": "2026-01-29",
+      "downloadUrl": "https://github.com/deepdeyiitgn/Clock-Overlays/releases/tag/v29.01.2026",
+      "notes": "Clock overlay only (previous stable baseline)"
+    }
+  ],
+  "releaseNotes": [
+    "Finalized Pomodoro system with accurate focus tracking",
+    "Stable QR Generator and Scanner",
+    "Utilities tab finalized",
+    "UI polish and consistency improvements",
+    "Bug fixes and performance stability"
+  ],
+  "knownIssues": [
+    "HEIC export falls back to JPEG (system codec limitation)"
+  ],
+  "requirements": {
+    "os": "Windows 10/11",
+    "dotnetRuntime": ".NET 8 Desktop Runtime (x64)",
+    "architecture": "x64"
+  }
+}
+

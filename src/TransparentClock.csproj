@@ -10,11 +10,15 @@
     <ApplicationIcon>Clock.ico</ApplicationIcon>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <SelfContained>false</SelfContained>
+    <SelfContained>true</SelfContained>
     <PublishSingleFile>false</PublishSingleFile>
     <IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
     <PublishReadyToRun>true</PublishReadyToRun>
     <PublishTrimmed>false</PublishTrimmed>
+    
+    <Version>25.5.2026.0</Version>
+    <AssemblyVersion>25.5.2026.0</AssemblyVersion>
+    <FileVersion>25.5.2026.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

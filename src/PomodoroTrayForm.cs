@@ -107,7 +107,15 @@ public class PomodoroTrayForm : Form
     {
         int seconds = Math.Max(0, State.RemainingSeconds);
         var time = TimeSpan.FromSeconds(seconds);
-        timeLabel.Text = $"{time.Minutes:00}:{time.Seconds:00}";
+
+        if (time.TotalHours >= 1)
+        {
+            timeLabel.Text = $"{(int)time.TotalHours}:{time.Minutes:00}:{time.Seconds:00}";
+        }
+        else
+        {
+            timeLabel.Text = $"{time.Minutes:00}:{time.Seconds:00}";
+        }
 
         string modeText = State.CurrentMode switch
         {
