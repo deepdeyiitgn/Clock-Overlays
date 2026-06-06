@@ -818,6 +818,8 @@
     </div>
   </main>
 
+  <!-- =========== Full Release Total Downloads Data [START] ============-->
+  
   <!-- Clock-Overlays Release Dashboard Widget -->
 <style>
     /* Scoped CSS - Sirf is widget ko affect karega */
@@ -832,6 +834,7 @@
         --co-accent-green-hover: #238636;
         --co-accent-blue: #58a6ff;
         --co-accent-warning: #d29922;
+        --co-accent-orange: #FF9933;
 
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         background-color: var(--co-bg-main);
@@ -848,7 +851,9 @@
     .co-dashboard-wrapper h2, 
     .co-dashboard-wrapper h3, 
     .co-dashboard-wrapper h4, 
-    .co-dashboard-wrapper p {
+    .co-dashboard-wrapper p,
+    .co-dashboard-wrapper ul,
+    .co-dashboard-wrapper li {
         margin: 0;
         padding: 0;
         line-height: 1.4;
@@ -857,6 +862,21 @@
     .co-dashboard-wrapper a {
         text-decoration: none;
         color: var(--co-accent-blue);
+    }
+
+    /* Rotating Quotes */
+    .co-quote-container {
+        text-align: center;
+        min-height: 24px;
+        margin-bottom: 25px;
+        font-style: italic;
+        color: var(--co-text-secondary);
+        font-size: 15px;
+        transition: opacity 0.5s ease-in-out;
+        background: #161b22;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px dashed var(--co-border-color);
     }
 
     /* Top Statistics Panel */
@@ -874,6 +894,13 @@
         padding: 20px;
         text-align: center;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+
+    .co-stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(88, 166, 255, 0.15);
+        border-color: var(--co-accent-blue);
     }
 
     .co-stat-title {
@@ -893,6 +920,135 @@
     .co-text-green { color: var(--co-accent-green); text-shadow: 0 0 15px rgba(46, 160, 67, 0.2); }
     .co-text-blue { color: var(--co-accent-blue); }
     .co-text-warning { color: var(--co-accent-warning); }
+
+    /* Dynamic Progress Bar with Percentage */
+    .co-progress-section {
+        background: var(--co-bg-card);
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid var(--co-border-color);
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .co-progress-msg {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 10px !important;
+        color: var(--co-text-primary);
+        text-align: center;
+    }
+
+    .co-progress-bar-bg {
+        width: 100%;
+        height: 16px;
+        background: #30363d;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 5px;
+        position: relative;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .co-progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--co-accent-blue), var(--co-accent-green));
+        width: 0%;
+        transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        position: relative;
+    }
+
+    .co-progress-percent-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 0;
+        left: 0;
+        font-size: 11px;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 16px;
+        text-shadow: 0px 0px 4px rgba(0,0,0,0.8);
+        z-index: 2;
+    }
+    
+    .co-progress-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--co-text-secondary);
+        font-weight: bold;
+    }
+
+    /* System Requirements */
+    .co-sys-req {
+        background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(13, 17, 23, 0.9));
+        border-left: 4px solid var(--co-accent-blue);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        font-size: 14px;
+        border-top: 1px solid var(--co-border-color);
+        border-right: 1px solid var(--co-border-color);
+        border-bottom: 1px solid var(--co-border-color);
+    }
+    
+    .co-sys-req h3 {
+        color: #f0f6fc;
+        margin-bottom: 15px !important;
+        font-size: 18px;
+    }
+
+    .co-sys-req ul {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 10px;
+        margin-bottom: 15px !important;
+    }
+
+    .co-sys-req li {
+        position: relative;
+        padding-left: 25px;
+        color: #b1bac4;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Installer Manager Banner */
+    .co-installer-banner {
+        background: linear-gradient(135deg, rgba(19, 136, 8, 0.15), rgba(14, 102, 6, 0.15));
+        border: 1px solid var(--co-accent-green);
+        border-radius: 8px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .co-installer-banner p {
+        color: #f0f6fc;
+        font-size: 13px;
+        flex: 1;
+    }
+
+    .co-installer-banner a {
+        background: var(--co-accent-green);
+        color: #ffffff !important;
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 13px;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+
+    .co-installer-banner a:hover {
+        background: var(--co-accent-green-hover);
+        box-shadow: 0 0 10px rgba(46, 160, 67, 0.5);
+    }
 
     /* Container Titles */
     .co-section-header {
@@ -930,11 +1086,13 @@
         border: 1px solid var(--co-border-color);
         border-radius: 10px;
         padding: 25px;
-        transition: border-color 0.2s;
+        transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
     }
 
     .co-release-card:hover {
         border-color: #58a6ff;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.5);
     }
 
     .co-release-header {
@@ -979,6 +1137,46 @@
         border-radius: 50%;
     }
 
+    /* GitHub Reactions Badges */
+    .co-reactions-container {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px dashed var(--co-border-color);
+    }
+
+    .co-reaction-badge {
+        background: #21262d;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 3px 10px;
+        font-size: 12px;
+        color: var(--co-text-secondary);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: 0.2s;
+        cursor: default;
+    }
+
+    .co-reaction-badge:hover {
+        background: #30363d;
+        color: var(--co-text-primary);
+        transform: scale(1.05);
+    }
+
+    .co-reaction-count {
+        font-weight: bold;
+    }
+
+    .co-reaction-active {
+        background: rgba(46, 160, 67, 0.1);
+        border-color: rgba(46, 160, 67, 0.4);
+        color: var(--co-accent-green);
+    }
+
     /* Metadata Grid */
     .co-meta-grid {
         display: grid;
@@ -1017,7 +1215,7 @@
         border-radius: 8px;
         padding: 15px 20px;
         margin-bottom: 20px;
-        max-height: 250px;
+        max-height: 400px;
         overflow-y: auto;
         font-size: 14px;
         line-height: 1.6;
@@ -1080,7 +1278,7 @@
         transition: background-color 0.2s;
     }
 
-    .co-btn-download:hover { background-color: var(--co-accent-green-hover); }
+    .co-btn-download:hover { background-color: var(--co-accent-green-hover); box-shadow: 0 0 10px rgba(46,160,67,0.4); }
 
     .co-btn-source {
         background-color: #21262d;
@@ -1090,14 +1288,28 @@
         font-size: 12px;
         border-radius: 6px;
         transition: background 0.2s;
+        cursor: pointer;
     }
     
-    .co-btn-source:hover { background-color: #30363d; }
+    .co-btn-source:hover { background-color: #30363d; box-shadow: 0 0 8px rgba(88,166,255,0.2); }
+    
+    .co-btn-reaction {
+        background-color: #21262d;
+        color: #f0f6fc !important;
+        border: 1px solid var(--co-border-color);
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .co-btn-reaction:hover { background-color: #30363d; border-color: #8b949e; box-shadow: 0 0 8px rgba(255,255,255,0.1); }
 
     .co-source-links {
         display: flex;
         gap: 10px;
         margin-top: 10px;
+        flex-wrap: wrap;
     }
 
     .co-status-message {
@@ -1106,10 +1318,79 @@
         color: var(--co-text-secondary);
         font-size: 16px;
     }
+    
+    /* Timeline styling */
+    .co-timeline-container {
+        margin-top: 50px;
+        padding-top: 20px;
+        border-top: 2px dashed var(--co-border-color);
+    }
+    .co-timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+        padding-left: 20px;
+    }
+    .co-timeline::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        height: 100%; width: 2px;
+        background: #30363d;
+    }
+    .co-timeline-item {
+        position: relative;
+        margin-bottom: 25px;
+        padding-left: 20px;
+    }
+    .co-timeline-item::before {
+        content: '';
+        position: absolute;
+        top: 5px; left: -25px;
+        width: 12px; height: 12px;
+        background: var(--co-bg-main);
+        border: 2px solid var(--co-accent-blue);
+        border-radius: 50%;
+    }
+    .co-timeline-item.co-timeline-current::before {
+        border-color: var(--co-accent-green);
+        background: var(--co-accent-green);
+        box-shadow: 0 0 10px rgba(46, 160, 67, 0.6);
+    }
+    .co-timeline-date {
+        font-size: 12px;
+        color: var(--co-text-secondary);
+        font-weight: 600;
+    }
+    .co-timeline-content {
+        color: #f0f6fc;
+        font-size: 14px;
+        margin-top: 4px !important;
+    }
+
+    /* Falling Emojis Container */
+    .co-emoji-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 999999;
+        overflow: hidden;
+    }
+    .co-falling-emoji {
+        position: absolute;
+        font-size: 30px;
+        user-select: none;
+        transition: opacity 1s;
+    }
 </style>
 
 <div class="co-dashboard-wrapper">
-    <!-- Global Stats -->
+
+    <div id="co-quote-box" class="co-quote-container">Loading inspiration...</div>
+
     <div class="co-stats-panel">
         <div class="co-stat-card">
             <p class="co-stat-title">Total Lifetime Downloads</p>
@@ -1125,7 +1406,39 @@
         </div>
     </div>
 
-    <!-- Stable Releases Container -->
+    <div class="co-progress-section">
+        <p id="co-progress-msg" class="co-progress-msg">Calculating milestones...</p>
+        <div class="co-progress-bar-bg">
+            <div id="co-progress-fill" class="co-progress-bar-fill"></div>
+            <span id="co-progress-percent-text" class="co-progress-percent-text">0.0%</span>
+        </div>
+        <div class="co-progress-labels">
+            <span id="co-progress-start">0</span>
+            <span id="co-progress-end">100</span>
+        </div>
+    </div>
+
+    <div class="co-sys-req">
+        <h3>🖥️ Minimum System Requirements Checker</h3>
+        <ul id="co-req-list">
+            <li id="req-os">Checking OS...</li>
+            <li id="req-ram">Checking RAM...</li>
+            <li>⚠️ Approx. 200 MB free disk space (Offline Storage)</li>
+            <li>⚠️ .NET 8 Desktop Runtime required (x64)</li>
+            <li>✅ No internet connection required after installation</li>
+            <li>✅ Optimized for low CPU and memory usage</li>
+        </ul>
+        
+        <div class="co-installer-banner">
+            <p><strong>⚠️ Some specs can't be checked by your browser.</strong><br>Don't worry! Download our Installer Manager. It automatically checks your PC, installs prerequisites, and manages updates.</p>
+            <a href="https://github.com/deepdeyiitgn/Clock-Overlays/releases/download/installer/TransparentClock--Installer-Manager.exe" target="_blank">Download Installer Manager</a>
+        </div>
+    </div>
+
+    <div id="co-cache-warning" style="display:none; background:#d2992222; border-left:4px solid #d29922; padding:10px 15px; border-radius:6px; margin-bottom:20px; font-size:13px; color:#d29922;">
+        ⚠️ Note: Showing cached offline data to prevent rate limits. Will update automatically soon.
+    </div>
+
     <div class="co-section-header">
         <h2 style="color: var(--co-accent-blue);">🟢 Stable Deployments</h2>
         <span id="co-stable-count-badge" class="co-badge-count">0 Versions</span>
@@ -1134,7 +1447,6 @@
         <div class="co-status-message">Loading stable releases...</div>
     </div>
 
-    <!-- Beta Releases Container -->
     <div class="co-section-header">
         <h2 style="color: var(--co-accent-warning);">🟡 Beta & Prerelease Lab</h2>
         <span id="co-beta-count-badge" class="co-badge-count">0 Versions</span>
@@ -1142,11 +1454,163 @@
     <div id="co-beta-container" class="co-releases-grid">
         <div class="co-status-message">Loading beta releases...</div>
     </div>
+
+    <div class="co-timeline-container">
+        <h3 style="color: #f0f6fc; margin-bottom: 20px !important;">📌 Project Milestone Timeline</h3>
+        <div class="co-timeline" id="co-timeline-box">
+            </div>
+    </div>
 </div>
 
 <script>
     (function() {
-        // Utilities
+        // --- 1. Rotating Quotes Logic ---
+        let quotes = [
+            "Time is what we want most, but what we use worst.",
+            "Customize your desktop, optimize your workflow.",
+            "Transparent Clock: Elegance meets productivity.",
+            "Open source makes the digital world a better place.",
+            "Your desktop, your rules. Stay focused.",
+            "Minimalist design, maximum performance.",
+            "Every second counts. Make it beautiful.",
+            "No internet required. Your data stays with you.",
+            "Code is poetry, and design is the soul.",
+            "Keeping your CPU usage low, and aesthetics high.",
+            "A clear desktop leads to a clear mind.",
+            "Built with ❤️ for the Windows community.",
+            "Precision in every pixel, accuracy in every second.",
+            "Stay offline, stay secure, stay productive.",
+            "Bridging the gap between legacy systems and modern UI.",
+            "The best tools are the ones you don't notice.",
+            "Simplicity is the ultimate sophistication.",
+            "Track time without breaking your focus.",
+            "Empowering developers and creators worldwide.",
+            "Thank you to everyone testing the beta builds!"
+        ];
+        
+        let quoteIndex = 0;
+        const quoteBox = document.getElementById('co-quote-box');
+        let dQuotesAdded = false;
+        
+        function rotateQuote() {
+            if(quotes.length === 0) return;
+            quoteBox.style.opacity = 0;
+            setTimeout(() => {
+                quoteBox.innerText = `"${quotes[quoteIndex]}"`;
+                quoteBox.style.opacity = 1;
+                quoteIndex = (quoteIndex + 1) % quotes.length;
+            }, 500); 
+        }
+        rotateQuote(); 
+        setInterval(rotateQuote, 3000); 
+
+        // --- 2. System Hardware Checker ---
+        function checkHardware() {
+            let isWin = navigator.platform.indexOf('Win') > -1 || navigator.userAgent.indexOf('Windows') > -1;
+            let is64 = navigator.userAgent.indexOf('WOW64') > -1 || navigator.userAgent.indexOf('Win64') > -1 || navigator.userAgent.indexOf('x64') > -1;
+            let ram = navigator.deviceMemory || null; // Will be null on unsupported browsers
+
+            let osEl = document.getElementById('req-os');
+            let ramEl = document.getElementById('req-ram');
+
+            if (isWin && is64) {
+                osEl.innerHTML = '<span style="margin-right:8px;">✅</span> Windows 10/11 (64-bit) Detected';
+            } else {
+                osEl.innerHTML = '<span style="margin-right:8px;">⚠️</span> Windows 64-bit (Could not auto-detect)';
+            }
+
+            if (ram) {
+                if (ram >= 2) {
+                    ramEl.innerHTML = `<span style="margin-right:8px;">✅</span> ${ram}GB+ RAM Detected`;
+                } else {
+                    ramEl.innerHTML = `<span style="margin-right:8px;">❌</span> Warning: Less than 2GB RAM Detected`;
+                }
+            } else {
+                ramEl.innerHTML = '<span style="margin-right:8px;">⚠️</span> Minimum 2 GB RAM (Could not verify)';
+            }
+        }
+        checkHardware();
+
+        // --- 3. Emoji Rain & Collect Logic ---
+        window.coTriggerReaction = function(event, url, btn) {
+            event.preventDefault();
+            
+            // Change button state
+            let originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Redirecting in 7s...';
+            btn.style.pointerEvents = 'none';
+            btn.style.backgroundColor = '#238636';
+            btn.style.borderColor = '#2ea043';
+
+            const emojis = ['👍', '🎉', '❤️', '🚀', '👀', '🔥', '💻', '✨'];
+            let container = document.createElement('div');
+            container.className = 'co-emoji-container';
+            document.body.appendChild(container);
+
+            let activeEmojis = [];
+
+            for(let i=0; i<70; i++) {
+                let el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.className = 'co-falling-emoji';
+                
+                // Starting position
+                el.style.top = '-50px';
+                el.style.left = Math.random() * 95 + 'vw';
+                container.appendChild(el);
+                activeEmojis.push(el);
+                
+                // Calculate drop physics
+                let dropDuration = Math.random() * 1500 + 1000; // 1 to 2.5s
+                let targetY = window.innerHeight - (Math.random() * 80 + 20); // Collect at bottom
+
+                el.animate([
+                    { transform: 'translateY(0px) rotate(0deg)' },
+                    { transform: `translateY(${targetY}px) rotate(${Math.random()*720}deg)` }
+                ], {
+                    duration: dropDuration,
+                    fill: 'forwards',
+                    easing: 'ease-in' // Accelerates like gravity
+                });
+            }
+
+            // Disappear sequence after exactly 7 seconds
+            setTimeout(() => {
+                // Fade out emojis
+                activeEmojis.forEach(el => el.style.opacity = '0');
+                
+                // Open new tab
+                window.open(url, '_blank');
+                
+                // Reset Button
+                btn.innerHTML = originalText;
+                btn.style.pointerEvents = 'auto';
+                btn.style.backgroundColor = '';
+                btn.style.borderColor = '';
+
+                // Clean DOM after fade out completes
+                setTimeout(() => container.remove(), 1000);
+            }, 7000);
+        };
+
+        // --- Utilities ---
+        const timeAgo = (dateString) => {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " mins ago";
+            return "Just now";
+        };
+
         const formatDateTime = (isoString) => {
             if (!isoString) return 'N/A';
             return new Date(isoString).toLocaleString(undefined, {
@@ -1189,6 +1653,31 @@
             return cleanText;
         };
 
+        const generateReactionsHTML = (reactionsObj) => {
+            const map = [
+                { emoji: '👍', key: '+1' },
+                { emoji: '❤️', key: 'heart' },
+                { emoji: '🎉', key: 'hooray' },
+                { emoji: '🚀', key: 'rocket' },
+                { emoji: '👀', key: 'eyes' },
+                { emoji: '😆', key: 'laugh' }
+            ];
+            if (!reactionsObj) reactionsObj = {};
+            let html = '<div class="co-reactions-container">';
+            html += '<span style="font-size:12px; color:var(--co-text-secondary); line-height: 26px; margin-right: 5px;">Community Reactions:</span>';
+            map.forEach(r => {
+                let count = reactionsObj[r.key] || 0;
+                let activeClass = count > 0 ? 'co-reaction-active' : '';
+                html += `
+                    <div class="co-reaction-badge ${activeClass}">
+                        ${r.emoji} <span class="co-reaction-count">${count}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            return html;
+        };
+
         const generateReleaseHTML = (release) => {
             let versionDownloads = 0;
             let assetsHtml = '';
@@ -1196,12 +1685,13 @@
             if (release.assets && release.assets.length > 0) {
                 release.assets.forEach(asset => {
                     versionDownloads += asset.download_count;
+                    let icon = asset.name.endsWith('.exe') ? '🪟' : (asset.name.endsWith('.zip') ? '🗜️' : '📦');
                     assetsHtml += `
                         <div class="co-asset-row">
                             <div class="co-asset-info">
-                                📦 ${asset.name}
+                                ${icon} ${asset.name}
                                 <div class="co-asset-stats">
-                                    Type: ${asset.content_type || 'Unknown'} • Size: ${formatBytes(asset.size)} • 📥 <strong>${asset.download_count.toLocaleString()}</strong> Downloads
+                                    Type: ${asset.content_type || 'Unknown'} • Size: ${formatBytes(asset.size)} • 📥 <strong style="color:var(--co-accent-green);">${asset.download_count.toLocaleString()}</strong> Downloads
                                 </div>
                             </div>
                             <a href="${asset.browser_download_url}" class="co-btn-download" target="_blank">Download Asset</a>
@@ -1215,9 +1705,11 @@
             const authorHtml = release.author ? `
                 <div class="co-author-badge">
                     <img src="${release.author.avatar_url}" alt="${release.author.login}">
-                    <span>Published by <a href="${release.author.html_url}" target="_blank">@${release.author.login}</a></span>
+                    <span>by <a href="${release.author.html_url}" target="_blank">@${release.author.login}</a></span>
                 </div>
             ` : '';
+
+            const reactionsHtml = generateReactionsHTML(release.reactions);
 
             return `
                 <div class="co-release-card">
@@ -1229,26 +1721,23 @@
                                 ${authorHtml}
                             </div>
                         </div>
-                        <div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="co-btn-reaction" onclick="coTriggerReaction(event, '${release.html_url}', this)">✨ React (7s)</button>
                             <a href="${release.html_url}" target="_blank" class="co-btn-source" style="border-color: #30363d; color: var(--co-text-primary) !important;">View on GitHub</a>
                         </div>
                     </div>
 
                     <div class="co-meta-grid">
                         <div class="co-meta-item">
-                            <span class="co-meta-label">Created At</span>
-                            <span class="co-meta-value">${formatDateTime(release.created_at)}</span>
+                            <span class="co-meta-label">📅 Published</span>
+                            <span class="co-meta-value" title="${formatDateTime(release.published_at)}">${timeAgo(release.published_at)}</span>
                         </div>
                         <div class="co-meta-item">
-                            <span class="co-meta-label">Published At</span>
-                            <span class="co-meta-value">${formatDateTime(release.published_at)}</span>
+                            <span class="co-meta-label">🌿 Target Branch</span>
+                            <span class="co-meta-value" style="font-family: monospace; background: #21262d; padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content;">${release.target_commitish}</span>
                         </div>
                         <div class="co-meta-item">
-                            <span class="co-meta-label">Target Commitish</span>
-                            <span class="co-meta-value" style="font-family: monospace; background: #21262d; padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content;">🌿 ${release.target_commitish}</span>
-                        </div>
-                        <div class="co-meta-item">
-                            <span class="co-meta-label">Version Downloads</span>
+                            <span class="co-meta-label">📥 Version Downloads</span>
                             <span class="co-meta-value co-text-green" style="font-size: 16px;">${versionDownloads.toLocaleString()}</span>
                         </div>
                     </div>
@@ -1263,65 +1752,165 @@
                         <a href="${release.zipball_url}" class="co-btn-source">📦 Source Code (ZIP)</a>
                         <a href="${release.tarball_url}" class="co-btn-source">📦 Source Code (TAR.GZ)</a>
                     </div>
+                    
+                    ${reactionsHtml}
                 </div>
             `;
         };
 
+        const updateProgressBar = (total) => {
+            let currentBase = Math.floor(total / 100) * 100;
+            let nextGoal = currentBase + 100;
+            if (total === 0) nextGoal = 100;
+
+            let percentage = ((total - currentBase) / (nextGoal - currentBase)) * 100;
+            let displayPercent = percentage.toFixed(1);
+            
+            document.getElementById('co-progress-start').innerText = currentBase.toLocaleString();
+            document.getElementById('co-progress-end').innerText = nextGoal.toLocaleString();
+            
+            setTimeout(() => {
+                document.getElementById('co-progress-fill').style.width = percentage + '%';
+                document.getElementById('co-progress-percent-text').innerText = `${displayPercent}%`;
+            }, 500);
+
+            let msgEl = document.getElementById('co-progress-msg');
+            if (total % 100 === 0 && total !== 0) {
+                msgEl.innerHTML = `🎉 Congratulations! We just hit exactly <span class="co-text-green">${total}</span> downloads!`;
+            } else {
+                let left = nextGoal - total;
+                msgEl.innerHTML = `🔥 We are growing! Only <span style="color:var(--co-accent-warning); font-size:18px;">${left}</span> downloads left to reach our next milestone of ${nextGoal}!`;
+            }
+
+            if(!dQuotesAdded) {
+                quotes.push(`🏆 Milestone Unlocked! A huge congratulations to our community for helping us cross ${currentBase} downloads!`);
+                quotes.push(`🚀 The journey continues... Let's hit the next target of ${nextGoal} downloads together. You've got this!`);
+                dQuotesAdded = true;
+            }
+        };
+
+        const generateDynamicTimeline = (releases, grandTotal) => {
+            // Sort releases from oldest to newest based on published_at
+            let sortedReleases = [...releases].sort((a, b) => new Date(a.published_at) - new Date(b.published_at));
+            
+            let html = '';
+            
+            sortedReleases.forEach(rel => {
+                let dateStr = new Date(rel.published_at).toLocaleString('en-US', { month: 'short', year: 'numeric' });
+                let typeText = rel.prerelease ? '🟡 Beta Released' : '🟢 Stable Released';
+                
+                html += `
+                    <div class="co-timeline-item">
+                        <p class="co-timeline-date">${dateStr}</p>
+                        <p class="co-timeline-content">${typeText}: <strong>${rel.name || rel.tag_name}</strong></p>
+                    </div>
+                `;
+            });
+
+            // Add dynamic Present node
+            const todayDate = new Date().toLocaleString('en-US', { month: 'short', year: 'numeric' });
+            html += `
+                <div class="co-timeline-item co-timeline-current">
+                    <p class="co-timeline-date">Present (${todayDate})</p>
+                    <p class="co-timeline-content" style="color: var(--co-accent-green); font-weight:bold; font-size:16px;">
+                        🎉 Crossed ${grandTotal.toLocaleString()} Total Lifetime Downloads!
+                    </p>
+                </div>
+            `;
+
+            document.getElementById('co-timeline-box').innerHTML = html;
+        };
+
+        const renderData = (releases) => {
+            let grandTotal = 0, stableTotal = 0, betaTotal = 0;
+            let stableHtml = '', betaHtml = '';
+            let stableCount = 0, betaCount = 0;
+
+            releases.forEach(release => {
+                let currentReleaseDownloads = 0;
+                if (release.assets) {
+                    release.assets.forEach(asset => {
+                        currentReleaseDownloads += asset.download_count;
+                    });
+                }
+
+                if (release.prerelease) {
+                    betaTotal += currentReleaseDownloads;
+                    betaHtml += generateReleaseHTML(release);
+                    betaCount++;
+                } else {
+                    stableTotal += currentReleaseDownloads;
+                    stableHtml += generateReleaseHTML(release);
+                    stableCount++;
+                }
+                
+                grandTotal += currentReleaseDownloads;
+            });
+
+            document.getElementById('co-stable-container').innerHTML = stableHtml || '<div class="co-status-message">No stable releases found.</div>';
+            document.getElementById('co-beta-container').innerHTML = betaHtml || '<div class="co-status-message">No beta/prereleases found.</div>';
+            
+            document.getElementById('co-stable-count-badge').innerText = `${stableCount} Versions`;
+            document.getElementById('co-beta-count-badge').innerText = `${betaCount} Versions`;
+
+            animateCount('co-stat-grand-total', grandTotal);
+            animateCount('co-stat-stable-total', stableTotal);
+            animateCount('co-stat-beta-total', betaTotal);
+
+            updateProgressBar(grandTotal);
+            generateDynamicTimeline(releases, grandTotal); // Now using the dynamic API-based timeline
+        };
+
         async function fetchAndRender() {
             const apiUrl = 'https://api.github.com/repos/deepdeyiitgn/Clock-Overlays/releases';
-            
+            const cacheKey = 'co_gh_cache_data';
+            const cacheTimeKey = 'co_gh_cache_timestamp';
+            const CACHE_EXPIRY = 3600000; // 1 Hour
+
             try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                let cachedData = localStorage.getItem(cacheKey);
+                let cachedTime = localStorage.getItem(cacheTimeKey);
+                let currentTime = new Date().getTime();
+
+                if (cachedData && cachedTime && (currentTime - cachedTime < CACHE_EXPIRY)) {
+                    renderData(JSON.parse(cachedData));
+                    console.log("Loaded data from localStorage Cache.");
+                    return; 
+                }
+
+                const response = await fetch(apiUrl, {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
                 
                 const releases = await response.json();
                 
-                let grandTotal = 0, stableTotal = 0, betaTotal = 0;
-                let stableHtml = '', betaHtml = '';
-                let stableCount = 0, betaCount = 0;
+                localStorage.setItem(cacheKey, JSON.stringify(releases));
+                localStorage.setItem(cacheTimeKey, currentTime.toString());
 
-                releases.forEach(release => {
-                    let currentReleaseDownloads = 0;
-                    if (release.assets) {
-                        release.assets.forEach(asset => {
-                            currentReleaseDownloads += asset.download_count;
-                        });
-                    }
-
-                    if (release.prerelease) {
-                        betaTotal += currentReleaseDownloads;
-                        betaHtml += generateReleaseHTML(release);
-                        betaCount++;
-                    } else {
-                        stableTotal += currentReleaseDownloads;
-                        stableHtml += generateReleaseHTML(release);
-                        stableCount++;
-                    }
-                    
-                    grandTotal += currentReleaseDownloads;
-                });
-
-                document.getElementById('co-stable-container').innerHTML = stableHtml || '<div class="co-status-message">No stable releases found.</div>';
-                document.getElementById('co-beta-container').innerHTML = betaHtml || '<div class="co-status-message">No beta/prereleases found.</div>';
-                
-                document.getElementById('co-stable-count-badge').innerText = `${stableCount} Versions`;
-                document.getElementById('co-beta-count-badge').innerText = `${betaCount} Versions`;
-
-                animateCount('co-stat-grand-total', grandTotal);
-                animateCount('co-stat-stable-total', stableTotal);
-                animateCount('co-stat-beta-total', betaTotal);
+                renderData(releases);
 
             } catch (error) {
                 console.error('Failed to load GitHub releases:', error);
-                document.getElementById('co-stable-container').innerHTML = `<div class="co-status-message" style="color:#f85149;">Failed to load data: ${error.message}</div>`;
-                document.getElementById('co-beta-container').innerHTML = `<div class="co-status-message" style="color:#f85149;">Failed to load data: ${error.message}</div>`;
+                let cachedData = localStorage.getItem(cacheKey);
+                if (cachedData) {
+                    document.getElementById('co-cache-warning').style.display = 'block';
+                    renderData(JSON.parse(cachedData));
+                } else {
+                    document.getElementById('co-stable-container').innerHTML = `<div class="co-status-message" style="color:#f85149;">Failed to load data: ${error.message}. Please try again later.</div>`;
+                    document.getElementById('co-beta-container').innerHTML = `<div class="co-status-message" style="color:#f85149;">Failed to load data: ${error.message}</div>`;
+                }
             }
         }
 
-        // Initialize fetch inside an IIFE to avoid global namespace pollution
         fetchAndRender();
     })();
 </script>
+
+    <!-- =========== Full Release Total Downloads Data [END] ============-->
 
   
   <footer>
