@@ -822,7 +822,7 @@
   
   <!-- Clock-Overlays Release Dashboard Widget -->
 <style>
-    /* Scoped CSS - Sirf is widget ko affect karega */
+    /* Scoped CSS - Affects only this widget to prevent host site conflicts */
     .co-dashboard-wrapper {
         --co-bg-main: #0d1117;
         --co-bg-card: #161b22;
@@ -1228,6 +1228,15 @@
     .co-release-description::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
     .co-release-description::-webkit-scrollbar-thumb:hover { background: #484f58; }
 
+    /* Image handling inside Release Notes */
+    .co-release-description img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+        margin: 10px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
     /* Assets and Downloads */
     .co-assets-title {
         font-size: 16px;
@@ -1423,10 +1432,10 @@
         <ul id="co-req-list">
             <li id="req-os">Checking OS...</li>
             <li id="req-ram">Checking RAM...</li>
-            <li>⚠️ Approx. 200 MB free disk space (Offline Storage)</li>
-            <li>⚠️ .NET 8 Desktop Runtime required (x64)</li>
-            <li>✅ No internet connection required after installation</li>
-            <li>✅ Optimized for low CPU and memory usage</li>
+            <li><span style="margin-right:8px;">⚠️</span> Approx. 200 MB free disk space (Offline Storage)</li>
+            <li><span style="margin-right:8px;">⚠️</span> .NET 8 Desktop Runtime required (x64)</li>
+            <li><span style="margin-right:8px;">✅</span> No internet connection required after installation</li>
+            <li><span style="margin-right:8px;">✅</span> Optimized for low CPU and memory usage</li>
         </ul>
         
         <div class="co-installer-banner">
@@ -1508,7 +1517,7 @@
         function checkHardware() {
             let isWin = navigator.platform.indexOf('Win') > -1 || navigator.userAgent.indexOf('Windows') > -1;
             let is64 = navigator.userAgent.indexOf('WOW64') > -1 || navigator.userAgent.indexOf('Win64') > -1 || navigator.userAgent.indexOf('x64') > -1;
-            let ram = navigator.deviceMemory || null; // Will be null on unsupported browsers
+            let ram = navigator.deviceMemory || null; 
 
             let osEl = document.getElementById('req-os');
             let ramEl = document.getElementById('req-ram');
@@ -1531,9 +1540,15 @@
         }
         checkHardware();
 
-        // --- 3. Emoji Rain & Collect Logic ---
+        // --- 3. Emoji Rain & Collect Logic (Popup Blocker Bypass) ---
         window.coTriggerReaction = function(event, url, btn) {
             event.preventDefault();
+            
+            // Bypass Popup Blocker: Open tab synchronously immediately upon click
+            let newTab = window.open('about:blank', '_blank');
+            if(newTab) {
+                newTab.document.write('<body style="background:#0d1117; color:#c9d1d9; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;"><h2>Hold tight! Syncing your reaction...</h2></body>');
+            }
             
             // Change button state
             let originalText = btn.innerHTML;
@@ -1570,17 +1585,21 @@
                 ], {
                     duration: dropDuration,
                     fill: 'forwards',
-                    easing: 'ease-in' // Accelerates like gravity
+                    easing: 'ease-in'
                 });
             }
 
             // Disappear sequence after exactly 7 seconds
             setTimeout(() => {
-                // Fade out emojis
                 activeEmojis.forEach(el => el.style.opacity = '0');
                 
-                // Open new tab
-                window.open(url, '_blank');
+                // Redirect the tab we opened earlier
+                if (newTab) {
+                    newTab.location.href = url;
+                } else {
+                    // Fallback if popup was fully blocked
+                    window.location.href = url;
+                }
                 
                 // Reset Button
                 btn.innerHTML = originalText;
@@ -1588,7 +1607,6 @@
                 btn.style.backgroundColor = '';
                 btn.style.borderColor = '';
 
-                // Clean DOM after fade out completes
                 setTimeout(() => container.remove(), 1000);
             }, 7000);
         };
@@ -1642,14 +1660,27 @@
             }, 20);
         };
 
+        // Enhanced markdown parsing for images and HTML
         const parseDescription = (text) => {
             if (!text) return 'No deployment notes provided.';
-            let cleanText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            let cleanText = text;
+            
+            // Basic Markdown Image parsing: ![alt](url)
+            cleanText = cleanText.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">');
+            
+            // Basic Link parsing: [text](url)
+            cleanText = cleanText.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="color:#58a6ff;">$1</a>');
+            
+            // Headers and formatting
             cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             cleanText = cleanText.replace(/^### (.*$)/gim, '<strong style="color:#58a6ff; font-size:16px; display:block; margin-top:10px;">$1</strong>');
             cleanText = cleanText.replace(/^## (.*$)/gim, '<strong style="color:#58a6ff; font-size:18px; display:block; margin-top:15px; border-bottom:1px solid #30363d; padding-bottom:5px;">$1</strong>');
             cleanText = cleanText.replace(/^# (.*$)/gim, '<strong style="color:#f0f6fc; font-size:20px; display:block; margin-top:20px; margin-bottom:10px;">$1</strong>');
             cleanText = cleanText.replace(/^---/gim, '<hr style="border:0; border-top:1px dashed #30363d; margin:15px 0;">');
+            
+            // Handle basic inline codeblocks
+            cleanText = cleanText.replace(/`([^`]+)`/g, '<code style="background:#21262d; padding:2px 5px; border-radius:4px; font-family:monospace;">$1</code>');
+            
             return cleanText;
         };
 
@@ -1679,13 +1710,18 @@
         };
 
         const generateReleaseHTML = (release) => {
-            let versionDownloads = 0;
+            let versionExeDownloads = 0; // Strictly counting .exe for the main card totals
             let assetsHtml = '';
 
             if (release.assets && release.assets.length > 0) {
                 release.assets.forEach(asset => {
-                    versionDownloads += asset.download_count;
-                    let icon = asset.name.endsWith('.exe') ? '🪟' : (asset.name.endsWith('.zip') ? '🗜️' : '📦');
+                    let isExe = asset.name.toLowerCase().endsWith('.exe');
+                    
+                    if (isExe) {
+                        versionExeDownloads += asset.download_count;
+                    }
+                    
+                    let icon = isExe ? '🪟' : (asset.name.toLowerCase().endsWith('.zip') ? '🗜️' : '📦');
                     assetsHtml += `
                         <div class="co-asset-row">
                             <div class="co-asset-info">
@@ -1737,8 +1773,8 @@
                             <span class="co-meta-value" style="font-family: monospace; background: #21262d; padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content;">${release.target_commitish}</span>
                         </div>
                         <div class="co-meta-item">
-                            <span class="co-meta-label">📥 Version Downloads</span>
-                            <span class="co-meta-value co-text-green" style="font-size: 16px;">${versionDownloads.toLocaleString()}</span>
+                            <span class="co-meta-label">📥 Installer Downloads (.EXE)</span>
+                            <span class="co-meta-value co-text-green" style="font-size: 16px;">${versionExeDownloads.toLocaleString()}</span>
                         </div>
                     </div>
 
@@ -1758,12 +1794,12 @@
             `;
         };
 
-        const updateProgressBar = (total) => {
-            let currentBase = Math.floor(total / 100) * 100;
+        const updateProgressBar = (totalExe) => {
+            let currentBase = Math.floor(totalExe / 100) * 100;
             let nextGoal = currentBase + 100;
-            if (total === 0) nextGoal = 100;
+            if (totalExe === 0) nextGoal = 100;
 
-            let percentage = ((total - currentBase) / (nextGoal - currentBase)) * 100;
+            let percentage = ((totalExe - currentBase) / (nextGoal - currentBase)) * 100;
             let displayPercent = percentage.toFixed(1);
             
             document.getElementById('co-progress-start').innerText = currentBase.toLocaleString();
@@ -1775,10 +1811,10 @@
             }, 500);
 
             let msgEl = document.getElementById('co-progress-msg');
-            if (total % 100 === 0 && total !== 0) {
-                msgEl.innerHTML = `🎉 Congratulations! We just hit exactly <span class="co-text-green">${total}</span> downloads!`;
+            if (totalExe % 100 === 0 && totalExe !== 0) {
+                msgEl.innerHTML = `🎉 Congratulations! We just hit exactly <span class="co-text-green">${totalExe}</span> downloads!`;
             } else {
-                let left = nextGoal - total;
+                let left = nextGoal - totalExe;
                 msgEl.innerHTML = `🔥 We are growing! Only <span style="color:var(--co-accent-warning); font-size:18px;">${left}</span> downloads left to reach our next milestone of ${nextGoal}!`;
             }
 
@@ -1789,7 +1825,7 @@
             }
         };
 
-        const generateDynamicTimeline = (releases, grandTotal) => {
+        const generateDynamicTimeline = (releases, grandTotalExe) => {
             // Sort releases from oldest to newest based on published_at
             let sortedReleases = [...releases].sort((a, b) => new Date(a.published_at) - new Date(b.published_at));
             
@@ -1807,13 +1843,13 @@
                 `;
             });
 
-            // Add dynamic Present node
+            // Add dynamic Present node strictly for EXE
             const todayDate = new Date().toLocaleString('en-US', { month: 'short', year: 'numeric' });
             html += `
                 <div class="co-timeline-item co-timeline-current">
                     <p class="co-timeline-date">Present (${todayDate})</p>
                     <p class="co-timeline-content" style="color: var(--co-accent-green); font-weight:bold; font-size:16px;">
-                        🎉 Crossed ${grandTotal.toLocaleString()} Total Lifetime Downloads!
+                        🎉 Crossed ${grandTotalExe.toLocaleString()} Total Lifetime Downloads!
                     </p>
                 </div>
             `;
@@ -1822,29 +1858,33 @@
         };
 
         const renderData = (releases) => {
-            let grandTotal = 0, stableTotal = 0, betaTotal = 0;
+            let grandTotalExe = 0, stableTotalExe = 0, betaTotalExe = 0;
             let stableHtml = '', betaHtml = '';
             let stableCount = 0, betaCount = 0;
 
             releases.forEach(release => {
-                let currentReleaseDownloads = 0;
+                let currentReleaseExeDownloads = 0;
+                
+                // Only sum up .exe files for the global grand totals
                 if (release.assets) {
                     release.assets.forEach(asset => {
-                        currentReleaseDownloads += asset.download_count;
+                        if (asset.name.toLowerCase().endsWith('.exe')) {
+                            currentReleaseExeDownloads += asset.download_count;
+                        }
                     });
                 }
 
                 if (release.prerelease) {
-                    betaTotal += currentReleaseDownloads;
+                    betaTotalExe += currentReleaseExeDownloads;
                     betaHtml += generateReleaseHTML(release);
                     betaCount++;
                 } else {
-                    stableTotal += currentReleaseDownloads;
+                    stableTotalExe += currentReleaseExeDownloads;
                     stableHtml += generateReleaseHTML(release);
                     stableCount++;
                 }
                 
-                grandTotal += currentReleaseDownloads;
+                grandTotalExe += currentReleaseExeDownloads;
             });
 
             document.getElementById('co-stable-container').innerHTML = stableHtml || '<div class="co-status-message">No stable releases found.</div>';
@@ -1853,12 +1893,13 @@
             document.getElementById('co-stable-count-badge').innerText = `${stableCount} Versions`;
             document.getElementById('co-beta-count-badge').innerText = `${betaCount} Versions`;
 
-            animateCount('co-stat-grand-total', grandTotal);
-            animateCount('co-stat-stable-total', stableTotal);
-            animateCount('co-stat-beta-total', betaTotal);
+            // Display strictly EXE totals
+            animateCount('co-stat-grand-total', grandTotalExe);
+            animateCount('co-stat-stable-total', stableTotalExe);
+            animateCount('co-stat-beta-total', betaTotalExe);
 
-            updateProgressBar(grandTotal);
-            generateDynamicTimeline(releases, grandTotal); // Now using the dynamic API-based timeline
+            updateProgressBar(grandTotalExe);
+            generateDynamicTimeline(releases, grandTotalExe); 
         };
 
         async function fetchAndRender() {
@@ -1909,7 +1950,7 @@
         fetchAndRender();
     })();
 </script>
-
+  
     <!-- =========== Full Release Total Downloads Data [END] ============-->
 
   
